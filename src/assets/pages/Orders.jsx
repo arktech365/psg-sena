@@ -1,0 +1,533 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { getOrdersByUserId } from '../../services/orderService';
+import OrderDetailsModal from '../../components/OrderDetailsModal';
+import { createReview, getUserReviewForProduct, updateReview, deleteReview } from '../../services/reviewService';
+import Swal from 'sweetalert2';
+
+const Orders = () => {
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reviewingProduct, setReviewingProduct] = useState(null);
+
+  // Get status text in Spanish
+  const getOrderStatusText = (status) => {
+    switch (status) {
+      case 'pending':
+        return 'Pendiente';
+      case 'processing':
+        return 'Procesando';
+      case 'shipped':
+        return 'Enviado';
+      case 'delivered':
+        return 'Entregado';
+      case 'cancelled':
+        return 'Cancelado';
+      default:
+        return status;
+    }
+  };
+
+  // Get status badge class
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'processing':
+        return 'bg-blue-100 text-blue-800';
+      case 'shipped':
+        return 'bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800';
+      case 'delivered':
+        return 'bg-green-100 text-green-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  // Format date for display
+  const formatDate = (date) => {
+    if (!date) return 'N/A';
+    if (date instanceof Date) {
+      return date.toLocaleDateString('es-CO');
+    }
+    if (date.toDate) {
+      return date.toDate().toLocaleDateString('es-CO');
+    }
+    return 'N/A';
+  };
+
+  // Format currency
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0
+    }).format(amount || 0);
+  };
+
+  const openOrderDetails = (order) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  };
+
+  const closeOrderDetails = () => {
+    setIsModalOpen(false);
+    setSelectedOrder(null);
+  };
+
+  // Open review form for a product
+  const openReviewForm = async (product) => {
+    try {
+      // Check if user already has a review for this product
+      const existingReview = await getUserReviewForProduct(currentUser.uid, product.id);
+      
+      if (existingReview) {
+        // User already has a review, open edit mode
+        setReviewingProduct({
+          id: existingReview.id,
+          productId: product.id,
+          productName: product.name,
+          rating: existingReview.rating,
+          comment: existingReview.comment,
+          isEditing: true
+        });
+      } else {
+        // User doesn't have a review yet, open create mode
+        setReviewingProduct({
+          productId: product.id,
+          productName: product.name,
+          rating: 0,
+          comment: '',
+          isEditing: false
+        });
+      }
+    } catch (error) {
+      console.error('Error checking existing review:', error);
+      // Fallback to create mode if there's an error
+      setReviewingProduct({
+        productId: product.id,
+        productName: product.name,
+        rating: 0,
+        comment: '',
+        isEditing: false
+      });
+    }
+  };
+
+  // Handle review form changes
+  const handleReviewChange = (e) => {
+    const { name, value } = e.target;
+    setReviewingProduct(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle star rating click
+  const handleRatingClick = (rating) => {
+    setReviewingProduct(prev => ({
+      ...prev,
+      rating
+    }));
+  };
+
+  // Submit review (create or update)
+  const submitReview = async () => {
+    // Validate review
+    if (reviewingProduct.rating === 0) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Por favor selecciona una calificación',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
+    if (reviewingProduct.comment.trim() === '') {
+      Swal.fire({
+        title: 'Error',
+        text: 'Por favor escribe un comentario',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
+    try {
+      const reviewData = {
+        productId: reviewingProduct.productId,
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        userName: currentUser.displayName || currentUser.email.split('@')[0],
+        rating: reviewingProduct.rating,
+        comment: reviewingProduct.comment.trim()
+      };
+
+      if (reviewingProduct.isEditing) {
+        // Update existing review
+        await updateReview(reviewingProduct.id, reviewData);
+        Swal.fire({
+          title: 'Reseña actualizada',
+          text: 'Tu reseña ha sido actualizada correctamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        });
+      } else {
+        // Create new review
+        await createReview(reviewData);
+        Swal.fire({
+          title: 'Reseña enviada',
+          text: 'Tu reseña ha sido enviada correctamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+      
+      setReviewingProduct(null);
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un error al procesar tu reseña. Por favor intenta nuevamente.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+    }
+  };
+
+  // Delete review
+  const deleteReviewHandler = async () => {
+    if (!reviewingProduct || !reviewingProduct.isEditing) return;
+
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará tu reseña permanentemente',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteReview(reviewingProduct.id);
+          Swal.fire({
+            title: 'Reseña eliminada',
+            text: 'Tu reseña ha sido eliminada correctamente',
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+          });
+          setReviewingProduct(null);
+        } catch (error) {
+          console.error('Error deleting review:', error);
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo un error al eliminar tu reseña. Por favor intenta nuevamente.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      }
+    });
+  };
+
+  useEffect(() => {
+    const fetchUserOrders = async () => {
+      if (!currentUser) {
+        navigate('/login');
+        return;
+      }
+
+      try {
+        const ordersData = await getOrdersByUserId(currentUser.uid);
+        setOrders(ordersData);
+      } catch (err) {
+        console.error('Error fetching user orders:', err);
+        setError('No se pudieron cargar tus órdenes. Por favor, intenta nuevamente.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserOrders();
+  }, [currentUser, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center h-64">
+            <div className="w-12 h-12 border-b-2 border-indigo-600 rounded-full animate-spin"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Mis Pedidos</h1>
+              <p className="mt-2 text-gray-600">Consulta el estado de tus pedidos recientes</p>
+            </div>
+            <div className="hidden sm:block">
+              <div className="flex items-center space-x-2 text-sm text-gray-500">
+                <span>Total de pedidos:</span>
+                <span className="font-semibold text-indigo-600">{orders.length}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {error && (
+          <div className="p-4 mb-6 rounded-md bg-red-50">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="w-5 h-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">{error}</h3>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {orders.length === 0 ? (
+          <div className="p-12 text-center bg-white shadow-sm rounded-xl">
+            <div className="flex items-center justify-center w-16 h-16 mx-auto rounded-full bg-indigo-50">
+              <svg className="w-8 h-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002-2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <h3 className="mt-4 text-lg font-medium text-gray-900">No tienes pedidos</h3>
+            <p className="mt-1 text-gray-500">Aún no has realizado ningún pedido.</p>
+            <div className="mt-6">
+              <Link
+                to="/shop"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Comprar ahora
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {orders.map((order) => (
+              <div key={order.id} className="overflow-hidden transition-all duration-300 bg-white shadow-sm rounded-xl hover:shadow-md">
+                {/* Order Header */}
+                <div className="px-6 py-5 border-b border-gray-100">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div className="flex items-center">
+                      <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 rounded-lg bg-indigo-50">
+                        <svg className="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                        </svg>
+                      </div>
+                      <div className="ml-4">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Pedido #{order.id.substring(0, 8)}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Realizado el {formatDate(order.createdAt)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center mt-4 space-x-3 md:mt-0">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeClass(order.orderStatus)}`}>
+                        {getOrderStatusText(order.orderStatus)}
+                      </span>
+                      <button
+                        onClick={() => openOrderDetails(order)}
+                        className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
+                      >
+                        Ver detalles
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Order Summary */}
+                <div className="px-6 py-5">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+                    <div className="pl-4 border-l-4 border-indigo-500">
+                      <p className="text-sm text-gray-500">Total</p>
+                      <p className="text-lg font-semibold text-gray-900">{formatCurrency(order.totalAmount)}</p>
+                    </div>
+                    <div className="pl-4 border-l-4 border-purple-500">
+                      <p className="text-sm text-gray-500">Productos</p>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {order.items?.length || 0}
+                      </p>
+                    </div>
+                    <div className="pl-4 border-l-4 border-pink-500">
+                      <p className="text-sm text-gray-500">Método de Pago</p>
+                      <p className="text-lg font-semibold text-gray-900">{order.paymentMethod || 'N/A'}</p>
+                    </div>
+                    <div className="pl-4 border-l-4 border-teal-500">
+                      <p className="text-sm text-gray-500">Estado</p>
+                      <p className="text-lg font-semibold text-gray-900 capitalize">{order.paymentStatus || 'N/A'}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Products in order with review option */}
+                  <div className="mt-6">
+                    <h4 className="mb-3 font-semibold text-gray-900 text-md">Productos en este pedido</h4>
+                    <div className="space-y-3">
+                      {order.items?.map((item, index) => (
+                        <div key={index} className="flex items-center justify-between p-4 transition-colors duration-200 rounded-lg bg-gray-50 hover:bg-gray-100">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 w-16 h-16 overflow-hidden border border-gray-200 rounded-md">
+                              <img
+                                src={item.imageUrl || 'https://via.placeholder.com/64x64.png?text=Moño'}
+                                alt={item.name}
+                                className="object-cover object-center w-full h-full"
+                                onError={(e) => {
+                                  e.target.onerror = null;
+                                  e.target.src = 'https://via.placeholder.com/64x64.png?text=Moño';
+                                }}
+                              />
+                            </div>
+                            <div className="ml-4">
+                              <h5 className="text-sm font-medium text-gray-900">{item.name}</h5>
+                              <div className="flex items-center mt-1">
+                                <span className="text-sm text-gray-500">Cantidad: {item.quantity}</span>
+                                <span className="mx-2 text-gray-300">•</span>
+                                <span className="text-sm font-medium text-gray-900">{formatCurrency(item.price * item.quantity)}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => openReviewForm(item)}
+                            className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
+                          >
+                            Dejar reseña
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      
+      {/* Review Modal */}
+      {reviewingProduct && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto bg-black bg-opacity-50">
+          <div className="relative w-full max-w-md mx-auto my-8 bg-white shadow-xl rounded-xl">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-gray-900">
+                  {reviewingProduct.isEditing ? 'Editar reseña' : 'Dejar una reseña'}
+                </h3>
+                <button
+                  onClick={() => setReviewingProduct(null)}
+                  className="text-2xl font-bold text-gray-400 hover:text-gray-500"
+                >
+                  ×
+                </button>
+              </div>
+              
+              <div className="mt-2">
+                <h4 className="font-medium text-gray-900">{reviewingProduct.productName}</h4>
+                
+                <div className="mt-4">
+                  <label className="block mb-2 text-sm font-medium text-gray-700">Calificación</label>
+                  <div className="flex items-center">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => handleRatingClick(star)}
+                        className="text-2xl focus:outline-none"
+                      >
+                        {star <= reviewingProduct.rating ? (
+                          <span className="text-yellow-400">★</span>
+                        ) : (
+                          <span className="text-gray-300">☆</span>
+                        )}
+                      </button>
+                    ))}
+                    <span className="ml-2 text-sm text-gray-500">
+                      {reviewingProduct.rating > 0 ? `${reviewingProduct.rating} de 5 estrellas` : 'Selecciona una calificación'}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="mt-4">
+                  <label htmlFor="review-comment" className="block mb-2 text-sm font-medium text-gray-700">
+                    Comentario
+                  </label>
+                  <textarea
+                    id="review-comment"
+                    name="comment"
+                    rows={4}
+                    value={reviewingProduct.comment}
+                    onChange={handleReviewChange}
+                    className="block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Comparte tu experiencia con este producto..."
+                  />
+                </div>
+                
+                <div className="flex justify-end mt-6 space-x-3">
+                  {reviewingProduct.isEditing && (
+                    <button
+                      type="button"
+                      onClick={deleteReviewHandler}
+                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    >
+                      Eliminar
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setReviewingProduct(null)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={submitReview}
+                    className="px-4 py-2 text-sm font-medium text-white border border-transparent rounded-lg shadow-sm bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    {reviewingProduct.isEditing ? 'Actualizar Reseña' : 'Enviar Reseña'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <OrderDetailsModal
+        order={selectedOrder}
+        isOpen={isModalOpen}
+        onClose={closeOrderDetails}
+        formatDate={formatDate}
+        formatCurrency={formatCurrency}
+        getOrderStatusText={getOrderStatusText}
+        getStatusBadgeClass={getStatusBadgeClass}
+      />
+    </div>
+  );
+};
+
+export default Orders;
