@@ -36,21 +36,21 @@ const Shop = () => {
 
   // Filter products based on category and search term
   const filteredProducts = useMemo(() => {
-    let result = filter === 'all' 
-      ? products 
+    let result = filter === 'all'
+      ? products
       : products.filter(product => product.category === filter);
-      
+
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      result = result.filter(product => 
-        product.name.toLowerCase().includes(term) || 
+      result = result.filter(product =>
+        product.name.toLowerCase().includes(term) ||
         (product.description && product.description.toLowerCase().includes(term)) ||
         (product.category && product.category.toLowerCase().includes(term)) ||
         (product.material && product.material.toLowerCase().includes(term)) ||
         (product.color && product.color.toLowerCase().includes(term))
       );
     }
-    
+
     return result;
   }, [products, filter, searchTerm]);
 
@@ -61,7 +61,7 @@ const Shop = () => {
   const getPrimaryImageUrl = (product) => {
     if (product.imageUrls && product.imageUrls.length > 0) {
       // Filter out empty images
-      const validImages = product.imageUrls.filter(image => 
+      const validImages = product.imageUrls.filter(image =>
         image && (typeof image === 'string' || (image.data && typeof image.data === 'string'))
       );
       if (validImages.length > 0) {
@@ -69,7 +69,7 @@ const Shop = () => {
         // Ensure primaryIndex is within bounds
         const safeIndex = Math.min(primaryIndex, validImages.length - 1);
         const primaryImage = validImages[safeIndex];
-        
+
         // Handle both string URLs and base64 data objects
         if (typeof primaryImage === 'string') {
           return primaryImage;
@@ -112,16 +112,16 @@ const Shop = () => {
       });
       return;
     }
-    
+
     // Get the primary product image as selected in the admin panel
     const mainImage = getPrimaryImageUrl(product);
-    
+
     addToCart({
       ...product,
       imageUrl: mainImage, // Ensure we use the primary image selected in admin panel
       quantity: 1
     });
-    
+
     Swal.fire({
       title: 'Producto agregado',
       text: 'Producto agregado correctamente al carrito',
@@ -152,12 +152,12 @@ const Shop = () => {
 
     // Get the primary product image as selected in the admin panel
     const mainImage = getPrimaryImageUrl(product);
-    
+
     addToWishlist({
       ...product,
       imageUrl: mainImage // Ensure we use the primary image selected in admin panel
     });
-    
+
     Swal.fire({
       title: 'Producto agregado',
       text: 'Producto agregado correctamente a tu lista de deseos',
@@ -171,37 +171,44 @@ const Shop = () => {
       <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex flex-col mb-8 md:flex-row md:items-center md:justify-between">
           <h1 className="text-3xl font-bold text-gray-900">Nuestra Colección</h1>
-          <div className="flex flex-col gap-4 mt-4 md:mt-0 sm:flex-row">
-            <div className="relative">
+          <div className="flex flex-col gap-4 mt-4 md:mt-0 sm:flex-row sm:items-center">
+            <div className="relative group">
               <input
                 type="text"
                 placeholder="Buscar productos..."
-                className="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:w-64"
+                className="w-full py-2.5 pl-11 pr-4 text-gray-700 transition-all duration-300 bg-white border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:shadow-md sm:w-72 hover:border-indigo-300"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                <svg className="w-5 h-5 text-gray-400 transition-colors duration-300 group-hover:text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
             </div>
-            <div>
-              <label htmlFor="category-filter" className="mr-2 text-sm font-medium text-gray-700">
+            <div className="flex items-center">
+              <label htmlFor="category-filter" className="mr-3 text-sm font-medium text-gray-600 whitespace-nowrap">
                 Filtrar por:
               </label>
-              <select
-                id="category-filter"
-                className="border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category === 'all' ? 'Todos' : category}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="category-filter"
+                  className="py-2.5 pl-4 pr-10 text-gray-700 bg-white border border-gray-200 rounded-full shadow-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent hover:border-indigo-300 transition-all duration-300"
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                >
+                  {categories.map(category => (
+                    <option key={category} value={category}>
+                      {category === 'all' ? 'Todos' : (typeof category === 'string' ? category.charAt(0).toUpperCase() + category.slice(1) : category)}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -244,30 +251,29 @@ const Shop = () => {
                         {product.category}
                       </span>
                       {product.stock !== undefined && product.stock <= 5 && (
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium shadow-sm ${
-                          product.stock > 0 
-                            ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' 
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium shadow-sm ${product.stock > 0
+                            ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white'
                             : 'bg-gradient-to-r from-red-500 to-red-600 text-white'
-                        }`}>
+                          }`}>
                           {product.stock > 0 ? `Solo ${product.stock} disponibles` : 'Agotado'}
                         </span>
                       )}
                     </div>
-                    
+
                     <h3 className="mt-2 text-lg font-medium text-gray-900">{product.name}</h3>
-                    
+
                     {product.rating > 0 && (
                       <div className="mt-2">
                         <StarRating rating={product.rating} size="sm" />
                       </div>
                     )}
-                    
+
                     <div className="mt-2">
                       <span className="text-lg font-semibold text-indigo-700">${parseFloat(product.price).toLocaleString('es-CO')}</span>
                     </div>
-                    
+
                     <div className="flex gap-2 mt-4">
-                      <button 
+                      <button
                         className="flex-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 border border-transparent rounded-md shadow-sm bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         onClick={(e) => {
                           e.preventDefault();
@@ -276,7 +282,7 @@ const Shop = () => {
                       >
                         Agregar al Carrito
                       </button>
-                      <button 
+                      <button
                         className="flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-300 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         onClick={(e) => {
                           e.preventDefault();
@@ -303,8 +309,8 @@ const Shop = () => {
             </svg>
             <h3 className="mt-2 text-lg font-medium text-gray-900">No se encontraron productos</h3>
             <p className="mt-1 text-gray-500">
-              {searchTerm 
-                ? `No se encontraron productos que coincidan con "${searchTerm}".` 
+              {searchTerm
+                ? `No se encontraron productos que coincidan con "${searchTerm}".`
                 : 'No hay productos disponibles en esta categoría.'}
             </p>
             {searchTerm && (
