@@ -51,19 +51,19 @@ const ResetPassword = () => {
             Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
           </p>
         </div>
-        
+
         {message && (
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
             <span className="block sm:inline">{message}</span>
           </div>
         )}
-        
+
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
             <span className="block sm:inline">{error}</span>
           </div>
         )}
-        
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email-address" className="block text-sm font-medium text-gray-700">
@@ -95,16 +95,16 @@ const ResetPassword = () => {
             </button>
           </div>
         </form>
-        
+
         <div className="text-center">
           <Link to="/login" className="font-medium text-purple-600 hover:text-purple-500">
             ← Volver al inicio de sesión
           </Link>
         </div>
-        
+
         <div className="mt-8 text-center">
           <p className="text-xs text-gray-500">
-            ©2020 Felix All rights reserved.
+            ©2026 ArkTech All rights reserved.
           </p>
         </div>
       </div>
