@@ -90,7 +90,7 @@ const Navbar = () => {
             {/* Logo */}
             <div className="text-2xl font-bold">
               <Link to="/home">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">CART</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">PSG</span>
                 <span className="text-slate-800">SHOP</span>
               </Link>
             </div>

@@ -1,0 +1,778 @@
+MANUAL DE USUARIO - PSG SHOP
+
+
+ESPECIFICACIONES DEL MANUAL
+
+A quién va dirigido el manual
+Este manual está dirigido a:
+- Usuarios finales del sistema (clientes que realizan compras en la tienda)
+- Administradores del sistema (personal encargado de gestionar productos, pedidos y usuarios)
+- Personal de soporte técnico que brinda ayuda a los usuarios
+- Desarrolladores que requieran entender el funcionamiento del sistema
+- Gerentes y tomadores de decisiones que requieran conocer las capacidades del sistema
+
+Introducción al Manual
+El presente manual tiene como propósito servir como guía de referencia para el uso efectivo del sistema PSG SHOP, una plataforma de comercio electrónico especializada en la venta de moños decorativos. El manual proporciona instrucciones detalladas sobre cómo navegar, operar y aprovechar al máximo todas las funcionalidades del sistema.
+
+Objetivos del Manual
+Objetivo General:
+- Proporcionar a los usuarios una guía completa y comprensible para el uso efectivo del sistema PSG SHOP.
+
+Objetivos Específicos:
+- Explicar claramente todas las funcionalidades del sistema para usuarios y administradores.
+- Facilitar la navegación y comprensión de la interfaz de usuario.
+- Proporcionar instrucciones paso a paso para todas las operaciones del sistema.
+- Ayudar a los usuarios a resolver problemas comunes y preguntas frecuentes.
+- Minimizar el tiempo de aprendizaje para nuevos usuarios del sistema.
+
+Generalidades del Sistema
+PSG SHOP es una aplicación web de comercio electrónico desarrollada en React con backend en Firebase. El sistema permite la gestión completa de un negocio de venta de moños decorativos, incluyendo catálogo de productos, carrito de compras, procesamiento de pedidos, gestión de usuarios y panel administrativo con estadísticas.
+
+Características principales:
+- Arquitectura cliente-servidor con React en el frontend
+- Base de datos NoSQL en tiempo real con Firestore
+- Autenticación segura de usuarios
+- Interfaz de usuario responsive y accesible
+- Integración con métodos de pago electrónicos
+- Sistema de reseñas y calificaciones
+- Panel administrativo con gráficos y estadísticas
+
+Descripción del Manual
+Este manual contiene información detallada sobre:
+- Cómo navegar por la plataforma
+- Cómo crear y gestionar una cuenta de usuario
+- Cómo explorar y buscar productos
+- Cómo utilizar el carrito de compras y finalizar compras
+- Cómo gestionar pedidos y reseñas
+- Cómo utilizar las funcionalidades administrativas
+- Cómo resolver problemas comunes
+- Cómo contactar al soporte técnico
+
+Uso de Teclas, Botones y Acciones Generales en el Sistema
+
+Teclas de Navegación:
+- TAB: Navega entre elementos interactivos
+- ENTER: Activa botones y enlaces
+- ESC: Cierra menús desplegables y modales
+- ESPACIO: Activa checkboxes y botones
+- F5: Recarga la página
+
+Botones y Elementos de Interfaz:
+- Botón "Agregar al Carrito": Añade productos seleccionados al carrito de compras
+- Botón "Comprar Ahora": Dirige directamente al proceso de checkout
+- Botón "Iniciar Sesión": Accede al panel de autenticación
+- Botón "Registrarse": Crea una nueva cuenta de usuario
+- Botón "Aplicar Cupón": Aplica descuentos al carrito
+- Botón "Proceder al Pago": Inicia el proceso de checkout
+- Botón "Editar Perfil": Permite modificar la información del usuario
+- Botón "Ver Detalles": Muestra información completa de productos/pedidos
+- Icono de Usuario: Accede al menú de perfil y opciones de cuenta
+- Icono de Carrito: Accede al carrito de compras
+- Icono de Corazón: Guarda productos en la lista de deseos
+- Icono de Búsqueda: Abre el panel de búsqueda de productos
+
+Acciones del Mouse:
+- Click Izquierdo: Activa botones y enlaces
+- Click Derecho: Abre menú contextual (en algunos elementos)
+- Scroll: Navega vertical u horizontalmente por la página
+- Hover: Muestra tooltips y efectos visuales en elementos interactivos
+
+Ayudas del Sistema
+El sistema PSG SHOP incluye varias formas de ayuda para los usuarios:
+
+1. Ayuda Contextual: Mensajes informativos que aparecen al pasar el mouse sobre elementos desconocidos
+2. Notificaciones: Alertas visuales sobre eventos importantes (éxito, error, advertencia)
+3. Mensajes de Confirmación: Solicitudes de confirmación antes de acciones importantes
+4. Indicadores de Carga: Mostradores visuales durante operaciones que requieren tiempo
+5. Validación en Tiempo Real: Verificación instantánea de datos ingresados en formularios
+6. Preguntas Frecuentes: Sección dedicada a respuestas comunes
+7. Soporte en Línea: Acceso directo al equipo de soporte técnico
+8. Barra de Estado: Información actualizada sobre el estado del sistema
+
+Además, este manual de usuario proporciona:
+- Instrucciones paso a paso para todas las funcionalidades
+- Soluciones a problemas comunes
+- Procedimientos detallados para tareas complejas
+- Ejemplos prácticos de uso del sistema
+
+
+REQUERIMIENTOS TÉCNICOS DEL SISTEMA
+
+Requisitos Mínimos del Cliente (Navegador):
+- Navegador web moderno: Chrome (versión 90+), Firefox (versión 88+), Safari (versión 14+), Edge (versión 90+)
+- Conexión a Internet de banda ancha (mínimo 1 Mbps recomendado)
+- JavaScript habilitado
+- Cookies habilitadas
+- Almacenamiento local (localStorage) habilitado
+- Resolución de pantalla mínima: 1024x768 píxeles
+- Memoria RAM: 2 GB recomendados
+- Espacio en disco duro: 100 MB disponibles
+
+Requisitos Recomendados del Cliente:
+- Navegador web actualizado a la última versión disponible
+- Conexión a Internet de banda ancha (mínimo 10 Mbps recomendado)
+- Resolución de pantalla: 1920x1080 píxeles o superior
+- Memoria RAM: 4 GB o más
+
+Requisitos del Sistema (Servidor/Firebase):
+- Firebase Authentication: Servicio de autenticación en la nube
+- Cloud Firestore: Base de datos NoSQL en tiempo real
+- Firebase Storage: Almacenamiento de archivos multimedia
+- Firebase Hosting: Hospedaje web (implícito)
+- Node.js: Versión 14 o superior (para desarrollo)
+- npm: Versión 8 o superior (para gestión de paquetes)
+
+Dependencias del Sistema:
+- React 19.1.1: Biblioteca para interfaces de usuario
+- Vite 7.1.2: Herramienta de compilación
+- React Router DOM 7.9.1: Enrutamiento de aplicaciones
+- Firebase SDK 12.3.0: Cliente para servicios Firebase
+- Tailwind CSS 4.1.13: Framework de estilos
+- Recharts 3.2.1: Biblioteca de gráficos
+- PayPal SDK: Integración de pagos
+
+
+INSTALACIÓN Y CONFIGURACIÓN
+
+Instalación del Sistema (Desarrollo):
+1. Requisitos Previos:
+   - Instalar Node.js versión 14 o superior
+   - Instalar npm (incluido con Node.js)
+   - Tener una cuenta de Firebase
+
+2. Clonar el Repositorio:
+   - Abrir terminal o consola de comandos
+   - Ejecutar comando: git clone <url-del-repositorio>
+   - Navegar al directorio: cd cartshop
+
+3. Instalar Dependencias:
+   - Ejecutar comando: npm install
+   - Esperar a que se instalen todas las dependencias
+
+4. Configurar Variables de Entorno:
+   - Crear archivo .env en el directorio raíz
+   - Agregar las siguientes variables con valores de Firebase:
+     VITE_API_KEY=your_api_key
+     VITE_AUTH_DOMAIN=your_auth_domain
+     VITE_PROJECT_ID=your_project_id
+     VITE_STORAGE_BUCKET=your_storage_bucket
+     VITE_MESSAGING_SENDER_ID=your_sender_id
+     VITE_APP_ID=your_app_id
+
+5. Iniciar el Servidor de Desarrollo:
+   - Ejecutar comando: npm run dev
+   - Abrir navegador en la URL mostrada (generalmente http://localhost:5173)
+
+Configuración del Sistema:
+1. Configuración de Firebase:
+   - Crear proyecto en Firebase Console
+   - Activar Firebase Authentication (proveedor de email/password)
+   - Crear base de datos Cloud Firestore
+   - Configurar reglas de seguridad para Firestore
+   - Activar Firebase Storage
+
+2. Configuración de Autenticación:
+   - Habilitar proveedor de autenticación por email/password
+   - Configurar reglas de validación de contraseñas
+   - Configurar verificación de email (opcional)
+
+3. Configuración de Seguridad:
+   - Definir reglas de seguridad en Firestore
+   - Configurar CORS si aplica
+   - Establecer políticas de retención de datos
+
+4. Configuración de Pagos:
+   - Integrar cuenta de PayPal para pagos
+   - Configurar webhook de confirmación de pagos
+   - Definir métodos de pago disponibles
+
+Configuración para Producción:
+1. Compilar el Proyecto:
+   - Ejecutar comando: npm run build
+   - El resultado se genera en la carpeta /dist
+
+2. Desplegar en Producción:
+   - Opción 1: Firebase Hosting (recomendado)
+     - Instalar Firebase CLI: npm install -g firebase-tools
+     - Iniciar sesión: firebase login
+     - Inicializar proyecto: firebase init hosting
+     - Desplegar: firebase deploy
+   - Opción 2: GitHub Pages
+     - Ejecutar: npm run deploy
+   - Opción 3: Otro hospedaje estático
+     - Subir contenido de carpeta /dist
+
+Actualización del Sistema:
+1. Backup de Configuración:
+   - Guardar copia de archivo .env
+   - Exportar datos importantes si aplica
+
+2. Actualizar Código:
+   - Obtener últimos cambios: git pull
+   - Actualizar dependencias: npm install
+   - Reconstruir proyecto: npm run build
+
+3. Verificar Funcionalidad:
+   - Probar todas las funcionalidades principales
+   - Verificar integración con servicios externos
+   - Confirmar que los datos se mantienen intactos
+
+
+ANTECEDENTES DEL SISTEMA
+
+El sistema PSG SHOP surge como respuesta a la necesidad de contar con una plataforma digital integral para la comercialización de productos de moda femenina, en particular moños decorativos, en el mercado colombiano. La evolución del comercio electrónico y la creciente demanda de productos fashion accesibles ha impulsado el desarrollo de soluciones tecnológicas que permitan a pequeños y medianos empresarios competir en el mercado digital.
+
+Inicialmente, la empresa enfrentaba desafíos como la gestión manual de inventarios, la dificultad para llegar a nuevos clientes, la falta de un canal de ventas permanente y la imposibilidad de ofrecer experiencias de compra personalizadas. La pandemia de COVID-19 aceleró la necesidad de contar con una presencia digital sólida, lo que llevó al desarrollo de esta plataforma e-commerce.
+
+La plataforma PSG SHOP se desarrolló con el objetivo de modernizar la operación comercial, automatizar procesos manuales y mejorar la experiencia tanto para clientes como para administradores. El sistema permite mantener un catálogo actualizado de productos, gestionar pedidos de forma eficiente, recolectar opiniones de clientes y ofrecer estadísticas relevantes para la toma de decisiones.
+
+La tecnología elegida (React y Firebase) permite una implementación ágil, escalabilidad y mantenimiento sencillo, lo cual es fundamental para una empresa en crecimiento. La integración con sistemas de pago como PayPal facilita las transacciones seguras, mientras que el sistema de autenticación garantiza la seguridad de los datos de los usuarios.
+
+
+OBJETIVOS DEL SISTEMA
+
+Objetivos Generales
+- Facilitar la compra y venta de moños decorativos a través de una plataforma digital intuitiva y segura.
+- Proporcionar una experiencia de usuario completa que abarque desde la exploración de productos hasta la gestión de pedidos.
+- Permitir la gestión eficiente de productos, usuarios y pedidos por parte del personal administrativo.
+- Implementar un sistema de reseñas y calificaciones para mejorar la experiencia de compra.
+- Ofrecer herramientas de análisis y reportes para la toma de decisiones de negocio.
+
+Objetivos Específicos
+- Permitir a los usuarios registrarse e iniciar sesión de forma segura en el sistema.
+- Facilitar la navegación y búsqueda de productos mediante categorías y filtros.
+- Habilitar la funcionalidad de carrito de compras con persistencia de datos.
+- Implementar un sistema de pago seguro integrado con múltiples métodos de pago.
+- Permitir a los usuarios dejar reseñas y calificaciones sobre los productos adquiridos.
+- Proporcionar a los administradores herramientas para gestionar productos, categorías y cupones.
+- Ofrecer a los administradores dashboards con métricas y estadísticas del negocio.
+- Implementar un sistema de gestión de pedidos con seguimiento de estados.
+- Permitir la creación y gestión de perfiles de usuario con información personal y direcciones.
+- Integrar funcionalidades de lista de deseos para mejora de la experiencia de usuario.
+
+
+TABLA DE CONTENIDOS
+1. Introducción
+2. Requisitos del Sistema
+3. Registro e Inicio de Sesión
+4. Navegación por el Sitio
+5. Exploración de Productos
+6. Gestión del Carrito de Compras
+7. Lista de Deseos
+8. Proceso de Compra
+9. Gestión de Cuenta
+10. Historial de Pedidos
+11. Reseñas de Productos
+12. Cupones y Promociones
+13. Blog y Contenido Adicional
+14. Contacto con el Soporte
+15. Preguntas Frecuentes
+16. Solución de Problemas
+
+
+INTRODUCCIÓN
+
+¡Bienvenido a PSG SHOP! Esta es una tienda en línea especializada en la venta de moños decorativos de alta calidad. Nuestra plataforma le permite navegar por nuestra colección, realizar compras seguras y gestionar su cuenta de usuario de manera intuitiva.
+
+Características Principales
+- Catálogo de productos con imágenes detalladas
+- Sistema de carrito de compras con persistencia
+- Lista de deseos para guardar productos favoritos
+- Proceso de pago seguro con PayPal o contra entrega
+- Gestión completa de perfil de usuario
+- Sistema de reseñas de productos
+- Aplicación de cupones de descuento
+- Historial de pedidos
+- Blog con contenido relacionado con moda y accesorios
+- Soporte al cliente integral
+
+Objetivo del Manual
+Este manual tiene como objetivo guiarle paso a paso en el uso de la plataforma PSG SHOP, desde el registro inicial hasta la gestión completa de sus compras y preferencias personales.
+
+
+REQUISITOS DEL SISTEMA
+
+Para utilizar nuestra tienda en línea, necesitará:
+- Un navegador web moderno (Chrome, Firefox, Safari, Edge)
+- Conexión a internet estable
+- JavaScript habilitado en su navegador
+- Cookies habilitadas
+- Resolución de pantalla mínima de 1024x768 para una experiencia óptima
+
+
+REGISTRO E INICIO DE SESIÓN
+
+Registro de Nueva Cuenta
+1. Haga clic en el ícono de usuario en la esquina superior derecha
+2. Seleccione "Iniciar Sesión" si no está logueado
+3. Haga clic en "Crear una Cuenta"
+4. Complete el formulario con su correo electrónico, contraseña y confirmación
+5. Haga clic en "Crear Cuenta"
+6. Verifique su correo electrónico si es necesario
+7. Una vez verificado, podrá iniciar sesión con sus credenciales
+
+Inicio de Sesión
+1. Haga clic en el ícono de usuario en la esquina superior derecha
+2. Ingrese su correo electrónico y contraseña
+3. Haga clic en "Iniciar Sesión"
+4. Opcionalmente, puede usar "Iniciar sesión con Google"
+
+Recuperación de Contraseña
+1. En la página de inicio de sesión, haga clic en "¿Olvidaste tu contraseña?"
+2. Ingrese su correo electrónico registrado
+3. Siga las instrucciones enviadas a su correo electrónico
+4. Cree una nueva contraseña cuando reciba el enlace de recuperación
+
+Cierre de Sesión
+1. Haga clic en su ícono de usuario en la esquina superior derecha
+2. Seleccione "Cerrar Sesión"
+3. Confirme que desea cerrar la sesión actual
+
+
+NAVEGACIÓN POR EL SITIO
+
+Menú Principal
+La barra de navegación en la parte superior contiene:
+- Inicio: Página principal con productos destacados
+- Productos: Catálogo completo de moños
+- Blog: Artículos relacionados con moda y accesorios
+- Contacto: Formulario para comunicarse con nosotros
+
+Barra de Herramientas
+- Ícono de Usuario: Acceso a su perfil y configuración
+- Ícono de Corazón: Acceso a su lista de deseos
+- Ícono de Carrito: Acceso a su carrito de compras
+- Ícono de Búsqueda: Búsqueda rápida de productos
+
+Pie de Página
+Contiene información adicional:
+- Enlaces rápidos a páginas importantes
+- Información de contacto
+- Redes sociales
+- Políticas de privacidad y términos de servicio
+
+
+EXPLORACIÓN DE PRODUCTOS
+
+Vista de Productos
+1. Desde la página principal o la sección "Productos", puede ver el catálogo
+2. Haga clic en cualquier imagen de producto para ver detalles
+3. En la vista detallada puede:
+   - Ver múltiples imágenes del producto
+   - Leer la descripción detallada
+   - Ver calificaciones y reseñas de otros clientes
+   - Ver disponibilidad y stock
+   - Agregar el producto al carrito
+   - Guardar en la lista de deseos
+   - Compartir el producto en redes sociales
+
+Búsqueda y Filtrado
+- Use la barra de búsqueda en la página de productos para encontrar moños específicos
+- Filtre productos por categoría usando el menú desplegable
+- Ordene productos por precio, popularidad o nombre
+- Filtre por características como material, color, tamaño o estilo
+
+Categorías de Productos
+Nuestros productos están organizados en categorías:
+- Moños para Cabello: Accesorios para peinado
+- Moños Decorativos: Para ropa y accesorios
+- Moños para Bebés: Accesorios infantiles
+- Moños de Fiesta: Para ocasiones especiales
+- Moños Personalizados: Diseños únicos a pedido
+
+
+GESTIÓN DEL CARRITO DE COMPRAS
+
+Agregar Productos al Carrito
+1. Desde la página de productos o la vista detallada, haga clic en "Agregar al Carrito"
+2. Seleccione cantidad y variantes si aplica (color, tamaño, etc.)
+3. Se mostrará una confirmación de que el producto fue agregado
+4. El carrito se actualizará automáticamente con el nuevo producto
+
+Ver y Gestionar el Carrito
+1. Haga clic en el ícono del carrito en la barra de navegación
+2. En la página del carrito puede:
+   - Ver todos los productos agregados
+   - Aumentar o disminuir la cantidad de productos
+   - Eliminar productos del carrito
+   - Ver el subtotal, descuentos y total de su compra
+   - Continuar comprando o proceder al pago
+
+Actualizar Cantidades
+1. En la página del carrito, use los controles de cantidad (+/-)
+2. O escriba directamente el número deseado
+3. El carrito se actualizará automáticamente
+4. Los precios totales se recalculan en tiempo real
+
+Eliminar Productos
+1. En la página del carrito, haga clic en el ícono de papelera junto al producto
+2. Confirme que desea eliminar el producto
+3. El carrito se actualizará sin el producto eliminado
+
+Aplicar Cupones
+1. En la página del carrito, ingrese el código del cupón en el campo correspondiente
+2. Haga clic en "Aplicar"
+3. El descuento se reflejará en el total del pedido
+4. El cupón se mostrará con su descripción y valor de descuento
+
+
+LISTA DE DESEOS
+
+Agregar a la Lista de Deseos
+1. En la página de productos o vista detallada, haga clic en el ícono de corazón
+2. El producto se agregará a su lista de deseos
+3. El contador de la lista de deseos se actualizará
+
+Gestionar la Lista de Deseos
+1. Acceda a su lista de deseos haciendo clic en el ícono de corazón en la barra de navegación
+2. Desde aquí puede:
+   - Ver todos los productos guardados
+   - Agregar productos al carrito
+   - Eliminar productos de la lista
+   - Compartir productos de la lista
+   - Ver precios y disponibilidad actualizados
+
+Comprar desde la Lista de Deseos
+1. En la página de la lista de deseos, haga clic en "Agregar al Carrito" para un producto
+2. O use el botón "Comprar Ahora" para ir directamente al checkout
+3. El producto se agregará al carrito o se iniciará el proceso de compra
+
+
+PROCESO DE COMPRA
+
+Iniciar el Proceso de Compra
+1. Desde el carrito, haga clic en "Proceder al Pago"
+2. Revise los productos en su pedido
+3. Aplique cupones si tiene disponibles
+4. Continúe con el proceso de pago
+
+Gestión de Direcciones
+1. Seleccione una dirección existente o agregue una nueva:
+   - Complete todos los campos requeridos (nombre, dirección, ciudad, estado, código postal, país)
+   - Establezca una dirección como predeterminada si lo desea
+2. Puede tener varias direcciones guardadas
+3. La dirección predeterminada se usará automáticamente en futuras compras
+
+Revisión del Pedido
+1. Revise todos los productos en su pedido
+2. Verifique el subtotal, impuestos, descuentos y costos de envío
+3. Aplique cupones de descuento si tiene
+4. Confirme que la dirección de envío es correcta
+5. Seleccione el método de envío preferido
+
+Métodos de Pago
+Seleccione uno de los siguientes métodos:
+- PayPal: Procesamiento seguro a través de PayPal
+- Contra Entrega: Pago en efectivo al recibir el pedido
+- Tarjeta de Crédito/Débito: A través del sistema de pagos integrado
+
+Confirmación del Pedido
+- Después de completar el pago, se mostrará una confirmación con número de pedido
+- Recibirá un correo electrónico con los detalles del pedido
+- Puede ver el estado de sus pedidos en "Mis Pedidos"
+- Guarde el número de pedido para futuras consultas
+
+
+GESTIÓN DE CUENTA
+
+Perfil de Usuario
+1. Haga clic en su foto de perfil o ícono de usuario
+2. Seleccione "Mi Perfil"
+3. Puede actualizar:
+   - Su nombre completo
+   - Número de teléfono
+   - Foto de perfil
+   - Información adicional como fecha de nacimiento o intereses
+
+Cambio de Contraseña
+1. En la sección de perfil, vaya a la pestaña "Seguridad"
+2. Ingrese su contraseña actual
+3. Ingrese y confirme su nueva contraseña
+4. Haga clic en "Cambiar Contraseña"
+5. Recibirá una confirmación por correo electrónico
+
+Gestión de Direcciones
+1. En la sección de perfil, vaya a la pestaña "Direcciones"
+2. Puede:
+   - Agregar nuevas direcciones
+   - Editar direcciones existentes
+   - Eliminar direcciones
+   - Establecer una dirección como predeterminada
+   - Organizar direcciones por tipo (casa, trabajo, etc.)
+
+Preferencias de Cuenta
+1. En la sección de perfil, vaya a "Preferencias"
+2. Configure:
+   - Idioma preferido
+   - Formato de moneda
+   - Notificaciones por correo electrónico
+   - Suscripción a newsletters
+   - Recordatorio de productos vistos
+
+
+HISTORIAL DE PEDIDOS
+
+Acceder al Historial
+1. Haga clic en su foto de perfil o ícono de usuario
+2. Seleccione "Mis Pedidos"
+3. Vea el historial completo de sus pedidos con detalles
+
+Estados de Pedido
+- Pendiente: Pedido recibido pero no procesado
+- Procesando: Pedido en preparación
+- Enviado: Pedido despachado
+- Entregado: Pedido recibido por el cliente
+- Cancelado: Pedido cancelado
+
+Detalles del Pedido
+- Número de pedido y fecha
+- Productos comprados con cantidades y precios
+- Dirección de envío
+- Método de pago
+- Costo de envío
+- Total del pedido
+- Cupones aplicados
+- Estado actual del pedido
+- Opciones para contactar soporte
+
+Reabrir Pedido
+1. En la página de detalles del pedido, busque la opción "Reabrir Pedido"
+2. Esto agregará nuevamente los mismos productos al carrito
+3. Puede modificar cantidades o eliminar productos antes de pagar
+
+Devoluciones y Reembolsos
+1. En la página de detalles del pedido, busque la opción "Solicitar Devolución"
+2. Complete el formulario con motivo y detalles
+3. Adjunte fotos si es necesario
+4. Espere confirmación del equipo de soporte
+
+
+RESEÑAS DE PRODUCTOS
+
+Dejar una Reseña
+1. Vaya a "Mis Pedidos" en su perfil
+2. Seleccione un pedido entregado
+3. Haga clic en "Dejar Reseña" para cualquier producto
+4. Califique con estrellas (1-5)
+5. Escriba un comentario descriptivo
+6. Incluya fotos si lo desea
+7. Envíe su reseña
+
+Ver Reseñas
+- Las reseñas de productos son visibles públicamente en la página de detalles del producto
+- Puede ver calificaciones promedio y comentarios de otros clientes
+- Las reseñas incluyen nombre de usuario, fecha y detalles del producto
+
+Editar Reseñas
+1. Vaya a "Mis Reseñas" en su perfil
+2. Seleccione la reseña que desea editar
+3. Modifique la calificación o comentario
+4. Guarde los cambios
+
+Eliminar Reseñas
+1. Vaya a "Mis Reseñas" en su perfil
+2. Seleccione la reseña que desea eliminar
+3. Confirme que desea eliminarla
+4. Tenga en cuenta que esta acción no se puede deshacer
+
+
+CUPONES Y PROMOCIONES
+
+Ver Cupones Disponibles
+1. Haga clic en su ícono de usuario
+2. Seleccione "Mis Cupones"
+3. Vea todos los cupones disponibles
+4. Revise fechas de vencimiento y condiciones
+
+Cómo Usar Cupones
+1. En la página del carrito, ingrese el código del cupón
+2. Haga clic en "Aplicar"
+3. El descuento se reflejará inmediatamente
+4. El cupón se mantendrá durante todo el proceso de compra
+
+Tipos de Cupones
+- Porcentaje: Descuento porcentual sobre el total
+- Monto Fijo: Descuento en dinero fijo
+- Envío Gratis: Exención del costo de envío
+- Compra Mínima: Requiere un monto mínimo para aplicar
+
+Cupones Recomendados
+1. Revise cupones recomendados basados en su historial de compras
+2. Reciba notificaciones cuando cupones especiales estén disponibles
+3. Participe en programas de fidelidad para obtener cupones exclusivos
+
+
+BLOG Y CONTENIDO ADICIONAL
+
+Navegar por el Blog
+1. Vaya a la sección "Blog" en el menú principal
+2. Explore artículos sobre moda, tendencias y consejos de estilo
+3. Lea sobre nuevos productos y lanzamientos
+4. Comparta artículos que le gusten
+
+Categorías del Blog
+- Tendencias de Moda: Estilo actual y consejos
+- Guías de Estilo: Cómo combinar accesorios
+- Productos Destacados: Presentaciones de nuevos moños
+- Consejos de Cuidado: Mantenimiento de accesorios
+- Historias de Clientes: Inspiración y testimonios
+
+Comentarios en el Blog
+1. Regístrese o inicie sesión para comentar
+2. Deje comentarios constructivos y respetuosos
+3. Responda a otros comentarios si desea
+4. Reciba notificaciones de respuestas a sus comentarios
+
+
+CONTACTO CON EL SOPORTE
+
+Formulario de Contacto
+1. Navegue a la página "Contacto" en el menú principal
+2. Complete el formulario con:
+   - Su nombre
+   - Correo electrónico
+   - Asunto
+   - Mensaje detallado
+   - Número de pedido si aplica
+3. Haga clic en "Enviar Mensaje"
+
+Información de Contacto
+- Teléfono: +1 (555) 123-4567 (Lun - Vie, 9:00 AM - 6:00 PM)
+- Email: info@psgshop.com (Respuesta en 24 horas hábiles)
+- Chat en Vivo: Disponible en horario laboral
+- Dirección: Calle Principal 123, Cajamarca, Tolima, Colombia
+
+Horarios de Atención
+- Lunes a Viernes: 9:00 AM - 6:00 PM
+- Sábados: 10:00 AM - 4:00 PM
+- Domingos y Festivos: Cerrado
+
+Canales de Soporte
+- Correo Electrónico: info@psgshop.com
+- Formulario Web: Página de contacto
+- Redes Sociales: Facebook, Instagram, Twitter
+- Chat en Vivo: Disponible en el sitio web
+
+
+PREGUNTAS FRECUENTES
+
+¿Cómo puedo rastrear mi pedido?
+Puede ver el estado de sus pedidos en la sección "Mis Pedidos" de su cuenta. Una vez que su pedido haya sido enviado, se le proporcionará un número de seguimiento.
+
+¿Cuáles son los métodos de pago disponibles?
+Aceptamos pagos a través de PayPal, tarjetas de crédito/débito y pago contra entrega en efectivo.
+
+¿Cuánto tiempo tarda el envío?
+El tiempo de envío depende de su ubicación. Generalmente los pedidos se procesan en 1-2 días hábiles y el envío toma de 2-5 días hábiles.
+
+¿Puedo devolver un producto?
+Sí, aceptamos devoluciones dentro de los 30 días posteriores a la compra. El producto debe estar en su estado original sin usar. Contacte a nuestro equipo de atención al cliente para iniciar el proceso de devolución.
+
+¿Cómo sé si un producto está disponible?
+La disponibilidad se muestra claramente en la página de cada producto. Si un producto está agotado, se indicará como "Agotado".
+
+¿Ofrecen envío internacional?
+Actualmente solo ofrecemos envío dentro del país. Para envíos internacionales, por favor contáctenos para verificar disponibilidad.
+
+¿Cómo puedo contactar al servicio al cliente?
+Puede contactarnos a través del formulario en la página "Contacto", chat en vivo, o llamando a nuestro número de atención al cliente.
+
+¿Puedo cambiar mi dirección de envío después de realizar un pedido?
+Si su pedido aún no ha sido procesado, puede contactar a nuestro equipo de atención al cliente para solicitar un cambio de dirección.
+
+¿Cómo me registro para recibir ofertas especiales?
+Al crear una cuenta en nuestra tienda, automáticamente se suscribirá a nuestro boletín con ofertas especiales y promociones.
+
+¿Qué hago si recibo un producto dañado?
+Contacte a nuestro equipo de atención al cliente inmediatamente con fotos del producto dañado. Le ayudaremos a resolver la situación con un reemplazo o reembolso.
+
+¿Puedo cancelar mi pedido?
+Puede cancelar su pedido siempre que aún no haya sido enviado. Contacte a soporte tan pronto como posible para solicitar la cancelación.
+
+¿Cómo cambio mi contraseña?
+Vaya a su perfil, seleccione la pestaña "Seguridad" y use la opción "Cambiar Contraseña".
+
+¿Puedo tener múltiples direcciones?
+Sí, puede guardar y gestionar múltiples direcciones en su perfil.
+
+
+SOLUCIÓN DE PROBLEMAS
+
+Problemas Comunes
+
+1. No puedo iniciar sesión
+   - Verifique que su correo y contraseña sean correctos
+   - Asegúrese de que su cuenta esté verificada
+   - Intente restablecer su contraseña
+   - Limpie la caché y cookies del navegador
+
+2. El carrito aparece vacío después de iniciar sesión
+   - Los carritos se guardan por usuario, asegúrese de haber iniciado sesión antes de agregar productos
+   - Verifique que no haya iniciado sesión en otra pestaña
+   - Intente actualizar la página
+
+3. No puedo completar un pago
+   - Verifique que toda la información de envío esté completa
+   - Asegúrese de que su método de pago sea válido
+   - Compruebe que tenga conexión a internet estable
+   - Verifique que el monto no exceda el límite de su método de pago
+
+4. Las imágenes no se cargan
+   - Actualice la página
+   - Verifique su conexión a internet
+   - Intente en un navegador diferente
+   - Deshabilite extensiones de bloqueo de anuncios
+
+5. Problemas con cupones
+   - Verifique que el código sea correcto
+   - Asegúrese de que el cupón aún sea válido
+   - Confirme que el cupón esté activo
+   - Revise las condiciones de uso del cupón
+
+6. Producto no disponible
+   - El stock puede haber cambiado mientras usted navegaba
+   - Use la función "Avísame cuando esté disponible"
+   - Busque productos similares en la misma categoría
+
+7. Error en la página
+   - Actualice la página
+   - Limpie la caché del navegador
+   - Intente en un navegador diferente
+   - Verifique que JavaScript esté habilitado
+
+8. Problemas con la lista de deseos
+   - Asegúrese de estar conectado
+   - Verifique que el producto aún esté disponible
+   - Intente recargar la página
+
+Pasos para Resolver Problemas
+
+1. Actualizar la Página: Presione Ctrl+F5 para forzar la recarga
+2. Cerrar Sesión y Volver a Iniciar: Esto puede resolver problemas de sesión
+3. Limpiar Caché: Elimine datos temporales del navegador
+4. Probar en Otro Navegador: Para determinar si es un problema específico
+5. Verificar Conexión: Asegúrese de tener una conexión estable a internet
+
+Contacto para Soporte
+Si experimenta problemas que no puede resolver:
+1. Use el formulario de contacto en la página "Contacto"
+2. Envíe un correo a nuestro equipo de soporte
+3. Llame a nuestro número de atención al cliente
+4. Use el chat en vivo si está disponible
+5. Visite nuestras redes sociales para soporte adicional
+
+Información para Soporte
+Cuando contacte al soporte, proporcione:
+- Descripción detallada del problema
+- Pasos que siguió antes del problema
+- Capturas de pantalla si es posible
+- Navegador y versión que está usando
+- Sistema operativo
+- Número de pedido si aplica
+- Fecha y hora del problema
+
+---
+Versión del Manual: 1.0
+Fecha de Publicación: Febrero 2026
+Actualizado: Febrero 2026
+Contacto: info@psgshop.com
