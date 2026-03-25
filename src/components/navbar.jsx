@@ -6,8 +6,6 @@ import { useWishlist } from '../context/WishlistContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { 
-  FaCartShopping, 
-  FaRegHeart, 
   FaRegUser, 
   FaGear, 
   FaList, 
@@ -19,6 +17,7 @@ import {
   FaBookOpen, 
   FaEnvelope 
 } from "react-icons/fa6";
+import { FiHeart, FiShoppingCart } from "react-icons/fi";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -71,8 +70,8 @@ const Navbar = () => {
     { to: '/shop', label: 'Productos', icon: FaBagShopping },
     { to: '/blog', label: 'Sobre Nosotros', icon: FaBookOpen },
     { to: '/contact', label: 'Contacto', icon: FaEnvelope },
-    { to: '/cart', label: 'Carrito', icon: FaCartShopping },
-    { to: '/wishlist', label: 'Favoritos', icon: FaRegHeart },
+    { to: '/cart', label: 'Carrito', icon: FiShoppingCart },
+    { to: '/wishlist', label: 'Favoritos', icon: FiHeart },
   ];
 
   return (
@@ -122,12 +121,12 @@ const Navbar = () => {
             {/* Wishlist */}
             <Link
               to="/wishlist"
-              className="flex relative justify-center items-center w-9 h-9 text-gray-600 rounded-full transition-all duration-150 hover:text-black hover:bg-gray-100"
+              className="flex relative justify-center items-center w-8 h-8 text-gray-800 rounded-full transition-all duration-150 hover:bg-gray-100"
               aria-label="Lista de deseos"
             >
-              <FaRegHeart size={18} />
+              <FiHeart size={16} strokeWidth={2} />
               {wishlistItemCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-black rounded-full">
+                <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-[10px] font-semibold text-white bg-black rounded-full transform translate-x-1 -translate-y-1 shadow-sm">
                   {wishlistItemCount}
                 </span>
               )}
@@ -136,12 +135,12 @@ const Navbar = () => {
             {/* Cart */}
             <Link
               to="/cart"
-              className="flex relative justify-center items-center w-9 h-9 text-gray-600 rounded-full transition-all duration-150 hover:text-black hover:bg-gray-100"
+              className="flex relative justify-center items-center w-8 h-8 text-gray-800 rounded-full transition-all duration-150 hover:bg-gray-100"
               aria-label="Carrito"
             >
-              <FaCartShopping size={18} />
+              <FiShoppingCart size={16} strokeWidth={2} />
               {cartItemCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-black rounded-full">
+                <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-[10px] font-semibold text-white bg-black rounded-full transform translate-x-1 -translate-y-1 shadow-sm">
                   {cartItemCount}
                 </span>
               )}
