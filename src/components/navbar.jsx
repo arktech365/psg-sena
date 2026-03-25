@@ -129,9 +129,9 @@ const Navbar = () => {
                 to="/wishlist"
                 className="p-2 rounded-xl transition-all duration-200 relative group text-slate-600 hover:text-black hover:bg-slate-50"
               >
-                <FaRegHeart size={18} />
+                <FaRegHeart size={18} strokeWidth={1.5} />
                 {wishlistItemCount > 0 && (
-                  <span className="absolute top-1 right-1 flex items-center justify-center min-w-[16px] h-4 px-1 bg-black text-white text-[8px] font-bold rounded-full border-2 border-white shadow-sm">
+                  <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 bg-black text-white text-[9px] font-bold rounded-full shadow-sm animate-in zoom-in-50 duration-300">
                     {wishlistItemCount}
                   </span>
                 )}
@@ -142,9 +142,9 @@ const Navbar = () => {
                 to="/cart"
                 className="p-2 rounded-xl transition-all duration-200 relative group text-slate-600 hover:text-black hover:bg-slate-50"
               >
-                <FiShoppingBag size={18} />
+                <FiShoppingBag size={18} strokeWidth={2} />
                 {cartItemCount > 0 && (
-                  <span className="absolute top-1 right-1 flex items-center justify-center min-w-[16px] h-4 px-1 bg-indigo-600 text-white text-[8px] font-bold rounded-full border-2 border-white shadow-sm">
+                  <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 bg-indigo-600 text-white text-[9px] font-bold rounded-full shadow-sm animate-in zoom-in-50 duration-300">
                     {cartItemCount}
                   </span>
                 )}
@@ -240,6 +240,28 @@ const Navbar = () => {
         </div>
 
         <nav className="flex-1 overflow-auto p-4">
+           {/* Mobile Quick Actions */}
+           <div className="flex gap-2 mb-6">
+              <Link to="/wishlist" onClick={toggleMenu} className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-50 rounded-xl relative">
+                  <FaRegHeart size={16} className="text-slate-600" />
+                  <span className="text-[10px] font-bold text-slate-700">Favoritos</span>
+                  {wishlistItemCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 bg-black text-white text-[8px] font-bold rounded-full shadow-sm">
+                      {wishlistItemCount}
+                    </span>
+                  )}
+              </Link>
+              <Link to="/cart" onClick={toggleMenu} className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-50 rounded-xl relative">
+                  <FiShoppingBag size={16} className="text-slate-600" />
+                  <span className="text-[10px] font-bold text-slate-700">Carrito</span>
+                  {cartItemCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 bg-indigo-600 text-white text-[8px] font-bold rounded-full shadow-sm">
+                      {cartItemCount}
+                    </span>
+                  )}
+              </Link>
+           </div>
+
            <span className="block text-[9px] font-bold text-slate-300 uppercase tracking-[0.2em] mb-4 px-2">Menu</span>
            <ul className="space-y-1">
               {navLinks.map(({ to, label, icon }) => (
