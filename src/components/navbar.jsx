@@ -80,8 +80,8 @@ const Navbar = () => {
       <header className="sticky top-0 z-50 bg-white border-b border-gray-100" style={{ fontFamily: 'Inter, sans-serif' }}>
         <nav className="flex justify-between items-center px-4 mx-auto max-w-7xl h-16">
 
-          {/* Left: hamburger + Logo */}
-          <div className="flex gap-3 items-center">
+          {/* Left: Logo (Inspired by reference) */}
+          <div className="flex items-center gap-6">
             <button
               className="text-gray-600 transition-colors duration-150 hover:text-black md:hidden"
               onClick={toggleMenu}
@@ -90,27 +90,25 @@ const Navbar = () => {
               <FaBars size={20} />
             </button>
 
-            <Link to="/home" className="flex items-center gap-0.5 select-none" aria-label="PSG Shop - Inicio">
-              <span className="text-xl font-black tracking-tight text-black">PSG</span>
-              <span className="w-1 h-1 mx-1 rounded-full bg-black inline-block mb-0.5" />
-              <span className="text-xs font-light tracking-widest text-gray-500 uppercase">SHOP</span>
+            <Link to="/home" className="flex items-center gap-2 group select-none">
+              <div className="w-8 h-8 bg-[#1e147e] rounded-lg flex items-center justify-center text-white shadow-sm group-hover:bg-indigo-700 transition-all">
+                <span className="font-black text-[10px]">P</span>
+              </div>
+              <span className="text-xl font-bold tracking-tight text-[#1e147e] group-hover:text-indigo-600 transition-colors">psg shop</span>
             </Link>
           </div>
 
-          {/* Center: desktop nav links */}
-          <ul className="hidden gap-1 items-center md:flex">
+          {/* Center: Desktop Nav Links (Inspired by reference) */}
+          <ul className="hidden md:flex items-center gap-8">
             {navLinks.map(({ to, label }) => (
               <li key={to}>
                 <Link
                   to={to}
-                  className={`relative px-3 py-5 text-sm font-medium block transition-colors duration-200 group ${
-                    isActiveLink(to) ? 'text-black' : 'text-gray-500 hover:text-black'
+                  className={`text-sm font-semibold transition-all duration-200 ${
+                    isActiveLink(to) ? 'text-[#1e147e]' : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
                   {label}
-                  <span className={`absolute bottom-0 left-3 right-3 h-0.5 bg-black rounded-full transition-transform duration-200 origin-left ${
-                    isActiveLink(to) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                  }`} />
                 </Link>
               </li>
             ))}
@@ -252,10 +250,11 @@ const Navbar = () => {
       >
         {/* Sidebar header */}
         <div className="flex justify-between items-center px-5 py-4 border-b border-gray-100">
-          <Link to="/home" onClick={toggleMenu} className="flex items-center gap-0.5 select-none">
-            <span className="text-lg font-black tracking-tight text-black">PSG</span>
-            <span className="inline-block mx-1 w-1 h-1 bg-black rounded-full" />
-            <span className="text-[10px] font-light tracking-widest text-gray-500 uppercase">SHOP</span>
+          <Link to="/home" onClick={toggleMenu} className="flex items-center gap-2 group select-none">
+            <div className="w-8 h-8 bg-[#1e147e] rounded-lg flex items-center justify-center text-white">
+              <span className="font-black text-[10px]">P</span>
+            </div>
+            <span className="text-xl font-bold tracking-tight text-[#1e147e]">psg shop</span>
           </Link>
           <button onClick={toggleMenu} className="text-gray-500 transition-colors hover:text-black">
             <FaXmark size={20} />
