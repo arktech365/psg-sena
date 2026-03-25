@@ -600,7 +600,7 @@ const ModernAdminDashboard = () => {
       <div className="flex flex-col flex-1 min-h-0">
         
         {/* LUXURY TOP NAV */}
-        <header className={`flex sticky top-0 justify-between items-center px-4 md:px-8 py-4 md:py-5 border-b backdrop-blur-md z-[100] ${headerBg}`}>
+        <header className={`flex sticky top-0 justify-between items-center px-4 py-4 border-b backdrop-blur-md md:px-8 md:py-5 z-[100] ${headerBg}`}>
           <div className="flex gap-6 items-center">
             <button onClick={() => setSidebarOpen(true)} className="p-2 lg:hidden text-slate-500"><FiMenu size={24} /></button>
             <div>
