@@ -269,7 +269,7 @@ const Home = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           // Redirect to login page with hash routing
-          window.location.href = '/psg-shop/#/login';
+          window.location.href = '/psg-official/#/login';
         }
       });
       return;
@@ -318,7 +318,7 @@ const Home = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           // Redirect to login page with hash routing
-          window.location.href = '/psg-shop/#/login';
+          window.location.href = '/psg-official/#/login';
         }
       });
       return;
@@ -500,7 +500,7 @@ const Home = () => {
           <div className="mt-12 md:mt-0 relative group-hover:rotate-1 transition-transform duration-700">
             <div className="absolute inset-0 bg-indigo-500 rounded-[2rem] blur-2xl opacity-10 group-hover:opacity-20 transition-opacity" />
             <img
-              src="/psg-shop/mejores.jpg"
+              src="/psg-official/mejores.jpg"
               alt="Elegante colección"
               className="relative object-cover w-64 md:w-80 h-auto rounded-[2rem] shadow-2xl grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
               onError={(e) => {
@@ -530,7 +530,7 @@ const Home = () => {
               </Link>
             </div>
             <img
-              src="/psg-shop/counteer.jpg"
+              src="/psg-official/counteer.jpg"
               alt="Moño"
               className="object-contain w-24 h-24 ml-4 rounded-2xl group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
               onError={(e) => {
@@ -557,7 +557,7 @@ const Home = () => {
               </Link>
             </div>
             <img
-              src="/psg-shop/discount.jpg"
+              src="/psg-official/discount.jpg"
               alt="Oferta"
               className="object-contain w-24 h-24 ml-4 rounded-2xl group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
               onError={(e) => {
@@ -646,7 +646,7 @@ const Home = () => {
                 >
                   {/* Category Image */}
                   <img
-                    src={category.imageUrl || '/psg-shop/clasicos.jpg'}
+                    src={category.imageUrl || '/psg-official/clasicos.jpg'}
                     alt={category.name}
                     className="absolute inset-0 object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
                     onError={(e) => {
@@ -882,7 +882,7 @@ const Home = () => {
             <div className="group relative bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col">
               <div className="h-72 overflow-hidden relative">
                 <img 
-                  src="/psg-shop/trayectoria.jpg" 
+                  src="/psg-official/trayectoria.jpg" 
                   alt="Nuestra Trayectoria" 
                   className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                 />
@@ -912,7 +912,7 @@ const Home = () => {
             <div className="group relative bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col">
               <div className="h-72 overflow-hidden relative">
                 <img 
-                  src="/psg-shop/compromiso.jpg" 
+                  src="/psg-official/compromiso.jpg" 
                   alt="Compromiso" 
                   className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                 />
@@ -942,7 +942,7 @@ const Home = () => {
             <div className="group relative bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 flex flex-col">
               <div className="h-72 overflow-hidden relative">
                 <img 
-                  src="/psg-shop/calidad.jpg" 
+                  src="/psg-official/calidad.jpg" 
                   alt="Equipo" 
                   className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                 />

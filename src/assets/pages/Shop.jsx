@@ -211,7 +211,7 @@ const Shop = () => {
         confirmButtonColor: '#111827',
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
-      }).then(result => { if (result.isConfirmed) window.location.href = '/psg-shop/#/login'; });
+      }).then(result => { if (result.isConfirmed) window.location.href = '/psg-official/#/login'; });
       return false;
     }
     return true;
