@@ -345,14 +345,13 @@ const CouponManager = ({ theme = 'light' }) => {
           {!loading && coupons.length === 0 && <div className="py-20 text-center text-slate-400 font-bold uppercase tracking-widest">Sin resultados registrados.</div>}
         </div>
 
-      {/* STUNNING MODAL */}
       {isModalOpen && (
-        <div className={`fixed inset-0 z-50 flex items-center justify-center p-6 ${modalOverlay} animate-in fade-in duration-300`}>
+        <div className={`fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-6 ${modalOverlay} animate-in fade-in duration-300`}>
           <div 
-            className={`w-full max-w-xl rounded-[2.5rem] border shadow-2xl relative animate-in zoom-in-95 duration-300 p-1 md:p-2 ${bgCard}`}
+            className={`w-full max-w-xl max-h-[95vh] overflow-y-auto rounded-[2rem] md:rounded-[2.5rem] border shadow-2xl relative animate-in zoom-in-95 duration-300 p-1 md:p-2 ${bgCard}`}
           >
-            <div className={`p-10 ${isDark ? 'bg-[#1a1b26]' : 'bg-white'} rounded-[2.4rem]`}>
-              <div className="flex items-center justify-between mb-10">
+            <div className={`p-6 md:p-10 ${isDark ? 'bg-[#1a1b26]' : 'bg-white'} rounded-[1.9rem] md:rounded-[2.4rem]`}>
+              <div className="flex items-center justify-between mb-8 md:mb-10">
                 <div>
                   <h3 className={`text-2xl font-black tracking-tight ${textTitle}`}>
                     {formData.id ? 'Refinar Cupón' : 'Propulsar Campaña'}
@@ -367,8 +366,8 @@ const CouponManager = ({ theme = 'light' }) => {
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
                   <div className="space-y-4">
                     <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Código Promocional</label>
                     <input
@@ -436,13 +435,13 @@ const CouponManager = ({ theme = 'light' }) => {
                   </div>
                 </div>
 
-                <div className={`p-6 rounded-[1.5rem] border ${isDark ? 'bg-indigo-500/5 border-indigo-500/10' : 'bg-indigo-50 border-indigo-100'} flex items-center justify-between`}>
+                <div className={`p-4 md:p-6 rounded-[1.5rem] border ${isDark ? 'bg-indigo-500/5 border-indigo-500/10' : 'bg-indigo-50 border-indigo-100'} flex items-center justify-between`}>
                   <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isDark ? 'bg-slate-900 text-indigo-400' : 'bg-white text-indigo-600 shadow-sm'}`}>
-                      <FiCheckCircle size={22} />
+                    <div className={`w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center ${isDark ? 'bg-slate-900 text-indigo-400' : 'bg-white text-indigo-600 shadow-sm'}`}>
+                      <FiCheckCircle size={20} className="md:w-5 md:h-5" />
                     </div>
                     <div>
-                      <p className={`text-sm font-black ${textTitle}`}>Vínculo Activo</p>
+                      <p className={`text-xs md:text-sm font-black ${textTitle}`}>Vínculo Activo</p>
                       <p className="text-[10px] opacity-60">El cupón será canjeable inmediatamente.</p>
                     </div>
                   </div>
@@ -455,10 +454,10 @@ const CouponManager = ({ theme = 'light' }) => {
                   />
                 </div>
 
-                <div className="flex gap-4 pt-6">
+                <div className="flex gap-4 pt-4 md:pt-6">
                   <button 
                     type="submit"
-                    className="flex-1 py-5 bg-indigo-600 text-white rounded-[1.5rem] font-black text-base transition-all hover:bg-indigo-700 hover:shadow-2xl hover:shadow-indigo-500/30 active:scale-95"
+                    className="flex-1 py-4 md:py-5 bg-indigo-600 text-white rounded-[1.2rem] md:rounded-[1.5rem] font-black text-sm md:text-base transition-all hover:bg-indigo-700 hover:shadow-2xl hover:shadow-indigo-500/30 active:scale-95"
                   >
                     {formData.id ? 'Guardar Cambios' : 'Lanzar Cupón 🔥'}
                   </button>
