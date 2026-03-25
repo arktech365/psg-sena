@@ -156,53 +156,54 @@ const CouponManager = ({ theme = 'light' }) => {
     <div className={`p-4 md:p-8 min-h-screen ${isDark ? 'bg-[#111218] text-slate-200' : 'bg-slate-50 text-slate-900'}`} style={{ fontFamily: 'Inter, sans-serif' }}>
       
       {/* Header with Title & Action */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-12">
         <div>
-          <h1 className={`text-3xl font-black tracking-tight ${textTitle}`}>Gestión de Cupones</h1>
-          <p className={textSub}>Crea, edita y monitorea los beneficios de tu tienda.</p>
+          <h1 className={`text-2xl md:text-3xl font-black tracking-tight ${textTitle}`}>Gestión de Cupones</h1>
+          <p className={`${textSub} text-xs md:text-sm`}>Crea, edita y monitorea los beneficios de tu tienda.</p>
         </div>
         <button
           onClick={() => openForm()}
-          className="group relative flex items-center justify-center gap-2 px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold transition-all hover:bg-indigo-700 hover:shadow-indigo-500/20 hover:shadow-2xl active:scale-95 overflow-hidden"
+          className="group relative flex items-center justify-center gap-2 px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold transition-all hover:bg-indigo-700 hover:shadow-indigo-500/20 hover:shadow-2xl active:scale-95 overflow-hidden w-full md:w-auto"
         >
           <div className="absolute inset-x-0 bottom-0 h-1 bg-white/20 transform translate-y-1 group-hover:translate-y-0 transition-transform"></div>
-          <FiPlus className="text-xl" /> Nuevo Beneficio
+          <FiPlus className="text-lg" /> Nuevo Beneficio
         </button>
       </div>
 
       {/* KPI Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 mb-8 md:mb-12">
         {[
           { label: 'Cupones Totales', val: stats.total, icon: FiGrid, color: 'indigo' },
           { label: 'Vigentes Ahora', val: stats.active, icon: FiCheckCircle, color: 'emerald' },
           { label: 'Expirados', val: stats.expired, icon: FiClock, color: 'rose' },
         ].map((s, idx) => (
-          <div key={idx} className={`${bgCard} p-8 rounded-[2rem] border relative overflow-hidden group`}>
+          <div key={idx} className={`${bgCard} p-6 md:p-8 rounded-3xl md:rounded-[2rem] border relative overflow-hidden group`}>
             <div className={`absolute top-0 right-0 w-32 h-32 -mr-12 -mt-12 bg-${s.color}-500/5 rounded-full transition-transform group-hover:scale-150`}></div>
-            <div className="relative flex items-center gap-6">
-              <div className={`p-4 rounded-2xl ${s.color === 'indigo' ? 'bg-indigo-500/10 text-indigo-500' : s.color === 'emerald' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}>
-                <s.icon size={28} />
+            <div className="relative flex items-center gap-5 md:gap-6">
+              <div className={`p-3 md:p-4 rounded-2xl ${s.color === 'indigo' ? 'bg-indigo-500/10 text-indigo-500' : s.color === 'emerald' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}>
+                <s.icon size={24} className="md:w-[28px] md:h-[28px]" />
               </div>
               <div>
-                <span className={`text-[11px] font-black uppercase tracking-[0.2em] ${textSub}`}>{s.label}</span>
-                <h4 className={`text-4xl font-black mt-1 ${textTitle}`}>{s.val}</h4>
+                <span className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] ${textSub}`}>{s.label}</span>
+                <h4 className={`text-2xl md:text-4xl font-black mt-1 ${textTitle}`}>{s.val}</h4>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Main Table Card */}
-      <div className={`${bgCard} rounded-[2rem] border overflow-hidden`}>
-        <div className="px-10 py-8 border-b border-inherit bg-inherit flex items-center justify-between">
-          <h3 className={`text-xl font-bold ${textTitle}`}>Catálogo de Cupones</h3>
+      {/* Main Table / Cards Card */}
+      <div className={`${bgCard} rounded-3xl md:rounded-[2rem] border overflow-hidden`}>
+        <div className="px-6 md:px-10 py-6 md:py-8 border-b border-inherit bg-inherit flex items-center justify-between">
+          <h3 className={`text-lg md:text-xl font-bold ${textTitle}`}>Catálogo de Cupones</h3>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">En tiempo real</span>
+            <span className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden sm:inline">En tiempo real</span>
           </div>
         </div>
 
-        <div className="overflow-x-auto px-4 py-4">
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-x-auto px-4 py-4">
           <table className="w-full text-left">
             <thead>
               <tr className={`text-[10px] font-black uppercase tracking-[0.2em] ${textSub}`}>
@@ -280,10 +281,69 @@ const CouponManager = ({ theme = 'light' }) => {
               })}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View (Cards) */}
+        <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800/10">
+          {!loading && coupons.map((c) => {
+            const expired = isExpired(c.expiryDate);
+            return (
+              <div key={c.id} className="p-6 space-y-4 hover:bg-indigo-500/5 transition-all">
+                <div className="flex justify-between items-start">
+                  <div className="min-w-0">
+                    <span className={`font-black text-xl block tracking-tight ${textTitle}`}>{c.code}</span>
+                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">ID: {c.id.slice(-6).toUpperCase()}</span>
+                  </div>
+                  {expired ? (
+                    <span className="px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest bg-rose-500/10 text-rose-500">Expirado</span>
+                  ) : c.isActive ? (
+                    <span className="px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-500">Vigente</span>
+                  ) : (
+                    <span className="px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest bg-slate-500/10 text-slate-500">Inactivo</span>
+                  )}
+                </div>
+
+                <div className="flex justify-between items-center bg-slate-500/5 p-4 rounded-2xl">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${c.discountType === 'percentage' ? 'bg-indigo-500/10 text-indigo-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                      {c.discountType === 'percentage' ? <FiPercent size={14} /> : <FiDollarSign size={14} />}
+                    </div>
+                    <div>
+                      <p className="text-[8px] font-black uppercase text-slate-400 tracking-widest mb-0.5">Valor</p>
+                      <span className={`font-black text-base ${textTitle}`}>
+                        {c.discountType === 'percentage' ? `${c.discountValue}%` : formatCurrency(c.discountValue)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[8px] font-black uppercase text-slate-400 tracking-widest mb-0.5">Expiración</p>
+                    <span className={`text-[10px] font-bold ${expired ? 'text-rose-400' : textTitle}`}>
+                      {formatDate(c.expiryDate)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <button 
+                    onClick={() => openForm(c)} 
+                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-xs transition-all ${isDark ? 'bg-slate-800 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}
+                  >
+                    <FiEdit3 size={16} /> Editar
+                  </button>
+                  <button 
+                    onClick={() => deleteCoupon(c.id, c.code)} 
+                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-xs transition-all ${isDark ? 'bg-slate-800/50 text-rose-400' : 'bg-rose-50 text-rose-600'}`}
+                  >
+                    <FiTrash2 size={16} /> Eliminar
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
           {loading && <div className="py-20 text-center"><div className="w-12 h-12 border-4 border-indigo-500 border-b-transparent rounded-full animate-spin mx-auto"></div></div>}
           {!loading && coupons.length === 0 && <div className="py-20 text-center text-slate-400 font-bold uppercase tracking-widest">Sin resultados registrados.</div>}
         </div>
-      </div>
 
       {/* STUNNING MODAL */}
       {isModalOpen && (

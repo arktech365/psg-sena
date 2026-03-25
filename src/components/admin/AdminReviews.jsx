@@ -36,7 +36,7 @@ const AdminReviews = ({
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       
       {/* Header & Filter Zone */}
-      <div className={`${bgCard} p-8 md:p-10 rounded-[2.5rem] border flex flex-col xl:flex-row xl:items-center justify-between gap-8 relative overflow-hidden`}>
+      <div className={`${bgCard} p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border flex flex-col xl:flex-row xl:items-center justify-between gap-6 md:gap-8 relative overflow-hidden`}>
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
         
         <div className="relative">
@@ -44,8 +44,8 @@ const AdminReviews = ({
             <div className="w-8 h-1 bg-indigo-600 rounded-full"></div>
             <span className={`text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600`}>Feedback Moderation</span>
           </div>
-          <h2 className={`text-3xl font-black tracking-tight ${textTitle}`}>Moderación de Reseñas</h2>
-          <p className={`${textSub} mt-1 text-sm`}>Supervisa y gestiona la reputación de tus productos en el mercado.</p>
+          <h2 className={`text-2xl md:text-3xl font-black tracking-tight ${textTitle}`}>Moderación de Reseñas</h2>
+          <p className={`${textSub} mt-1 text-xs md:text-sm`}>Supervisa y gestiona la reputación de tus productos en el mercado.</p>
         </div>
 
         <div className="flex flex-col md:flex-row items-center gap-4 relative">
@@ -53,7 +53,7 @@ const AdminReviews = ({
             <FiSearch className={`absolute left-5 top-1/2 -translate-y-1/2 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-indigo-400' : 'text-slate-400 group-focus-within:text-indigo-600'}`} />
             <input
               type="text"
-              placeholder="Buscar por producto o fecha..."
+              placeholder="Buscar por producto..."
               value={reviewSearchTerm}
               onChange={(e) => setReviewSearchTerm(e.target.value)}
               className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
@@ -64,9 +64,10 @@ const AdminReviews = ({
         </div>
       </div>
 
-      {/* Reviews Table Card */}
-      <div className={`${bgCard} rounded-[2.5rem] border overflow-hidden`}>
-        <div className="overflow-x-auto">
+      {/* Reviews Content Table / Cards */}
+      <div className={`${bgCard} rounded-3xl md:rounded-[2.5rem] border overflow-hidden`}>
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className={`text-[10px] font-black uppercase tracking-[0.2em] ${textSub} border-b border-inherit`}>
@@ -135,17 +136,71 @@ const AdminReviews = ({
               ))}
             </tbody>
           </table>
-          
-          {filteredReviews.length === 0 && (
-            <div className="py-24 text-center">
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${isDark ? 'bg-slate-800' : 'bg-slate-50'}`}>
-                <FiActivity size={32} className="opacity-20" />
-              </div>
-              <h3 className={`text-lg font-black ${textTitle}`}>Aún no hay reseñas</h3>
-              <p className={`${textSub} text-sm mt-2`}>Las opiniones de tus clientes aparecerán aquí una vez que comiencen a calificar.</p>
-            </div>
-          )}
         </div>
+
+        {/* Mobile View (Cards) */}
+        <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800/10">
+          {filteredReviews.map((r) => (
+            <div key={r.id} className="p-6 space-y-4 hover:bg-indigo-500/5 transition-all">
+              <div className="flex items-start justify-between">
+                <div className="flex gap-4">
+                  <div className={`w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center font-black shadow-inner ${
+                    isDark ? 'bg-slate-800 text-indigo-400' : 'bg-indigo-50 text-indigo-600'
+                  }`}>
+                     <FiMessageSquare size={16} />
+                  </div>
+                  <div className="min-w-0">
+                    <span className={`font-black text-sm block truncate tracking-tight ${textTitle}`}>{r.productName || 'N/A'}</span>
+                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">ID: {r.id.slice(-6).toUpperCase()}</span>
+                  </div>
+                </div>
+                <span className={`text-[9px] font-black uppercase tracking-widest ${textSub}`}>
+                  {formatDate(r.createdAt)}
+                </span>
+              </div>
+
+              <div className={`${isDark ? 'bg-slate-900/40' : 'bg-slate-50'} p-4 rounded-2xl space-y-3`}>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FiStar 
+                      key={star} 
+                      size={14}
+                      className={star <= r.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'} 
+                    />
+                  ))}
+                </div>
+                <p className={`text-sm leading-relaxed ${textTitle} opacity-80 italic`}>
+                  "{r.comment || 'Sin comentarios.'}"
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => openEditReviewModal(r)} 
+                  className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-xs transition-all ${isDark ? 'bg-slate-800 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}
+                >
+                  <FiEdit3 size={16} /> Moderar
+                </button>
+                <button 
+                  onClick={() => deleteReviewHandler(r.id)} 
+                  className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-xs transition-all ${isDark ? 'bg-slate-800/50 text-rose-400' : 'bg-rose-50 text-rose-600'}`}
+                >
+                  <FiTrash2 size={16} /> Eliminar
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {filteredReviews.length === 0 && (
+          <div className="py-24 text-center">
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${isDark ? 'bg-slate-800' : 'bg-slate-50'}`}>
+              <FiActivity size={32} className="opacity-20" />
+            </div>
+            <h3 className={`text-lg font-black ${textTitle}`}>Aún no hay reseñas</h3>
+            <p className={`${textSub} text-sm mt-2`}>Las opiniones de tus clientes aparecerán aquí una vez que comiencen a calificar.</p>
+          </div>
+        )}
       </div>
     </div>
   );

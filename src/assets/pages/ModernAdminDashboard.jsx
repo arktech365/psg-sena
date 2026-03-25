@@ -532,7 +532,7 @@ const ModernAdminDashboard = () => {
           </div>
         );
       default:
-        return <div className="p-10 text-center uppercase font-black text-slate-400">Section selection required.</div>;
+        return <div className="p-10 font-black text-center uppercase text-slate-400">Section selection required.</div>;
     }
   };
 
@@ -544,18 +544,18 @@ const ModernAdminDashboard = () => {
   const textSub = isDark ? 'text-slate-400' : 'text-slate-500';
 
   return (
-    <div className={`min-h-screen flex w-full overflow-hidden ${bgMain}`} style={{ fontFamily: 'Inter, sans-serif' }}>
+    <div className={`flex overflow-hidden w-full min-h-screen ${bgMain}`} style={{ fontFamily: 'Inter, sans-serif' }}>
       
       {/* SUCCESS/ERROR TOASTS */}
       <div className="fixed top-8 right-8 z-[200] space-y-4">
         {successMessage && (
-          <div className="px-6 py-4 bg-emerald-600 text-white rounded-2xl shadow-2xl flex items-center gap-3 animate-in slide-in-from-right-10 duration-500">
-            <FiCheck className="text-xl" /> <span className="text-sm font-black uppercase tracking-widest">{successMessage}</span>
+          <div className="flex gap-3 items-center px-6 py-4 text-white bg-emerald-600 rounded-2xl shadow-2xl duration-500 animate-in slide-in-from-right-10">
+            <FiCheck className="text-xl" /> <span className="text-sm font-black tracking-widest uppercase">{successMessage}</span>
           </div>
         )}
         {error && (
-          <div className="px-6 py-4 bg-rose-600 text-white rounded-2xl shadow-2xl flex items-center gap-3 animate-in slide-in-from-right-10 duration-500">
-            <FiX className="text-xl" /> <span className="text-sm font-black uppercase tracking-widest">{error}</span>
+          <div className="flex gap-3 items-center px-6 py-4 text-white bg-rose-600 rounded-2xl shadow-2xl duration-500 animate-in slide-in-from-right-10">
+            <FiX className="text-xl" /> <span className="text-sm font-black tracking-widest uppercase">{error}</span>
           </div>
         )}
       </div>
@@ -565,13 +565,13 @@ const ModernAdminDashboard = () => {
 
       {/* LUXURY SIDEBAR */}
       <aside className={`fixed lg:static inset-y-0 left-0 z-[150] w-72 ${sidebarBg} border-r transform transition-transform duration-500 ease-out lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex flex-col h-full pt-10 px-8 pb-10">
-          <div className="flex items-center justify-between mb-16">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center font-black italic shadow-2xl">P</div>
+        <div className="flex flex-col px-8 pt-10 pb-10 h-full">
+          <div className="flex justify-between items-center mb-16">
+            <div className="flex gap-3 items-center">
+              <div className="flex justify-center items-center w-10 h-10 italic font-black text-white bg-black rounded-xl shadow-2xl">P</div>
               <h1 className={`text-xl font-black tracking-tighter ${textTitle}`}>PSG ADMIN</h1>
             </div>
-            <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-2 text-slate-400"><FiX size={24} /></button>
+            <button onClick={() => setSidebarOpen(false)} className="p-2 lg:hidden text-slate-400"><FiX size={24} /></button>
           </div>
           
           <nav className="flex-1 space-y-1">
@@ -597,12 +597,12 @@ const ModernAdminDashboard = () => {
       </aside>
 
       {/* MAIN VIEWPORT */}
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex flex-col flex-1 min-h-0">
         
         {/* LUXURY TOP NAV */}
-        <header className={`sticky top-0 z-[100] ${headerBg} backdrop-blur-md border-b px-8 py-5 flex items-center justify-between`}>
-          <div className="flex items-center gap-6">
-            <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 text-slate-500"><FiMenu size={24} /></button>
+        <header className={`flex sticky top-0 justify-between items-center px-4 md:px-8 py-4 md:py-5 border-b backdrop-blur-md z-[100] ${headerBg}`}>
+          <div className="flex gap-6 items-center">
+            <button onClick={() => setSidebarOpen(true)} className="p-2 lg:hidden text-slate-500"><FiMenu size={24} /></button>
             <div>
               <h2 className={`text-sm font-black uppercase tracking-[0.2em] ${textTitle}`}>
                 {navItems.find(i => i.id === activeSection)?.label || 'Dashboard'}
@@ -615,20 +615,20 @@ const ModernAdminDashboard = () => {
             </div>
           </div>
           
-          <div className="flex items-center gap-6">
-            <button onClick={toggleTheme} className={`p-4 rounded-2xl transition-all active:scale-90 ${isDark ? 'bg-slate-800 text-amber-400' : 'bg-slate-100 text-indigo-600 shadow-sm'}`}>
+          <div className="flex gap-6 items-center">
+            <button onClick={toggleTheme} className={`p-4 rounded-2xl transition-all active:scale-90 ${isDark ? 'text-amber-400 bg-slate-800' : 'text-indigo-600 shadow-sm bg-slate-100'}`}>
               {theme === 'dark' ? <FiSun /> : <FiMoon />}
             </button>
             <div className="relative" ref={profileMenuRef}>
               <div 
                  onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                 className="flex items-center gap-4 cursor-pointer p-1 rounded-2xl transition-all hover:bg-slate-500/10 hover:scale-105 active:scale-95"
+                 className="flex gap-4 items-center p-1 rounded-2xl transition-all cursor-pointer hover:bg-slate-500/10 hover:scale-105 active:scale-95"
               >
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-white shadow-2xl transition-all ${isProfileMenuOpen ? 'ring-4 ring-indigo-500/20' : ''} ${isDark ? 'bg-indigo-600' : 'bg-black'}`}>
                   {currentUser?.email?.charAt(0).toUpperCase()}
                 </div>
-                <div className="hidden md:block text-left">
-                  <p className={`text-[12px] font-bold tracking-tight ${textTitle}`}>{currentUser?.email?.split('@')[0]}</p>
+                <div className="hidden text-left md:block">
+                  <p className={`font-bold tracking-tight text-[12px] ${textTitle}`}>{currentUser?.email?.split('@')[0]}</p>
                   <p className="text-[10px] font-bold text-slate-400 tracking-wider">Administrator</p>
                 </div>
               </div>
@@ -647,7 +647,7 @@ const ModernAdminDashboard = () => {
                       <div className={`h-[1px] mx-4 ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`} />
                       <button 
                          onClick={() => { handleLogout(); setIsProfileMenuOpen(false); }}
-                         className="flex items-center w-full gap-4 px-5 py-4 rounded-2xl transition-all text-rose-500 hover:bg-rose-500/10 text-sm font-bold tracking-tight"
+                         className="flex gap-4 items-center px-5 py-4 w-full text-sm font-bold tracking-tight text-rose-500 rounded-2xl transition-all hover:bg-rose-500/10"
                       >
                          <FiLogOut size={16} />
                          <span>Cerrar Sesión</span>
@@ -660,13 +660,13 @@ const ModernAdminDashboard = () => {
         </header>
         
         {/* MAIN SCROLLABLE AREA */}
-        <main className="flex-1 overflow-auto p-10 lg:p-14">
+        <main className="overflow-auto flex-1 p-4 md:p-10 lg:p-14">
           <div className="max-w-[1600px] mx-auto">
             {isAdmin ? renderContent() : (
-              <div className="flex flex-col items-center justify-center py-20">
-                <FiX className="text-rose-500 mb-4" size={48} />
-                <p className="text-xl font-black text-slate-400 uppercase tracking-widest">Acceso Denegado</p>
-                <button onClick={() => navigate('/')} className="mt-8 px-10 py-4 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest">Volver al Home</button>
+              <div className="flex flex-col justify-center items-center py-20">
+                <FiX className="mb-4 text-rose-500" size={48} />
+                <p className="text-xl font-black tracking-widest uppercase text-slate-400">Acceso Denegado</p>
+                <button onClick={() => navigate('/')} className="px-10 py-4 mt-8 text-xs font-black tracking-widest text-white uppercase bg-black rounded-2xl">Volver al Home</button>
               </div>
             )}
           </div>
@@ -696,12 +696,12 @@ const ModernAdminDashboard = () => {
       {reviewModalOpen && editingReview && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
           <div className={`w-full max-w-xl rounded-[2.5rem] border shadow-2xl relative animate-in zoom-in-95 duration-300 ${isDark ? 'bg-[#1a1b26] border-slate-800' : 'bg-white border-slate-100'} p-12`}>
-            <div className="mb-10 flex items-center justify-between">
+            <div className="flex justify-between items-center mb-10">
               <div>
                 <h3 className={`text-2xl font-black tracking-tight ${textTitle}`}>Moderación de Reseña</h3>
                 <p className={textSub}>Ajusta la calificación o el contenido del feedback.</p>
               </div>
-              <button onClick={() => setReviewModalOpen(false)} className="p-3 bg-slate-100 dark:bg-slate-800 rounded-2xl"><FiX/></button>
+              <button onClick={() => setReviewModalOpen(false)} className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800"><FiX/></button>
             </div>
             <form onSubmit={saveEditedReview} className="space-y-8">
               <div className="flex flex-col items-center">
@@ -716,9 +716,9 @@ const ModernAdminDashboard = () => {
               </div>
               <div className="space-y-3">
                 <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-1">Comentario Editado</label>
-                <textarea name="comment" rows={5} value={editingReview.comment} onChange={(e) => setEditingReview({...editingReview, comment: e.target.value})} className={`w-full px-6 py-4 rounded-2xl border transition-all ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
+                <textarea name="comment" rows={5} value={editingReview.comment} onChange={(e) => setEditingReview({...editingReview, comment: e.target.value})} className={`w-full px-6 py-4 rounded-2xl border transition-all ${isDark ? 'text-white bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
               </div>
-              <button type="submit" className="w-full py-5 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-600 transition-all">Guardar Cambios</button>
+              <button type="submit" className="py-5 w-full text-xs font-black tracking-widest text-white uppercase bg-black rounded-2xl transition-all hover:bg-indigo-600">Guardar Cambios</button>
             </form>
           </div>
         </div>
@@ -728,29 +728,29 @@ const ModernAdminDashboard = () => {
       {categoryModalOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
           <div className={`w-full max-w-xl rounded-[2.5rem] border shadow-2xl animate-in zoom-in-95 duration-300 ${isDark ? 'bg-[#1a1b26] border-slate-800' : 'bg-white border-slate-100'} p-12`}>
-            <div className="mb-10 flex items-center justify-between">
+            <div className="flex justify-between items-center mb-10">
               <div>
                 <h3 className={`text-2xl font-black tracking-tight ${textTitle}`}>{categoryModalMode === 'add' ? 'Nueva Colección' : 'Refinar Colección'}</h3>
                 <p className={textSub}>Define los parámetros de la categoría.</p>
               </div>
-              <button onClick={() => setCategoryModalOpen(false)} className="p-3 bg-slate-100 dark:bg-slate-800 rounded-2xl"><FiX/></button>
+              <button onClick={() => setCategoryModalOpen(false)} className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800"><FiX/></button>
             </div>
             <form onSubmit={categoryModalMode === 'add' ? createCategoryHandler : updateCategoryHandler} className="space-y-8">
               <div className="space-y-3">
                 <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-1">Título de Colección</label>
-                <input type="text" name="name" value={categoryModalMode === 'add' ? newCategory.name : editingCategory?.name} onChange={categoryModalMode === 'add' ? (e) => setNewCategory({...newCategory, name: e.target.value}) : (e) => setEditingCategory({...editingCategory, name: e.target.value})} className={`w-full px-6 py-4 rounded-2xl border ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`} required />
+                <input type="text" name="name" value={categoryModalMode === 'add' ? newCategory.name : editingCategory?.name} onChange={categoryModalMode === 'add' ? (e) => setNewCategory({...newCategory, name: e.target.value}) : (e) => setEditingCategory({...editingCategory, name: e.target.value})} className={`w-full px-6 py-4 rounded-2xl border ${isDark ? 'text-white bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900'}`} required />
               </div>
               <div className="space-y-3">
                 <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-1">Descripción Conceptual</label>
-                <textarea name="description" rows={3} value={categoryModalMode === 'add' ? newCategory.description : editingCategory?.description} onChange={categoryModalMode === 'add' ? (e) => setNewCategory({...newCategory, description: e.target.value}) : (e) => setEditingCategory({...editingCategory, description: e.target.value})} className={`w-full px-6 py-4 rounded-2xl border ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
+                <textarea name="description" rows={3} value={categoryModalMode === 'add' ? newCategory.description : editingCategory?.description} onChange={categoryModalMode === 'add' ? (e) => setNewCategory({...newCategory, description: e.target.value}) : (e) => setEditingCategory({...editingCategory, description: e.target.value})} className={`w-full px-6 py-4 rounded-2xl border ${isDark ? 'text-white bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
               </div>
               <div className="space-y-3">
                 <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-1">Visual Identitario</label>
-                <div className="flex items-center gap-6">
+                <div className="flex gap-6 items-center">
                   {((categoryModalMode === 'add' && categoryImagePreview) || (categoryModalMode === 'edit' && (editingCategoryImagePreview || editingCategory?.imageUrl))) ? (
-                    <div className="relative group w-24 h-24 rounded-2xl overflow-hidden shadow-2xl">
-                      <img src={categoryModalMode === 'add' ? categoryImagePreview : (editingCategoryImagePreview || editingCategory?.imageUrl)} alt="Preview" className="w-full h-full object-cover" />
-                      <button type="button" onClick={() => clearCategoryImage(categoryModalMode === 'edit')} className="absolute inset-0 bg-rose-600/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity"><FiTrash2/></button>
+                    <div className="overflow-hidden relative w-24 h-24 rounded-2xl shadow-2xl group">
+                      <img src={categoryModalMode === 'add' ? categoryImagePreview : (editingCategoryImagePreview || editingCategory?.imageUrl)} alt="Preview" className="object-cover w-full h-full" />
+                      <button type="button" onClick={() => clearCategoryImage(categoryModalMode === 'edit')} className="flex absolute inset-0 justify-center items-center text-white opacity-0 transition-opacity bg-rose-600/60 group-hover:opacity-100"><FiTrash2/></button>
                     </div>
                   ) : (
                     <label className={`w-24 h-24 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${isDark ? 'bg-slate-900 border-slate-700 hover:border-indigo-600' : 'bg-slate-50 border-slate-200 hover:border-indigo-600'}`}>
@@ -761,7 +761,7 @@ const ModernAdminDashboard = () => {
                   <p className="text-[10px] text-slate-400 font-bold max-w-[150px]">Recomendado: 800x800px. Máximo 1MB.</p>
                 </div>
               </div>
-              <button type="submit" className="w-full py-5 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-600 shadow-2xl transition-all">
+              <button type="submit" className="py-5 w-full text-xs font-black tracking-widest text-white uppercase bg-black rounded-2xl shadow-2xl transition-all hover:bg-indigo-600">
                 {categoryModalMode === 'add' ? 'Lanzar Colección' : 'Guardar Cambios'}
               </button>
             </form>

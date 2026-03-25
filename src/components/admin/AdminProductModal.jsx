@@ -29,37 +29,37 @@ const AdminProductModal = ({
   const onChange = modalMode === 'add' ? handleProductChange : handleEditProductChange;
 
   return (
-    <div className={`fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 ${modalOverlay} animate-in fade-in duration-300`}>
+    <div className={`flex fixed inset-0 justify-center items-center p-4 duration-300 z-[100] md:p-6 ${modalOverlay} animate-in fade-in`}>
       <div 
         className={`w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] border shadow-2xl relative animate-in zoom-in-95 duration-300 ${bgCard}`}
       >
-        <div className="p-8 md:p-12 relative">
+        <div className="relative p-6 md:p-12">
           
           {/* Close Button */}
           <button 
             onClick={onClose}
-            className={`absolute right-8 top-8 p-3 rounded-2xl transition-all active:scale-95 ${isDark ? 'bg-slate-800 text-slate-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+            className={`absolute right-4 md:right-8 top-6 md:top-8 p-3 rounded-2xl transition-all active:scale-95 ${isDark ? 'bg-slate-800 text-slate-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
           >
             <FiX size={20} />
           </button>
 
           {/* Header */}
           <div className="mb-12">
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex gap-3 items-center mb-2">
               <div className="w-8 h-1 bg-indigo-600 rounded-full"></div>
               <span className={`text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600`}>Catalogue Engineering</span>
             </div>
-            <h3 className={`text-4xl font-black tracking-tight ${textTitle}`}>
+            <h3 className={`text-2xl md:text-4xl font-black tracking-tight ${textTitle}`}>
               {modalMode === 'add' ? 'Nuevo Ejemplar' : 'Editar Producto'}
             </h3>
-            <p className={`${textSub} mt-1 text-base`}>Define los parámetros técnicos y estéticos de tu producto.</p>
+            <p className={`mt-1 text-sm md:text-base ${textSub}`}>Define los parámetros técnicos y estéticos de tu producto.</p>
           </div>
 
           <form onSubmit={modalMode === 'add' ? createProduct : updateProduct} className="space-y-10">
             
             {/* Basic Info */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="md:col-span-2 space-y-8">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+              <div className="space-y-8 md:col-span-2">
                 <div className="space-y-3">
                   <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Nombre de Identidad</label>
                   <div className="relative group">
@@ -70,7 +70,7 @@ const AdminProductModal = ({
                       value={productData?.name}
                       onChange={onChange}
                       className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
-                        isDark ? 'bg-slate-900 border-slate-700 focus:ring-indigo-500/10 text-white' : 'bg-slate-50 border-slate-200 focus:ring-indigo-500/5 text-slate-900'
+                        isDark ? 'text-white bg-slate-900 border-slate-700 focus:ring-indigo-500/10' : 'bg-slate-50 border-slate-200 focus:ring-indigo-500/5 text-slate-900'
                       }`}
                       placeholder="Ej: Bolso Luxury Edition"
                       required
@@ -86,7 +86,7 @@ const AdminProductModal = ({
                     onChange={onChange}
                     rows="4"
                     className={`w-full px-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
-                      isDark ? 'bg-slate-900 border-slate-700 focus:ring-indigo-500/10 text-white' : 'bg-slate-50 border-slate-200 focus:ring-indigo-500/5 text-slate-900'
+                      isDark ? 'text-white bg-slate-900 border-slate-700 focus:ring-indigo-500/10' : 'bg-slate-50 border-slate-200 focus:ring-indigo-500/5 text-slate-900'
                     }`}
                     placeholder="Detalla los materiales, el origen y la propuesta de valor..."
                   />
@@ -104,7 +104,7 @@ const AdminProductModal = ({
                       value={productData?.price}
                       onChange={onChange}
                       className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
-                        isDark ? 'bg-slate-900 border-slate-700 focus:ring-emerald-500/10 text-white font-bold' : 'bg-slate-50 border-slate-200 focus:ring-emerald-500/5 text-slate-900 font-bold'
+                        isDark ? 'font-bold text-white bg-slate-900 border-slate-700 focus:ring-emerald-500/10' : 'font-bold bg-slate-50 border-slate-200 focus:ring-emerald-500/5 text-slate-900'
                       }`}
                       placeholder="0.00"
                       required
@@ -122,7 +122,7 @@ const AdminProductModal = ({
                       value={productData?.stock}
                       onChange={onChange}
                       className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
-                        isDark ? 'bg-slate-900 border-slate-700 focus:ring-amber-500/10 text-white' : 'bg-slate-50 border-slate-200 focus:ring-amber-500/5 text-slate-900'
+                        isDark ? 'text-white bg-slate-900 border-slate-700 focus:ring-amber-500/10' : 'bg-slate-50 border-slate-200 focus:ring-amber-500/5 text-slate-900'
                       }`}
                       placeholder="Unidades"
                     />
@@ -131,8 +131,8 @@ const AdminProductModal = ({
               </div>
             </div>
 
-            {/* Classification */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Classification Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="space-y-3">
                 <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Categoría</label>
                 <select
@@ -153,7 +153,7 @@ const AdminProductModal = ({
               <div className="space-y-3">
                 <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Valoración Base</label>
                 <div className="relative group">
-                  <FiStar className={`absolute left-5 top-1/2 -translate-y-1/2 text-amber-500`} />
+                  <FiStar className={`absolute left-5 top-1/2 text-amber-500 -translate-y-1/2`} />
                   <input
                     type="number"
                     step="0.1"
@@ -161,7 +161,7 @@ const AdminProductModal = ({
                     value={productData?.rating}
                     onChange={onChange}
                     className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all outline-none ${
-                        isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                        isDark ? 'text-white bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900'
                     }`}
                     placeholder="0.0 - 5.0"
                   />
@@ -176,7 +176,7 @@ const AdminProductModal = ({
                   value={productData?.material}
                   onChange={onChange}
                   className={`w-full px-6 py-4 rounded-2xl border transition-all outline-none ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                      isDark ? 'text-white bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900'
                   }`}
                   placeholder="Ej: Cuero Italiano"
                 />
@@ -190,7 +190,7 @@ const AdminProductModal = ({
                   value={productData?.color}
                   onChange={onChange}
                   className={`w-full px-6 py-4 rounded-2xl border transition-all outline-none ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                      isDark ? 'text-white bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900'
                   }`}
                   placeholder="Ej: Midnight Blue"
                 />
@@ -199,7 +199,7 @@ const AdminProductModal = ({
 
             {/* Media System */}
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
+              <div className="flex justify-between items-center">
                 <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Gestión de Assets Visuales (Máx 4)</label>
                 <button
                   type="button"
@@ -207,8 +207,8 @@ const AdminProductModal = ({
                   disabled={uploading || (productData?.imageUrls?.length >= 4)}
                   className={`flex items-center gap-2 px-6 py-3 rounded-xl border-2 transition-all font-black text-[10px] uppercase tracking-widest ${
                     isDark 
-                    ? 'border-indigo-600/30 text-indigo-400 hover:bg-indigo-600 hover:text-white' 
-                    : 'border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white'
+                    ? 'text-indigo-400 border-indigo-600/30 hover:bg-indigo-600 hover:text-white' 
+                    : 'text-indigo-600 border-indigo-600 hover:bg-indigo-600 hover:text-white'
                   }`}
                 >
                   {uploading ? <FiRefreshCw className="animate-spin" /> : <FiCamera size={16} />}
@@ -216,15 +216,15 @@ const AdminProductModal = ({
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
                 {productData?.imageUrls?.map((img, idx) => (
                   <div key={idx} className={`relative rounded-3xl overflow-hidden border-2 group transition-all duration-300 ${isDark ? 'border-slate-800' : 'border-slate-100'} h-40`}>
                     <img 
                       src={typeof img === 'string' ? img : img.data} 
                       alt="Product" 
-                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                      className="object-cover w-full h-full transition-transform group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+                    <div className="flex absolute inset-0 flex-col gap-2 justify-center items-center opacity-0 transition-opacity bg-black/60 group-hover:opacity-100">
                        <button 
                          type="button" 
                          onClick={() => setPrimaryImage(idx, modalMode === 'edit')}

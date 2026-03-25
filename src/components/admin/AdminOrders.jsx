@@ -44,7 +44,7 @@ const AdminOrders = ({
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       
       {/* Header & Filter Zone */}
-      <div className={`${bgCard} p-8 md:p-10 rounded-[2.5rem] border flex flex-col xl:flex-row xl:items-center justify-between gap-8 relative overflow-hidden`}>
+      <div className={`${bgCard} p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border flex flex-col xl:flex-row xl:items-center justify-between gap-6 md:gap-8 relative overflow-hidden`}>
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
         
         <div className="relative">
@@ -52,8 +52,8 @@ const AdminOrders = ({
             <div className="w-8 h-1 bg-indigo-600 rounded-full"></div>
             <span className={`text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600`}>Logistics Control</span>
           </div>
-          <h2 className={`text-3xl font-black tracking-tight ${textTitle}`}>Flujo de Pedidos</h2>
-          <p className={`${textSub} mt-1 text-sm`}>Supervisa el ciclo de vida de cada venta, desde el pago hasta la entrega final.</p>
+          <h2 className={`text-2xl md:text-3xl font-black tracking-tight ${textTitle}`}>Flujo de Pedidos</h2>
+          <p className={`${textSub} mt-1 text-xs md:text-sm`}>Supervisa el ciclo de vida de cada venta, desde el pago hasta la entrega final.</p>
         </div>
 
         <div className="flex flex-col md:flex-row items-center gap-4 relative">
@@ -61,7 +61,7 @@ const AdminOrders = ({
             <FiSearch className={`absolute left-5 top-1/2 -translate-y-1/2 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-indigo-400' : 'text-slate-400 group-focus-within:text-indigo-600'}`} />
             <input
               type="text"
-              placeholder="Buscar por ID, email o estado..."
+              placeholder="Buscar pedido..."
               value={orderSearchTerm}
               onChange={(e) => setOrderSearchTerm(e.target.value)}
               className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
@@ -72,9 +72,10 @@ const AdminOrders = ({
         </div>
       </div>
 
-      {/* Orders Table Card */}
-      <div className={`${bgCard} rounded-[2.5rem] border overflow-hidden`}>
-        <div className="overflow-x-auto">
+      {/* Orders Content Table / Cards */}
+      <div className={`${bgCard} rounded-3xl md:rounded-[2.5rem] border overflow-hidden`}>
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className={`text-[10px] font-black uppercase tracking-[0.2em] ${textSub} border-b border-inherit`}>
@@ -158,17 +159,92 @@ const AdminOrders = ({
               ))}
             </tbody>
           </table>
-          
-          {filteredOrders.length === 0 && (
-            <div className="py-24 text-center">
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${isDark ? 'bg-slate-800' : 'bg-slate-50'}`}>
-                <FiPackage size={32} className="opacity-20" />
-              </div>
-              <h3 className={`text-lg font-black ${textTitle}`}>Sin órdenes registradas</h3>
-              <p className={`${textSub} text-sm mt-2`}>No hay transacciones que coincidan con los filtros aplicados.</p>
-            </div>
-          )}
         </div>
+
+        {/* Mobile View (Cards) */}
+        <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800/10">
+          {filteredOrders.map((o) => (
+            <div key={o.id} className="p-6 space-y-4 hover:bg-indigo-500/5 transition-all">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-inner ${
+                    isDark ? 'bg-slate-800 text-indigo-400' : 'bg-indigo-50 text-indigo-600'
+                  }`}>
+                     <FiPackage size={16} />
+                  </div>
+                  <div className="min-w-0">
+                    <span className={`font-black text-sm block truncate tracking-tight ${textTitle}`}>{o.userEmail || 'Invitado'}</span>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">ORD-{o.id.substring(0, 8).toUpperCase()}</span>
+                  </div>
+                </div>
+                <span className={`text-[10px] font-black uppercase tracking-widest ${textSub} shrink-0`}>
+                  {formatDate(o.createdAt)}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center bg-slate-500/5 p-4 rounded-2xl">
+                <div>
+                  <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest mb-1">Monto Total</p>
+                  <span className={`font-black text-lg text-emerald-500`}>
+                    {formatCurrency(o.totalAmount || 0)}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest mb-1">Estado</p>
+                  <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border ${getStatusBadgeClass(o.orderStatus, theme)} shadow-sm`}>
+                    {getOrderStatusText(o.orderStatus)}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3 p-3 rounded-2xl border border-slate-500/10">
+                  <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest min-w-[50px]">Status:</span>
+                   {orderStatusUpdating[o.id] ? (
+                    <FiRefreshCw className="animate-spin text-indigo-500" size={16} />
+                  ) : (
+                    <select
+                      value={o.orderStatus || 'pending'}
+                      onChange={(e) => updateOrderStatusHandler(o.id, e.target.value)}
+                      className={`flex-1 text-[10px] font-black uppercase tracking-widest rounded-xl px-4 py-2 bg-slate-500/5 border-none outline-none ${isDark ? 'text-white' : 'text-slate-900'}`}
+                    >
+                      <option value="pending">Pendiente</option>
+                      <option value="processing">Procesando</option>
+                      <option value="shipped">Enviado</option>
+                      <option value="delivered">Entregado</option>
+                      <option value="cancelled">Cancelado</option>
+                    </select>
+                  )}
+                </div>
+
+                <div className="flex gap-3">
+                  <button 
+                    onClick={() => openOrderDetails(o)} 
+                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-xs transition-all ${isDark ? 'bg-slate-800 text-blue-400' : 'bg-blue-50 text-blue-600'}`}
+                  >
+                    <FiExternalLink size={16} /> Detalles
+                  </button>
+                  <button 
+                    onClick={() => deleteOrder(o.id)} 
+                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-xs transition-all ${isDark ? 'bg-slate-800/50 text-rose-400' : 'bg-rose-50 text-rose-600'}`}
+                  >
+                    <FiTrash2 size={16} /> Eliminar
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {filteredOrders.length === 0 && (
+          <div className="py-24 text-center">
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${isDark ? 'bg-slate-800' : 'bg-slate-50'}`}>
+              <FiPackage size={32} className="opacity-20" />
+            </div>
+            <h3 className={`text-lg font-black ${textTitle}`}>Sin órdenes registradas</h3>
+            <p className={`${textSub} text-sm mt-2`}>No hay transacciones que coincidan con los filtros aplicados.</p>
+          </div>
+        )}
       </div>
     </div>
   );

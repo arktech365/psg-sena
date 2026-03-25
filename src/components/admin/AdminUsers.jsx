@@ -43,7 +43,7 @@ const AdminUsers = ({
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       
       {/* Header & Filters Zone */}
-      <div className={`${bgCard} p-8 md:p-10 rounded-[2.5rem] border flex flex-col xl:flex-row xl:items-center justify-between gap-8 relative overflow-hidden`}>
+      <div className={`${bgCard} p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border flex flex-col xl:flex-row xl:items-center justify-between gap-6 md:gap-8 relative overflow-hidden`}>
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
         
         <div className="relative">
@@ -51,8 +51,8 @@ const AdminUsers = ({
             <div className="w-8 h-1 bg-indigo-600 rounded-full"></div>
             <span className={`text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600`}>Identity Management</span>
           </div>
-          <h2 className={`text-3xl font-black tracking-tight ${textTitle}`}>Directorio de Usuarios</h2>
-          <p className={`${textSub} mt-1 text-sm`}>Controla los niveles de acceso y gestiona la comunidad de PSG Shop.</p>
+          <h2 className={`text-2xl md:text-3xl font-black tracking-tight ${textTitle}`}>Directorio de Usuarios</h2>
+          <p className={`${textSub} mt-1 text-xs md:text-sm`}>Controla los niveles de acceso y gestiona la comunidad de PSG Shop.</p>
         </div>
 
         <div className="flex flex-col md:flex-row items-center gap-4 relative">
@@ -60,7 +60,7 @@ const AdminUsers = ({
             <FiSearch className={`absolute left-5 top-1/2 -translate-y-1/2 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-indigo-400' : 'text-slate-400 group-focus-within:text-indigo-600'}`} />
             <input
               type="text"
-              placeholder="Buscar por email o rol..."
+              placeholder="Buscar email..."
               value={userSearchTerm}
               onChange={(e) => setUserSearchTerm(e.target.value)}
               className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
@@ -71,7 +71,7 @@ const AdminUsers = ({
           <select
             value={userRoleFilter}
             onChange={(e) => setUserRoleFilter(e.target.value)}
-            className={`px-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 font-bold text-xs uppercase tracking-widest ${
+            className={`w-full md:w-auto px-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 font-bold text-xs uppercase tracking-widest ${
               isDark ? 'bg-slate-800 border-slate-700 text-slate-200 focus:ring-indigo-500/20' : 'bg-white border-slate-200 text-slate-700 focus:ring-indigo-500/10'
             }`}
           >
@@ -82,9 +82,10 @@ const AdminUsers = ({
         </div>
       </div>
 
-      {/* Users Table Card */}
-      <div className={`${bgCard} rounded-[2.5rem] border overflow-hidden`}>
-        <div className="overflow-x-auto">
+      {/* Users Content Table / Cards */}
+      <div className={`${bgCard} rounded-3xl md:rounded-[2.5rem] border overflow-hidden`}>
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className={`text-[10px] font-black uppercase tracking-[0.2em] ${textSub} border-b border-inherit`}>
@@ -136,24 +137,75 @@ const AdminUsers = ({
                       }`}
                     >
                       <FiKey size={14} className="opacity-50" />
-                      {u.role === 'admin' ? 'Degradar Rango' : 'Elevar a Admin'}
+                      {u.role === 'admin' ? 'Degradar' : 'Hacer Admin'}
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          
-          {filteredUsers.length === 0 && (
-            <div className="py-24 text-center">
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${isDark ? 'bg-slate-800' : 'bg-slate-50'}`}>
-                <FiUsers size={32} className="opacity-20" />
-              </div>
-              <h3 className={`text-lg font-black ${textTitle}`}>Usuarios no encontrados</h3>
-              <p className={`${textSub} text-sm mt-2`}>No hay registros que coincidan con los criterios de búsqueda actuales.</p>
-            </div>
-          )}
         </div>
+
+        {/* Mobile View (Cards) */}
+        <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800/10">
+          {filteredUsers.map((u) => (
+            <div key={u.id} className="p-6 space-y-4 hover:bg-indigo-500/5 transition-all">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xs shadow-inner shrink-0 ${
+                    isDark ? 'bg-slate-800 text-indigo-400' : 'bg-indigo-50 text-indigo-600'
+                  }`}>
+                    {u.email?.charAt(0).toUpperCase() || <FiUser/>}
+                  </div>
+                  <div className="min-w-0">
+                    <span className={`font-black text-sm block truncate tracking-tight ${textTitle}`}>{u.email}</span>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">UID: {u.id.slice(-8).toUpperCase()}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                   <span className={`text-[9px] font-black uppercase tracking-widest ${textSub}`}>Activo</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between bg-slate-500/5 p-4 rounded-2xl">
+                <div>
+                  <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest mb-1.5">Nivel de Acceso</p>
+                  <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
+                    u.role === 'admin' 
+                      ? isDark ? 'bg-indigo-500/10 text-indigo-400 ring-1 ring-indigo-500/20' : 'bg-indigo-100 text-indigo-700 border border-indigo-200'
+                      : isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'
+                  }`}>
+                    {u.role === 'admin' ? <FiShield size={10} /> : <FiUser size={10} />}
+                    {u.role === 'admin' ? 'Admin' : 'Cliente'}
+                  </span>
+                </div>
+                
+                <button 
+                  onClick={() => updateUserRole(u.id, u.role === 'admin' ? 'user' : 'admin')} 
+                  className={`px-4 py-2.5 rounded-xl transition-all font-black text-[9px] uppercase tracking-widest flex items-center gap-2 ${
+                    isDark 
+                      ? 'bg-slate-800 text-indigo-400 border border-slate-700 active:bg-indigo-600 active:text-white' 
+                      : 'bg-white text-slate-700 border border-slate-200 active:bg-black active:text-white shadow-sm'
+                  }`}
+                >
+                  <FiKey size={12} className="opacity-50" />
+                  {u.role === 'admin' ? 'Degradar' : 'Elevar'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {filteredUsers.length === 0 && (
+          <div className="py-24 text-center">
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${isDark ? 'bg-slate-800' : 'bg-slate-50'}`}>
+              <FiUsers size={32} className="opacity-20" />
+            </div>
+            <h3 className={`text-lg font-black ${textTitle}`}>Usuarios no encontrados</h3>
+            <p className={`${textSub} text-sm mt-2`}>No hay registros que coincidan con los criterios de búsqueda actuales.</p>
+          </div>
+        )}
       </div>
     </div>
   );

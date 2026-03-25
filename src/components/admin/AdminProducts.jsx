@@ -40,7 +40,7 @@ const AdminProducts = ({
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       
       {/* Header & Search Zone */}
-      <div className={`${bgCard} p-8 md:p-10 rounded-[2.5rem] border flex flex-col xl:flex-row xl:items-center justify-between gap-8 relative overflow-hidden`}>
+      <div className={`${bgCard} p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border flex flex-col xl:flex-row xl:items-center justify-between gap-6 md:gap-8 relative overflow-hidden`}>
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
         
         <div className="relative">
@@ -48,8 +48,8 @@ const AdminProducts = ({
             <div className="w-8 h-1 bg-indigo-600 rounded-full"></div>
             <span className={`text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600`}>Inventory Hub</span>
           </div>
-          <h2 className={`text-3xl font-black tracking-tight ${textTitle}`}>Gestión de Productos</h2>
-          <p className={`${textSub} mt-1 text-sm`}>Control total sobre tu catálogo, precios y niveles de stock.</p>
+          <h2 className={`text-2xl md:text-3xl font-black tracking-tight ${textTitle}`}>Gestión de Productos</h2>
+          <p className={`${textSub} mt-1 text-xs md:text-sm`}>Control total sobre tu catálogo, precios y niveles de stock.</p>
         </div>
 
         <div className="flex flex-col md:flex-row items-center gap-4 relative">
@@ -57,7 +57,7 @@ const AdminProducts = ({
             <FiSearch className={`absolute left-5 top-1/2 -translate-y-1/2 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-indigo-400' : 'text-slate-400 group-focus-within:text-indigo-600'}`} />
             <input
               type="text"
-              placeholder="Buscar por nombre o categoría..."
+              placeholder="Buscar..."
               value={productSearchTerm}
               onChange={(e) => setProductSearchTerm(e.target.value)}
               className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
@@ -74,9 +74,10 @@ const AdminProducts = ({
         </div>
       </div>
 
-      {/* Main Content Table */}
-      <div className={`${bgCard} rounded-[2.5rem] border overflow-hidden`}>
-        <div className="overflow-x-auto">
+      {/* Main Content Table / Cards */}
+      <div className={`${bgCard} rounded-3xl md:rounded-[2.5rem] border overflow-hidden`}>
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className={`text-[10px] font-black uppercase tracking-[0.2em] ${textSub} border-b border-inherit`}>
@@ -143,17 +144,74 @@ const AdminProducts = ({
               ))}
             </tbody>
           </table>
-          
-          {filteredProducts.length === 0 && (
-            <div className="py-24 text-center">
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${isDark ? 'bg-slate-800' : 'bg-slate-50'}`}>
-                <FiPackage size={32} className="opacity-20" />
-              </div>
-              <h3 className={`text-lg font-black ${textTitle}`}>Sin Resultados Coincidentes</h3>
-              <p className={`${textSub} text-sm mt-2`}>Intenta refinar tus términos de búsqueda o añade un nuevo ejemplar.</p>
-            </div>
-          )}
         </div>
+
+        {/* Mobile View (Cards) */}
+        <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800/10">
+          {filteredProducts.map((p) => (
+            <div key={p.id} className="p-6 space-y-4 hover:bg-indigo-500/5 transition-all">
+              <div className="flex items-center gap-4">
+                <div className={`w-16 h-16 shrink-0 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                  {p.imageUrl ? (
+                    <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <FiShoppingBag className={textSub} size={24} />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className={`font-black text-lg block truncate tracking-tight ${textTitle}`}>{p.name}</span>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-600'}`}>
+                      {p.category || 'General'}
+                    </span>
+                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">#{p.id.slice(-6).toUpperCase()}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center bg-slate-500/5 p-4 rounded-2xl">
+                <div>
+                  <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest mb-1">Inversión</p>
+                  <span className={`font-black text-lg ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}>
+                    {formatCurrency(p.price)}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest mb-1">Disponibilidad</p>
+                  <div className="flex items-center justify-end gap-2 text-sm font-bold">
+                    <div className={`w-2 h-2 rounded-full ${p.stock > 10 ? 'bg-emerald-500' : p.stock > 0 ? 'bg-amber-500' : 'bg-rose-500'}`}></div>
+                    <span className={textTitle}>{p.stock} Uni.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => openEditProductModal(p)} 
+                  className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-xs transition-all ${isDark ? 'bg-slate-800 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}
+                >
+                  <FiEdit3 size={16} /> Editar
+                </button>
+                <button 
+                  onClick={() => deleteProduct(p.id, p.name)} 
+                  className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-xs transition-all ${isDark ? 'bg-slate-800/50 text-rose-400' : 'bg-rose-50 text-rose-600'}`}
+                >
+                  <FiTrash2 size={16} /> Eliminar
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {filteredProducts.length === 0 && (
+          <div className="py-24 text-center">
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${isDark ? 'bg-slate-800' : 'bg-slate-50'}`}>
+              <FiPackage size={32} className="opacity-20" />
+            </div>
+            <h3 className={`text-lg font-black ${textTitle}`}>Sin Resultados Coincidentes</h3>
+            <p className={`${textSub} text-sm mt-2`}>Intenta refinar tus términos de búsqueda o añade un nuevo ejemplar.</p>
+          </div>
+        )}
       </div>
     </div>
   );
