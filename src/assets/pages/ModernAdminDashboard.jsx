@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
-
-import { db, storage } from '../../firebase';
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db } from '../../firebase';
 import { 
   collection, 
   getDocs, 
@@ -18,21 +16,19 @@ import { getAllUsers, updateUserRole as updateUserServiceRole } from '../../serv
 import { getAllReviews, deleteReview, updateReview } from '../../services/reviewService';
 import { getAllOrders, updateOrderStatus, getOrderStatusText, getStatusBadgeClass } from '../../services/orderService';
 import { getSalesData, getSalesByCategory, getOrderStatusDistribution, getTopSellingProducts, getUserRegistrationData, getRevenueByPaymentMethod } from '../../services/analyticsService';
-import { getCategories, createCategory, updateCategory, deleteCategory, uploadCategoryImage } from '../../services/categoryService';
+import { getCategories, createCategory, updateCategory, deleteCategory } from '../../services/categoryService';
 import CouponManager from '../../components/CouponManager';
 import OrderDetailsModal from '../../components/OrderDetailsModal';
-import StarRating from '../../components/StarRating';
 import Loader from '../../components/Loader';
-// Add chart components imports
-import SalesTrendChart from '../../components/charts/SalesTrendChart';
-import SalesByCategoryChart from '../../components/charts/SalesByCategoryChart';
-import OrderStatusChart from '../../components/charts/OrderStatusChart';
-import PaymentMethodChart from '../../components/charts/PaymentMethodChart';
-import UserRegistrationChart from '../../components/charts/UserRegistrationChart';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
-import { FiMenu, FiX, FiHome, FiShoppingBag, FiUsers, FiMessageSquare, FiTag, FiPackage, FiBarChart2, FiPlus, FiEdit, FiTrash2, FiLogOut, FiShoppingCart, FiSun, FiMoon, FiList } from 'react-icons/fi';
+import { 
+  FiMenu, FiX, FiHome, FiShoppingBag, FiUsers, FiMessageSquare, 
+  FiTag, FiPackage, FiBarChart2, FiPlus, FiLogOut, FiSun, FiMoon, 
+  FiList, FiCheck, FiChevronRight, FiGrid, FiActivity, FiStar, FiImage, FiCamera, FiRefreshCw,
+  FiLayers, FiTrash2
+} from 'react-icons/fi';
 import DashboardAnalytics from '../../components/admin/DashboardAnalytics';
 import AdminProducts from '../../components/admin/AdminProducts';
 import AdminUsers from '../../components/admin/AdminUsers';
@@ -40,7 +36,6 @@ import AdminReviews from '../../components/admin/AdminReviews';
 import AdminOrders from '../../components/admin/AdminOrders';
 import AdminCategories from '../../components/admin/AdminCategories';
 import AdminProductModal from '../../components/admin/AdminProductModal';
-
 
 const ModernAdminDashboard = () => {
   const { currentUser, isAdmin } = useAuth();
@@ -56,14 +51,13 @@ const ModernAdminDashboard = () => {
     totalRevenue: 0,
     recentOrders: [],
     recentUsers: [],
-    // Analytics data
     salesData: [],
     salesByCategory: [],
     orderStatusData: [],
     topSellingProducts: [],
     userRegistrationData: [],
     paymentMethodData: [],
-    dateRange: 'last30days' // Default date range
+    dateRange: 'last30days'
   });
   const [loading, setLoading] = useState(false);
   
@@ -71,22 +65,11 @@ const ModernAdminDashboard = () => {
   const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(false);
   const [newProduct, setNewProduct] = useState({ 
-    name: '', 
-    description: '', 
-    price: '', 
-    imageUrls: [],
-    primaryImageIndex: 0,
-    category: '',
-    material: '',
-    color: '',
-    size: '',
-    style: '',
-    stock: 0,
-    rating: 0
+    name: '', description: '', price: '', imageUrls: [], primaryImageIndex: 0, category: '', material: '', color: '', size: '', style: '', stock: 0, rating: 0
   });
   const [editingProduct, setEditingProduct] = useState(null);
   const [productModalOpen, setProductModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState('add'); // 'add' or 'edit'
+  const [modalMode, setModalMode] = useState('add');
   
   // Users state
   const [users, setUsers] = useState([]);
@@ -105,19 +88,11 @@ const ModernAdminDashboard = () => {
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [orderStatusUpdating, setOrderStatusUpdating] = useState({});
   
-  // Search state for products
+  // Search states
   const [productSearchTerm, setProductSearchTerm] = useState('');
-  
-  // Search state for reviews
   const [reviewSearchTerm, setReviewSearchTerm] = useState('');
-  
-  // Search state for orders
   const [orderSearchTerm, setOrderSearchTerm] = useState('');
-  
-  // Search state for users
   const [userSearchTerm, setUserSearchTerm] = useState('');
-  
-  // Role filter state for users
   const [userRoleFilter, setUserRoleFilter] = useState('all');
   
   // Categories state
@@ -126,44 +101,45 @@ const ModernAdminDashboard = () => {
   const [newCategory, setNewCategory] = useState({ name: '', description: '' });
   const [editingCategory, setEditingCategory] = useState(null);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
-  const [categoryModalMode, setCategoryModalMode] = useState('add'); // 'add' or 'edit'
+  const [categoryModalMode, setCategoryModalMode] = useState('add');
   const [categorySearchTerm, setCategorySearchTerm] = useState('');
   const [categoryImage, setCategoryImage] = useState(null);
   const [categoryImagePreview, setCategoryImagePreview] = useState(null);
   const [editingCategoryImage, setEditingCategoryImage] = useState(null);
   const [editingCategoryImagePreview, setEditingCategoryImagePreview] = useState(null);
   
-  // Admin profile menu
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
-  
-  // UI state
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  // Toggle theme
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     localStorage.setItem('adminDashboardTheme', newTheme);
   };
 
-  // Initialize theme from localStorage or system preference
   useEffect(() => {
     const savedTheme = localStorage.getItem('adminDashboardTheme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
     if (savedTheme) {
       setTheme(savedTheme);
-    } else if (systemPrefersDark) {
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setTheme('dark');
-    } else {
-      setTheme('light');
     }
   }, []);
 
-  // Apply theme to document
   useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -172,572 +148,18 @@ const ModernAdminDashboard = () => {
     }
   }, [theme]);
 
-  // Close profile menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
-        setIsProfileMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // Toggle profile menu
-  const toggleProfileMenu = () => {
-    setIsProfileMenuOpen(!isProfileMenuOpen);
-  };
-
-  // Close profile menu
-  const closeProfileMenu = () => {
-    setIsProfileMenuOpen(false);
-  };
-
-  // Fetch categories
   const fetchCategories = async () => {
     try {
       setCategoriesLoading(true);
       const categoriesList = await getCategories();
-      console.log('Fetched categories:', categoriesList);
       setCategories(categoriesList);
     } catch (error) {
-      console.error('Error fetching categories:', error);
       setError('Error al cargar las categorías');
     } finally {
       setCategoriesLoading(false);
     }
   };
 
-  // Handle category form changes
-  const handleCategoryChange = (e) => {
-    setNewCategory({ ...newCategory, [e.target.name]: e.target.value });
-  };
-
-  // Handle edit category form changes
-  const handleEditCategoryChange = (e) => {
-    setEditingCategory({ ...editingCategory, [e.target.name]: e.target.value });
-  };
-
-  // Handle category image upload and convert to base64
-  const handleCategoryImageUpload = async (e, isEditing = false) => {
-    try {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      // Validate file type
-      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-      if (!validTypes.includes(file.type)) {
-        const errorMsg = "Por favor, sube una imagen válida (JPEG, JPG, PNG, GIF).";
-        console.error('File type validation error:', errorMsg);
-        setError(errorMsg);
-        alert(errorMsg);
-        return;
-      }
-
-      // Validate file size (max 1MB to avoid Firestore limits)
-      if (file.size > 1024 * 1024) {
-        const errorMsg = "La imagen debe ser menor a 1MB.";
-        console.error('File size validation error:', errorMsg);
-        setError(errorMsg);
-        alert(errorMsg);
-        return;
-      }
-
-      // Convert file to base64
-      const base64Data = await fileToBase64(file);
-      
-      if (isEditing) {
-        setEditingCategoryImage(base64Data);
-        setEditingCategoryImagePreview(base64Data);
-      } else {
-        setCategoryImage(base64Data);
-        setCategoryImagePreview(base64Data);
-      }
-    } catch (err) {
-      console.error("Error handling image upload: ", err);
-      const errorMsg = `Error al procesar la imagen: ${err.message || 'Unknown error'}`;
-      setError(errorMsg);
-      alert(errorMsg);
-    }
-  };
-
-  // Clear category image
-  const clearCategoryImage = (isEditing = false) => {
-    if (isEditing) {
-      setEditingCategoryImage(null);
-      setEditingCategoryImagePreview(null);
-      if (editingCategory?.imageUrl) {
-        setEditingCategory({ ...editingCategory, imageUrl: null });
-      }
-    } else {
-      setCategoryImage(null);
-      setCategoryImagePreview(null);
-      setNewCategory({ ...newCategory, imageUrl: null });
-    }
-  };
-
-  // Create category
-  const createCategoryHandler = async (e) => {
-    e.preventDefault();
-    console.log('Attempting to create category with data:', newCategory);
-    
-    // Validate category name
-    if (!newCategory.name || newCategory.name.trim() === '') {
-      const errorMsg = "Por favor, introduce un nombre para la categoría.";
-      console.error('Validation error:', errorMsg);
-      setError(errorMsg);
-      alert(errorMsg);
-      return;
-    }
-    
-    try {
-      // Prepare category data
-      const categoryData = { ...newCategory };
-      
-      // If there's an image, add it as base64
-      if (categoryImage) {
-        categoryData.imageUrl = categoryImage;
-      }
-      
-      console.log('Creating category with data:', categoryData);
-      
-      // Create the category with all data including image
-      const createdCategory = await createCategory(categoryData);
-      console.log('Category created:', createdCategory);
-      
-      if (!createdCategory || !createdCategory.id) {
-        throw new Error('Failed to create category');
-      }
-      
-      setNewCategory({ name: '', description: '' });
-      setCategoryImage(null);
-      setCategoryImagePreview(null);
-      showSuccessMessage("Categoría creada exitosamente!");
-      alert("Categoría creada exitosamente!");
-      setCategoryModalOpen(false);
-      fetchCategories();
-    } catch (err) {
-      console.error("Error creating category: ", err);
-      setUploading(false);
-      const errorMsg = `Error al crear la categoría: ${err.message || 'Unknown error'}. ¿Tienes permisos de escritura?`;
-      setError(errorMsg);
-      // Also show error in an alert for better visibility
-      alert(errorMsg);
-    }
-  };
-
-  // Update category
-  const updateCategoryHandler = async (e) => {
-    e.preventDefault();
-    if (!editingCategory.name) {
-      const errorMsg = "Por favor, introduce un nombre para la categoría.";
-      setError(errorMsg);
-      alert(errorMsg);
-      return;
-    }
-    
-    try {
-      // Update the category data
-      const categoryData = { ...editingCategory };
-      
-      // If there's a new image, use the base64 data
-      if (editingCategoryImage) {
-        categoryData.imageUrl = editingCategoryImage;
-      }
-      
-      await updateCategory(editingCategory.id, categoryData);
-      showSuccessMessage("Categoría actualizada exitosamente!");
-      alert("Categoría actualizada exitosamente!");
-      setCategoryModalOpen(false);
-      setEditingCategory(null);
-      setEditingCategoryImage(null);
-      setEditingCategoryImagePreview(null);
-      fetchCategories();
-    } catch (err) {
-      console.error("Error updating category: ", err);
-      setUploading(false);
-      const errorMsg = "Error al actualizar la categoría. ¿Tienes permisos de escritura?";
-      setError(errorMsg);
-      alert(errorMsg);
-    }
-  };
-
-  // Delete category
-  const deleteCategoryHandler = async (id, name) => {
-    const confirmDelete = window.confirm(`¿Estás seguro de que quieres eliminar la categoría "${name}"?`);
-    if (!confirmDelete) return;
-
-    try {
-      await deleteCategory(id);
-      setCategories(categories.filter((category) => category.id !== id));
-      showSuccessMessage("Categoría eliminada exitosamente!");
-    } catch (err) {
-      console.error("Error deleting category: ", err);
-      setError("Error al eliminar la categoría. ¿Tienes permisos de escritura?");
-    }
-  };
-
-  // Open add category modal
-  const openAddCategoryModal = () => {
-    setNewCategory({ name: '', description: '' });
-    setCategoryModalMode('add');
-    setCategoryModalOpen(true);
-  };
-
-  // Open edit category modal
-  const openEditCategoryModal = (category) => {
-    setEditingCategory({ ...category });
-    setEditingCategoryImage(null);
-    setEditingCategoryImagePreview(null);
-    setCategoryModalMode('edit');
-    setCategoryModalOpen(true);
-  };
-
-  // Handle logout
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      closeProfileMenu();
-      navigate('/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
-      setError('Error al cerrar sesión');
-    }
-  };
-
-  // Show success message
-  const showSuccessMessage = (message) => {
-    setSuccessMessage(message);
-    setTimeout(() => setSuccessMessage(''), 3000);
-  };
-
-  // Format currency
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
-      minimumFractionDigits: 0
-    }).format(amount || 0);
-  };
-
-  // Format date
-  const formatDate = (date) => {
-    if (!date) return 'N/A';
-    if (date instanceof Date) {
-      return date.toLocaleDateString('es-CO');
-    }
-    if (date.toDate) {
-      return date.toDate().toLocaleDateString('es-CO');
-    }
-    return 'N/A';
-  };
-
-  // Delete order function
-  const deleteOrder = async (orderId) => {
-    const confirmDelete = window.confirm('¿Estás seguro de que quieres eliminar este pedido? Esta acción no se puede deshacer.');
-    if (!confirmDelete) return;
-
-    try {
-      const orderDoc = doc(db, 'orders', orderId);
-      await deleteDoc(orderDoc);
-      
-      // Update the orders state to remove the deleted order
-      setOrders(orders.filter(order => order.id !== orderId));
-      
-      // Show success message
-      showSuccessMessage('Pedido eliminado exitosamente!');
-    } catch (err) {
-      console.error('Error deleting order:', err);
-      setError('Error al eliminar el pedido. Por favor, intenta de nuevo.');
-    }
-  };
-
-  // Update order status
-  const updateOrderStatusHandler = async (orderId, newStatus) => {
-    try {
-      setOrderStatusUpdating(prev => ({ ...prev, [orderId]: true }));
-      
-      await updateOrderStatus(orderId, newStatus);
-      
-      // Update local state
-      setOrders(orders.map(order => 
-        order.id === orderId 
-          ? { ...order, orderStatus: newStatus, updatedAt: new Date() }
-          : order
-      ));
-      
-      // Also update selectedOrder if it's the same order
-      if (selectedOrder && selectedOrder.id === orderId) {
-        setSelectedOrder({ ...selectedOrder, orderStatus: newStatus, updatedAt: new Date() });
-      }
-    } catch (err) {
-      console.error('Error updating order status:', err);
-      setError('Error al actualizar el estado del pedido. Por favor, intenta de nuevo.');
-    } finally {
-      setOrderStatusUpdating(prev => ({ ...prev, [orderId]: false }));
-    }
-  };
-
-  // Fetch dashboard statistics
-  const fetchDashboardStats = async () => {
-    try {
-      setLoading(true);
-      
-      // Calculate date range
-      const endDate = new Date();
-      let startDate = new Date();
-      
-      switch (stats.dateRange) {
-        case 'last7days':
-          startDate.setDate(startDate.getDate() - 7);
-          break;
-        case 'last30days':
-          startDate.setDate(startDate.getDate() - 30);
-          break;
-        case 'last90days':
-          startDate.setDate(startDate.getDate() - 90);
-          break;
-        case 'lastYear':
-          startDate.setFullYear(startDate.getFullYear() - 1);
-          break;
-        default:
-          startDate.setDate(startDate.getDate() - 30);
-      }
-      
-      // Fetch products count
-      const productsSnapshot = await getDocs(collection(db, 'products'));
-      const productsCount = productsSnapshot.size;
-      
-      // Fetch orders count and calculate total revenue
-      const ordersSnapshot = await getDocs(collection(db, 'orders'));
-      const ordersCount = ordersSnapshot.size;
-      
-      // Calculate total revenue
-      let totalRevenue = 0;
-      ordersSnapshot.docs.forEach(doc => {
-        const orderData = doc.data();
-        totalRevenue += orderData.totalAmount || 0;
-      });
-      
-      // Fetch users count
-      const usersList = await getAllUsers();
-      const usersCount = usersList.length;
-      
-      // Fetch reviews count
-      const reviewsList = await getAllReviews();
-      const reviewsCount = reviewsList.length;
-      
-      // Fetch recent orders (last 5)
-      const ordersQuery = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(5));
-      const ordersData = await getDocs(ordersQuery);
-      const recentOrders = ordersData.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      
-      // Fetch recent users (last 5)
-      const recentUsers = usersList.slice(0, 5);
-      
-      // Fetch analytics data
-      const salesData = await getSalesData(startDate, endDate);
-      const salesByCategory = await getSalesByCategory();
-      const orderStatusData = await getOrderStatusDistribution();
-      const topSellingProducts = await getTopSellingProducts(10);
-      const userRegistrationData = await getUserRegistrationData(startDate, endDate);
-      const paymentMethodData = await getRevenueByPaymentMethod();
-      
-      setStats({
-        totalProducts: productsCount,
-        totalOrders: ordersCount,
-        totalUsers: usersCount,
-        totalReviews: reviewsCount,
-        totalRevenue: totalRevenue,
-        recentOrders,
-        recentUsers,
-        salesData: salesData.salesData,
-        salesByCategory,
-        orderStatusData,
-        topSellingProducts,
-        userRegistrationData: userRegistrationData.registrationData,
-        paymentMethodData,
-        dateRange: stats.dateRange
-      });
-    } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
-      setError('Error al cargar las estadísticas del dashboard');
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  // Handle date range change
-  const handleDateRangeChange = (range) => {
-    setStats(prev => ({
-      ...prev,
-      dateRange: range
-    }));
-  };
-  
-  // Fetch products
-  const fetchProducts = async () => {
-    try {
-      setProductsLoading(true);
-      const productsSnapshot = await getDocs(collection(db, 'products'));
-      const productsData = productsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setProducts(productsData);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      setError('Error al cargar los productos');
-    } finally {
-      setProductsLoading(false);
-    }
-  };
-
-  // Filter products based on search term
-  const filteredProducts = productSearchTerm
-    ? products.filter(product =>
-        product.name.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
-        (product.category && product.category.toLowerCase().includes(productSearchTerm.toLowerCase())) ||
-        (product.description && product.description.toLowerCase().includes(productSearchTerm.toLowerCase()))
-      )
-    : products;
-
-  // Fetch users
-  const fetchUsers = async () => {
-    try {
-      setUsersLoading(true);
-      const usersList = await getAllUsers();
-      setUsers(usersList);
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      setError('Error al cargar los usuarios');
-    } finally {
-      setUsersLoading(false);
-    }
-  };
-
-  // Fetch reviews
-  const fetchReviews = async () => {
-    try {
-      setReviewsLoading(true);
-      const reviewsList = await getAllReviews();
-      setReviews(reviewsList);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-      setError('Error al cargar las reseñas');
-    } finally {
-      setReviewsLoading(false);
-    }
-  };
-
-  // Fetch orders
-  const fetchOrders = async () => {
-    try {
-      setOrdersLoading(true);
-      const ordersList = await getAllOrders();
-      setOrders(ordersList);
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-      setError('Error al cargar los pedidos');
-    } finally {
-      setOrdersLoading(false);
-    }
-  };
-
-  // Initialize data based on active section
-  useEffect(() => {
-    if (isAdmin) {
-      // Reset loading states when switching sections
-      setLoading(false); // Only used for analytics
-      setProductsLoading(false);
-      setUsersLoading(false);
-      setReviewsLoading(false);
-      setOrdersLoading(false);
-      
-      switch (activeSection) {
-        case 'analytics':
-          fetchDashboardStats();
-          break;
-        case 'products':
-          setProductsLoading(true);
-          fetchProducts();
-          fetchCategories();
-          break;
-        case 'users':
-          setUsersLoading(true);
-          fetchUsers();
-          break;
-        case 'reviews':
-          setReviewsLoading(true);
-          fetchReviews();
-          break;
-        case 'orders':
-          setOrdersLoading(true);
-          fetchOrders();
-          break;
-        case 'categories':
-          setCategoriesLoading(true);
-          fetchCategories();
-          break;
-        default:
-          fetchDashboardStats();
-      }
-    }
-  }, [activeSection, isAdmin]);
-
-  // Handle product form changes
-  const handleProductChange = (e) => {
-    setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
-  };
-
-  // Handle edit product form changes
-  const handleEditProductChange = (e) => {
-    setEditingProduct({ ...editingProduct, [e.target.name]: e.target.value });
-  };
-
-  // Handle file upload - Modified to use base64 encoding instead of Firebase Storage
-  const handleFileUpload = async (file) => {
-    if (!file) return null;
-    
-    // Validate file type
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-    if (!validTypes.includes(file.type)) {
-      setError("Por favor, sube una imagen válida (JPEG, JPG, PNG, GIF).");
-      return null;
-    }
-    
-    // Validate file size (max 1MB to avoid Firestore limits)
-    if (file.size > 1024 * 1024) {
-      setError("La imagen debe ser menor a 1MB.");
-      return null;
-    }
-    
-    try {
-      setUploading(true);
-      // Convert file to base64
-      const base64Data = await fileToBase64(file);
-      return {
-        name: file.name,
-        type: file.type,
-        data: base64Data,
-        timestamp: Date.now()
-      };
-    } catch (error) {
-      console.error("Error converting file to base64:", error);
-      setError("Error al procesar la imagen: " + error.message);
-      return null;
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  // Convert file to base64
   const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -747,356 +169,288 @@ const ModernAdminDashboard = () => {
     });
   };
 
-  // Handle image selection - Modified to support multiple images with limit of 4 and base64 encoding
+  const handleCategoryImageUpload = async (e, isEditing = false) => {
+    try {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 1024 * 1024) { alert("La imagen debe ser menor a 1MB."); return; }
+      const base64Data = await fileToBase64(file);
+      if (isEditing) {
+        setEditingCategoryImage(base64Data);
+        setEditingCategoryImagePreview(base64Data);
+      } else {
+        setCategoryImage(base64Data);
+        setCategoryImagePreview(base64Data);
+      }
+    } catch (err) { setError("Error al procesar la imagen."); }
+  };
+
+  const clearCategoryImage = (isEditing = false) => {
+    if (isEditing) {
+      setEditingCategoryImage(null);
+      setEditingCategoryImagePreview(null);
+      if (editingCategory?.imageUrl) setEditingCategory({ ...editingCategory, imageUrl: null });
+    } else {
+      setCategoryImage(null);
+      setCategoryImagePreview(null);
+      setNewCategory({ ...newCategory, imageUrl: null });
+    }
+  };
+
+  const createCategoryHandler = async (e) => {
+    e.preventDefault();
+    if (!newCategory.name) { alert("Introduce un nombre."); return; }
+    try {
+      const categoryData = { ...newCategory };
+      if (categoryImage) categoryData.imageUrl = categoryImage;
+      await createCategory(categoryData);
+      setNewCategory({ name: '', description: '' });
+      setCategoryImage(null);
+      setCategoryImagePreview(null);
+      showSuccessMessage("Categoría creada exitosamente!");
+      setCategoryModalOpen(false);
+      fetchCategories();
+    } catch (err) { setError("Error al crear la categoría."); }
+  };
+
+  const updateCategoryHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const categoryData = { ...editingCategory };
+      if (editingCategoryImage) categoryData.imageUrl = editingCategoryImage;
+      await updateCategory(editingCategory.id, categoryData);
+      showSuccessMessage("Categoría actualizada!");
+      setCategoryModalOpen(false);
+      setEditingCategory(null);
+      fetchCategories();
+    } catch (err) { setError("Error al actualizar."); }
+  };
+
+  const deleteCategoryHandler = async (id, name) => {
+    if (!window.confirm(`¿Eliminar "${name}"?`)) return;
+    try {
+      await deleteCategory(id);
+      setCategories(categories.filter(c => c.id !== id));
+      showSuccessMessage("Categoría eliminada.");
+    } catch (err) { setError("Error al eliminar."); }
+  };
+
+  const openAddCategoryModal = () => {
+    setNewCategory({ name: '', description: '' });
+    setCategoryImage(null);
+    setCategoryImagePreview(null);
+    setCategoryModalMode('add');
+    setCategoryModalOpen(true);
+  };
+
+  const openEditCategoryModal = (category) => {
+    setEditingCategory({ ...category });
+    setEditingCategoryImage(null);
+    setEditingCategoryImagePreview(null);
+    setCategoryModalMode('edit');
+    setCategoryModalOpen(true);
+  };
+
+  const handleLogout = async () => {
+    try { await signOut(auth); navigate('/login'); } catch (error) { setError('Error al cerrar sesión'); }
+  };
+
+  const showSuccessMessage = (message) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(''), 3000);
+  };
+
+  const formatCurrency = (amt) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(amt || 0);
+  const formatDate = (date) => {
+    if (!date) return 'N/A';
+    const d = date.toDate ? date.toDate() : new Date(date);
+    return d.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+
+  const fetchDashboardStats = async () => {
+    try {
+      setLoading(true);
+      const endDate = new Date();
+      let startDate = new Date();
+      switch (stats.dateRange) {
+        case 'last7days': startDate.setDate(startDate.getDate() - 7); break;
+        case 'last30days': startDate.setDate(startDate.getDate() - 30); break;
+        case 'last90days': startDate.setDate(startDate.getDate() - 90); break;
+        case 'lastYear': startDate.setFullYear(startDate.getFullYear() - 1); break;
+        default: startDate.setDate(startDate.getDate() - 30);
+      }
+      const productsSnapshot = await getDocs(collection(db, 'products'));
+      const ordersSnapshot = await getDocs(collection(db, 'orders'));
+      let totalRev = 0; ordersSnapshot.docs.forEach(d => totalRev += d.data().totalAmount || 0);
+      const usersList = await getAllUsers();
+      const reviewsList = await getAllReviews();
+      const salesData = await getSalesData(startDate, endDate);
+      const salesByCategory = await getSalesByCategory();
+      const orderStatusData = await getOrderStatusDistribution();
+      const topSellingProducts = await getTopSellingProducts(10);
+      const userRegistrationData = await getUserRegistrationData(startDate, endDate);
+      const paymentMethodData = await getRevenueByPaymentMethod();
+      
+      setStats({
+        totalProducts: productsSnapshot.size,
+        totalOrders: ordersSnapshot.size,
+        totalUsers: usersList.length,
+        totalReviews: reviewsList.length,
+        totalRevenue: totalRev,
+        recentOrders: [], // can be filled if needed
+        recentUsers: usersList.slice(0, 5),
+        salesData: salesData.salesData,
+        salesByCategory,
+        orderStatusData,
+        topSellingProducts,
+        userRegistrationData: userRegistrationData.registrationData,
+        paymentMethodData,
+        dateRange: stats.dateRange
+      });
+    } catch (e) { setError('Error en estadísticas.'); } finally { setLoading(false); }
+  };
+
+  const handleDateRangeChange = (range) => setStats(prev => ({ ...prev, dateRange: range }));
+  
+  const fetchProducts = async () => {
+    try {
+      setProductsLoading(true);
+      const snap = await getDocs(collection(db, 'products'));
+      setProducts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    } catch (err) { setError('Error en productos.'); } finally { setProductsLoading(false); }
+  };
+
+  const fetchUsers = async () => { try { setUsersLoading(true); setUsers(await getAllUsers()); } catch (err) { setError('Error en usuarios.'); } finally { setUsersLoading(false); } };
+  const fetchReviews = async () => { try { setReviewsLoading(true); setReviews(await getAllReviews()); } catch (err) { setError('Error en reviews.'); } finally { setReviewsLoading(false); } };
+  const fetchOrders = async () => { try { setOrdersLoading(true); setOrders(await getAllOrders()); } catch (err) { setError('Error en pedidos.'); } finally { setOrdersLoading(false); } };
+
+  useEffect(() => {
+    if (isAdmin) {
+      switch (activeSection) {
+        case 'analytics': fetchDashboardStats(); break;
+        case 'products': fetchProducts(); fetchCategories(); break;
+        case 'users': fetchUsers(); break;
+        case 'reviews': fetchReviews(); break;
+        case 'orders': fetchOrders(); break;
+        case 'categories': fetchCategories(); break;
+        default: fetchDashboardStats();
+      }
+    }
+  }, [activeSection, isAdmin, stats.dateRange]);
+
+  const handleProductChange = (e) => setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
+  const handleEditProductChange = (e) => setEditingProduct({ ...editingProduct, [e.target.name]: e.target.value });
+
   const handleImageSelect = async (isEditing = false) => {
     const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-    fileInput.multiple = true; // Allow multiple file selection
-    
+    fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.multiple = true;
     fileInput.onchange = async (e) => {
       const files = Array.from(e.target.files);
       if (!files.length) return;
-      
-      // Check if we're adding or editing
       const currentImages = isEditing ? editingProduct.imageUrls : newProduct.imageUrls;
-      
-      // Check if adding these files would exceed the limit of 4 images
-      if (currentImages.length + files.length > 4) {
-        setError(`Solo puedes subir un máximo de 4 imágenes. Actualmente tienes ${currentImages.length} imágenes.`);
-        return;
-      }
-      
-      // Process each file
+      if (currentImages.length + files.length > 4) { setError("Máximo 4 imágenes."); return; }
+      setUploading(true);
       const imageDataArray = [];
       for (const file of files) {
-        const imageData = await handleFileUpload(file);
-        if (imageData) {
-          imageDataArray.push(imageData);
-        }
+        const base64 = await fileToBase64(file);
+        imageDataArray.push({ name: file.name, type: file.type, data: base64, timestamp: Date.now() });
       }
-      
-      // Update state with new images
-      if (imageDataArray.length > 0) {
-        if (isEditing) {
-          setEditingProduct({
-            ...editingProduct,
-            imageUrls: [...editingProduct.imageUrls, ...imageDataArray]
-          });
-        } else {
-          setNewProduct({
-            ...newProduct,
-            imageUrls: [...newProduct.imageUrls, ...imageDataArray]
-          });
-        }
-        showSuccessMessage(`${imageDataArray.length} imagen(es) subida(s) exitosamente!`);
-      }
+      if (isEditing) setEditingProduct({ ...editingProduct, imageUrls: [...editingProduct.imageUrls, ...imageDataArray] });
+      else setNewProduct({ ...newProduct, imageUrls: [...newProduct.imageUrls, ...imageDataArray] });
+      setUploading(false);
     };
-    
     fileInput.click();
   };
 
-  // Remove image
-  const removeImage = (index, isEditing = false) => {
+  const removeImage = (idx, isEditing = false) => {
     if (isEditing) {
-      const newImages = [...editingProduct.imageUrls];
-      newImages.splice(index, 1);
-      setEditingProduct({
-        ...editingProduct,
-        imageUrls: newImages
-      });
+      const imgs = [...editingProduct.imageUrls]; imgs.splice(idx, 1);
+      setEditingProduct({ ...editingProduct, imageUrls: imgs });
     } else {
-      const newImages = [...newProduct.imageUrls];
-      newImages.splice(index, 1);
-      setNewProduct({
-        ...newProduct,
-        imageUrls: newImages
-      });
+      const imgs = [...newProduct.imageUrls]; imgs.splice(idx, 1);
+      setNewProduct({ ...newProduct, imageUrls: imgs });
     }
   };
 
-  // Set primary image
-  const setPrimaryImage = (index, isEditing = false) => {
-    if (isEditing) {
-      setEditingProduct({
-        ...editingProduct,
-        primaryImageIndex: index
-      });
-    } else {
-      setNewProduct({
-        ...newProduct,
-        primaryImageIndex: index
-      });
-    }
+  const setPrimaryImage = (idx, isEditing = false) => {
+    if (isEditing) setEditingProduct({ ...editingProduct, primaryImageIndex: idx });
+    else setNewProduct({ ...newProduct, primaryImageIndex: idx });
   };
 
-  // Create product
   const createProduct = async (e) => {
     e.preventDefault();
-    if (!newProduct.name || !newProduct.price) {
-      setError("Por favor, introduce al menos un nombre y un precio.");
-      return;
-    }
-    
     try {
-      // Validate price is a number
-      const price = parseFloat(newProduct.price);
-      if (isNaN(price)) {
-        setError("El precio debe ser un número válido.");
-        return;
-      }
-      
-      // Validate stock is a number
-      const stock = parseInt(newProduct.stock);
-      if (isNaN(stock)) {
-        setError("El stock debe ser un número válido.");
-        return;
-      }
-      
-      // Validate rating is a number between 0 and 5
-      const rating = parseFloat(newProduct.rating);
-      if (isNaN(rating) || rating < 0 || rating > 5) {
-        setError("La calificación debe ser un número entre 0 y 5.");
-        return;
-      }
-      
-      await addDoc(collection(db, "products"), { 
-        ...newProduct,
-        price: price,
-        stock: stock,
-        rating: rating,
-        createdAt: new Date()
-      });
-      
-      setNewProduct({ 
-        name: '', 
-        description: '', 
-        price: '',
-        stock: 0,
-        rating: 0,
-        imageUrls: [],
-        primaryImageIndex: 0,
-        category: '',
-        material: '',
-        color: '',
-        size: '',
-        style: ''
-      });
-      
-      showSuccessMessage("Producto añadido exitosamente!");
+      await addDoc(collection(db, "products"), { ...newProduct, price: parseFloat(newProduct.price), stock: parseInt(newProduct.stock), rating: parseFloat(newProduct.rating), createdAt: new Date() });
+      showSuccessMessage("Producto creado!");
       setProductModalOpen(false);
       fetchProducts();
-    } catch (err) {
-      console.error("Firebase error: ", err);
-      setError("Error al crear el producto. ¿Tienes permisos de escritura?");
-    }
+    } catch (err) { setError("Error al crear producto."); }
   };
 
-  // Update product
   const updateProduct = async (e) => {
     e.preventDefault();
-    if (!editingProduct.name || !editingProduct.price) {
-      setError("Por favor, introduce al menos un nombre y un precio.");
-      return;
-    }
-    
     try {
-      // Validate price is a number
-      const price = parseFloat(editingProduct.price);
-      if (isNaN(price)) {
-        setError("El precio debe ser un número válido.");
-        return;
-      }
-      
-      // Validate stock is a number
-      const stock = parseInt(editingProduct.stock);
-      if (isNaN(stock)) {
-        setError("El stock debe ser un número válido.");
-        return;
-      }
-      
-      // Validate rating is a number between 0 and 5
-      const rating = parseFloat(editingProduct.rating);
-      if (isNaN(rating) || rating < 0 || rating > 5) {
-        setError("La calificación debe ser un número entre 0 y 5.");
-        return;
-      }
-      
-      const productDoc = doc(db, "products", editingProduct.id);
-      await updateDoc(productDoc, {
-        ...editingProduct,
-        price: price,
-        stock: stock,
-        rating: rating,
-        updatedAt: new Date()
-      });
-      
-      showSuccessMessage("Producto actualizado exitosamente!");
+      await updateDoc(doc(db, "products", editingProduct.id), { ...editingProduct, price: parseFloat(editingProduct.price), stock: parseInt(editingProduct.stock), rating: parseFloat(editingProduct.rating), updatedAt: new Date() });
+      showSuccessMessage("Producto actualizado!");
       setProductModalOpen(false);
-      setEditingProduct(null);
       fetchProducts();
-    } catch (err) {
-      console.error("Firebase error: ", err);
-      setError("Error al actualizar el producto. ¿Tienes permisos de escritura?");
-    }
+    } catch (err) { setError("Error al actualizar."); }
   };
 
-  // Delete product
   const deleteProduct = async (id, name) => {
-    const confirmDelete = window.confirm(`¿Estás seguro de que quieres eliminar el producto "${name}"?`);
-    if (!confirmDelete) return;
-
-    try {
-      const productDoc = doc(db, "products", id);
-      await deleteDoc(productDoc);
-      setProducts(products.filter((product) => product.id !== id));
-      showSuccessMessage("Producto eliminado exitosamente!");
-    } catch (err) {
-      console.error("Firebase error: ", err);
-      setError("Error al eliminar el producto. ¿Tienes permisos de escritura?");
-    }
+    if (!window.confirm(`¿Eliminar ${name}?`)) return;
+    try { await deleteDoc(doc(db, "products", id)); fetchProducts(); showSuccessMessage("Eliminado."); } catch (err) { setError("Error."); }
   };
 
-  // Open add product modal
-  const openAddProductModal = () => {
-    setNewProduct({ 
-      name: '', 
-      description: '', 
-      price: '', 
-      imageUrls: [],
-      primaryImageIndex: 0,
-      category: '',
-      material: '',
-      color: '',
-      size: '',
-      style: '',
-      stock: 0,
-      rating: 0
-    });
-    setModalMode('add');
-    setProductModalOpen(true);
-  };
+  const openAddProductModal = () => { setModalMode('add'); setProductModalOpen(true); };
+  const openEditProductModal = (p) => { setEditingProduct({ ...p }); setModalMode('edit'); setProductModalOpen(true); };
 
-  // Open edit product modal
-  const openEditProductModal = (product) => {
-    setEditingProduct({ ...product });
-    setModalMode('edit');
-    setProductModalOpen(true);
-  };
-
-  // Update user role
   const updateUserRole = async (userId, newRole) => {
-    try {
-      await updateUserServiceRole(userId, newRole);
-      
-      // Update local state
-      setUsers(users.map(user => 
-        user.id === userId 
-          ? { ...user, role: newRole, updatedAt: new Date() }
-          : user
-      ));
-      
-      showSuccessMessage(`Usuario actualizado a ${newRole === 'admin' ? 'administrador' : 'cliente'} exitosamente!`);
-    } catch (err) {
-      console.error("Firebase error updating user role: ", err);
-      setError("Error al actualizar el rol del usuario. ¿Tienes permisos de escritura?");
-    }
+    try { await updateUserServiceRole(userId, newRole); fetchUsers(); showSuccessMessage("Rol actualizado."); } catch (err) { setError("Error."); }
   };
 
-  // Handle review edit change
-  const handleReviewEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditingReview({ ...editingReview, [name]: value });
-  };
-
-  // Handle star rating click for editing
-  const handleEditRatingClick = (rating) => {
-    setEditingReview({ ...editingReview, rating });
-  };
-
-  // Save edited review
   const saveEditedReview = async (e) => {
     e.preventDefault();
-    
-    // Validate rating
-    if (editingReview.rating < 1 || editingReview.rating > 5) {
-      setError("La calificación debe estar entre 1 y 5 estrellas.");
-      return;
-    }
-    
-    // Validate comment
-    if (!editingReview.comment || editingReview.comment.trim() === '') {
-      setError("El comentario no puede estar vacío.");
-      return;
-    }
-    
     try {
-      await updateReview(editingReview.id, {
-        rating: editingReview.rating,
-        comment: editingReview.comment.trim()
-      });
-      
-      // Update local state
-      setReviews(reviews.map(review => 
-        review.id === editingReview.id 
-          ? { ...review, rating: editingReview.rating, comment: editingReview.comment.trim() }
-          : review
-      ));
-      
-      setEditingReview(null);
+      await updateReview(editingReview.id, { rating: editingReview.rating, comment: editingReview.comment });
       setReviewModalOpen(false);
-      showSuccessMessage("Reseña actualizada exitosamente!");
-    } catch (err) {
-      console.error("Firebase error: ", err);
-      setError("Error al actualizar la reseña. ¿Tienes permisos de escritura?");
-    }
+      fetchReviews();
+      showSuccessMessage("Reseña actualizada.");
+    } catch (err) { setError("Error."); }
   };
 
-  // Delete review
   const deleteReviewHandler = async (id) => {
-    const confirmDelete = window.confirm("¿Estás seguro de que quieres eliminar esta reseña?");
-    if (!confirmDelete) return;
+    if (!window.confirm("¿Eliminar reseña?")) return;
+    try { await deleteReview(id); fetchReviews(); showSuccessMessage("Eliminado."); } catch (err) { setError("Error."); }
+  };
 
+  const openEditReviewModal = (r) => { setEditingReview({ ...r }); setReviewModalOpen(true); };
+  const openOrderDetails = (o) => { setSelectedOrder(o); setOrderModalOpen(true); };
+  const closeOrderDetails = () => { setOrderModalOpen(false); setSelectedOrder(null); };
+
+  const deleteOrder = async (id) => {
+    if (!window.confirm("¿Eliminar pedido?")) return;
+    try { await deleteDoc(doc(db, "orders", id)); fetchOrders(); showSuccessMessage("Eliminado."); } catch (err) { setError("Error."); }
+  };
+
+  const updateOrderStatusHandler = async (id, status) => {
     try {
-      await deleteReview(id);
-      setReviews(reviews.filter((review) => review.id !== id));
-      showSuccessMessage("Reseña eliminada exitosamente!");
-    } catch (err) {
-      console.error("Firebase error: ", err);
-      setError("Error al eliminar la reseña. ¿Tienes permisos de escritura?");
-    }
+      setOrderStatusUpdating(prev => ({ ...prev, [id]: true }));
+      await updateOrderStatus(id, status);
+      fetchOrders();
+    } catch (err) { setError("Error."); } finally { setOrderStatusUpdating(prev => ({ ...prev, [id]: false })); }
   };
 
-  // Open edit review modal
-  const openEditReviewModal = (review) => {
-    setEditingReview({ ...review });
-    setReviewModalOpen(true);
-  };
-
-  // Open order details modal
-  const openOrderDetails = (order) => {
-    setSelectedOrder(order);
-    setOrderModalOpen(true);
-  };
-
-  // Close order details modal
-  const closeOrderDetails = () => {
-    setOrderModalOpen(false);
-    setSelectedOrder(null);
-  };
-
-  // Navigation items
   const navItems = [
-    { id: 'analytics', label: 'Analytics', icon: <FiBarChart2 /> },
-    { id: 'products', label: 'Productos', icon: <FiShoppingBag /> },
-    { id: 'categories', label: 'Categorías', icon: <FiList /> },
-    { id: 'users', label: 'Usuarios', icon: <FiUsers /> },
-    { id: 'reviews', label: 'Reviews', icon: <FiMessageSquare /> },
+    { id: 'analytics', label: 'Estrategia', icon: <FiActivity /> },
+    { id: 'products', label: 'Inventario', icon: <FiGrid /> },
+    { id: 'categories', label: 'Colecciones', icon: <FiLayers /> },
+    { id: 'users', label: 'Clientes', icon: <FiUsers /> },
+    { id: 'reviews', label: 'Feedback', icon: <FiStar /> },
     { id: 'coupons', label: 'Cupones', icon: <FiTag /> },
-    { id: 'orders', label: 'Pedidos', icon: <FiPackage /> },
+    { id: 'orders', label: 'Logística', icon: <FiPackage /> },
   ];
 
-  // Render content based on active section
   const renderContent = () => {
     switch (activeSection) {
       case 'analytics':
@@ -1173,203 +527,153 @@ const ModernAdminDashboard = () => {
         />;
       case 'coupons':
         return (
-          <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <h2 className={`text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Todos los códigos promocionales</h2>
-            </div>
-            <div className="w-full overflow-x-auto">
-              <CouponManager theme={theme} />
-            </div>
+          <div className="w-full">
+            <CouponManager theme={theme} />
           </div>
         );
       default:
-        return (
-          <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-            <h2 className={`mb-6 text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Dashboard</h2>
-            <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}>Bienvenido al panel de administración moderno.</p>
-          </div>
-        );
+        return <div className="p-10 text-center uppercase font-black text-slate-400">Section selection required.</div>;
     }
   };
 
+  const isDark = theme === 'dark';
+  const bgMain = isDark ? 'bg-[#111218]' : 'bg-slate-50';
+  const sidebarBg = isDark ? 'bg-[#1a1b26] border-slate-800' : 'bg-white border-slate-100 shadow-xl';
+  const headerBg = isDark ? 'bg-[#1a1b26]/80 border-slate-800' : 'bg-white/80 border-slate-100 shadow-sm';
+  const textTitle = isDark ? 'text-slate-100' : 'text-slate-900';
+  const textSub = isDark ? 'text-slate-400' : 'text-slate-500';
+
   return (
-    <div className={`min-h-screen flex w-full ${theme === 'dark' ? 'dark:bg-gray-900 bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
-      {/* Success/Error Messages */}
-      {successMessage && (
-        <div className="fixed z-50 px-6 py-4 text-white bg-green-600 rounded-lg shadow-lg top-4 right-4">
-          {successMessage}
-        </div>
-      )}
+    <div className={`min-h-screen flex w-full overflow-hidden ${bgMain}`} style={{ fontFamily: 'Inter, sans-serif' }}>
       
-      {error && (
-        <div className="fixed z-50 px-6 py-4 text-white bg-red-600 rounded-lg shadow-lg top-4 right-4">
-          {error}
-        </div>
-      )}
-
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        ></div>
-      )}
-
-      {/* Sidebar */}
-      <div 
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:flex lg:flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} ${theme === 'dark' ? 'dark:bg-gray-800 bg-gray-800' : ''}`}
-      >
-        <div className={`flex items-center justify-between p-6 border-b ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
-          <h1 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Admin Panel</h1>
-          <button 
-            onClick={() => setSidebarOpen(false)}
-            className={`p-1 rounded-lg lg:hidden ${theme === 'dark' ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}`}
-          >
-            <FiX size={24} />
-          </button>
-        </div>
-        
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {navItems.map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => {
-                    setActiveSection(item.id);
-                    setSidebarOpen(false);
-                  }}
-                  className={`flex items-center w-full p-3 rounded-lg transition-colors ${
-                    activeSection === item.id
-                      ? theme === 'dark' 
-                        ? 'bg-blue-900 text-blue-300' 
-                        : 'bg-blue-100 text-blue-600'
-                      : theme === 'dark' 
-                        ? 'text-gray-300 hover:bg-gray-700' 
-                        : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <span className="mr-3">{item.icon}</span>
-                  {item.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      {/* SUCCESS/ERROR TOASTS */}
+      <div className="fixed top-8 right-8 z-[200] space-y-4">
+        {successMessage && (
+          <div className="px-6 py-4 bg-emerald-600 text-white rounded-2xl shadow-2xl flex items-center gap-3 animate-in slide-in-from-right-10 duration-500">
+            <FiCheck className="text-xl" /> <span className="text-sm font-black uppercase tracking-widest">{successMessage}</span>
+          </div>
+        )}
+        {error && (
+          <div className="px-6 py-4 bg-rose-600 text-white rounded-2xl shadow-2xl flex items-center gap-3 animate-in slide-in-from-right-10 duration-500">
+            <FiX className="text-xl" /> <span className="text-sm font-black uppercase tracking-widest">{error}</span>
+          </div>
+        )}
       </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col flex-1 w-full">
-        {/* Header */}
-        <header className={`flex items-center justify-between p-4 border-b ${theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'} flex-wrap gap-4`}>
-          <div className="flex items-center">
-            <button 
-              onClick={() => setSidebarOpen(true)}
-              className={`p-2 mr-4 rounded-lg lg:hidden ${theme === 'dark' ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}`}
-            >
-              <FiMenu size={24} />
-            </button>
-            <h2 className={`text-xl font-semibold capitalize ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-              {navItems.find(item => item.id === activeSection)?.label || 'Dashboard'}
-            </h2>
+      {/* MOBILE OVERLAY */}
+      {sidebarOpen && <div className="fixed inset-0 z-[140] bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />}
+
+      {/* LUXURY SIDEBAR */}
+      <aside className={`fixed lg:static inset-y-0 left-0 z-[150] w-72 ${sidebarBg} border-r transform transition-transform duration-500 ease-out lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="flex flex-col h-full pt-10 px-8 pb-10">
+          <div className="flex items-center justify-between mb-16">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-black text-white rounded-xl flex items-center justify-center font-black italic shadow-2xl">P</div>
+              <h1 className={`text-xl font-black tracking-tighter ${textTitle}`}>PSG ADMIN</h1>
+            </div>
+            <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-2 text-slate-400"><FiX size={24} /></button>
           </div>
           
-          <div className="flex items-center space-x-4">
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className={`p-2 rounded-full ${
-                theme === 'dark' 
-                  ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              } transition-colors`}
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? <FiSun size={20} /> : <FiMoon size={20} />}
-            </button>
-            
-            {/* Profile Menu */}
-            <div className="relative" ref={profileMenuRef}>
+          <nav className="flex-1 space-y-1">
+            <span className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">Command Center</span>
+            {navItems.map((item) => (
               <button
-                onClick={toggleProfileMenu}
-                className="flex items-center space-x-2 focus:outline-none"
+                key={item.id}
+                onClick={() => { setActiveSection(item.id); setSidebarOpen(false); }}
+                className={`flex items-center w-full px-5 py-4 rounded-2xl transition-all duration-300 group ${
+                  activeSection === item.id 
+                    ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-500/20 active:scale-95' 
+                    : `text-slate-400 hover:bg-indigo-500/5 ${isDark ? 'hover:text-slate-100' : 'hover:text-indigo-600'}`
+                }`}
               >
-                <div className={`flex items-center justify-center w-10 h-10 text-white rounded-full ${
-                  theme === 'dark' ? 'bg-blue-600' : 'bg-blue-500'
-                }`}>
-                  {currentUser?.email?.charAt(0).toUpperCase() || 'A'}
-                </div>
+                <span className={`mr-4 transition-transform group-hover:scale-110 ${activeSection === item.id ? 'text-white' : 'text-slate-500'}`}>{item.icon}</span>
+                <span className="text-xs font-black uppercase tracking-widest">{item.label}</span>
+                {activeSection === item.id && <FiChevronRight className="ml-auto opacity-50" />}
               </button>
-              
+            ))}
+          </nav>
+
+        </div>
+      </aside>
+
+      {/* MAIN VIEWPORT */}
+      <div className="flex-1 flex flex-col min-h-0">
+        
+        {/* LUXURY TOP NAV */}
+        <header className={`sticky top-0 z-[100] ${headerBg} backdrop-blur-md border-b px-8 py-5 flex items-center justify-between`}>
+          <div className="flex items-center gap-6">
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 text-slate-500"><FiMenu size={24} /></button>
+            <div>
+              <h2 className={`text-sm font-black uppercase tracking-[0.2em] ${textTitle}`}>
+                {navItems.find(i => i.id === activeSection)?.label || 'Dashboard'}
+              </h2>
+              <div className="flex items-center gap-2 mt-0.5">
+                 <FiHome className="text-slate-400" size={12}/>
+                 <FiChevronRight className="text-slate-300" size={10}/>
+                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Admin</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-6">
+            <button onClick={toggleTheme} className={`p-4 rounded-2xl transition-all active:scale-90 ${isDark ? 'bg-slate-800 text-amber-400' : 'bg-slate-100 text-indigo-600 shadow-sm'}`}>
+              {theme === 'dark' ? <FiSun /> : <FiMoon />}
+            </button>
+            <div className="relative" ref={profileMenuRef}>
+              <div 
+                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                 className="flex items-center gap-4 cursor-pointer p-1 rounded-2xl transition-all hover:bg-slate-500/10 hover:scale-105 active:scale-95"
+              >
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-white shadow-2xl transition-all ${isProfileMenuOpen ? 'ring-4 ring-indigo-500/20' : ''} ${isDark ? 'bg-indigo-600' : 'bg-black'}`}>
+                  {currentUser?.email?.charAt(0).toUpperCase()}
+                </div>
+                <div className="hidden md:block text-left">
+                  <p className={`text-[11px] font-black uppercase tracking-widest ${textTitle}`}>{currentUser?.email?.split('@')[0]}</p>
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Administrator</p>
+                </div>
+              </div>
+
+              {/* LUXURY DROPDOWN */}
               {isProfileMenuOpen && (
-                <div className={`absolute right-0 z-50 w-48 mt-2 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 ${
-                  theme === 'dark' ? 'bg-gray-800' : 'bg-white'
-                }`}>
-                  <div className="py-1">
-                    <div className={`px-4 py-2 border-b ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
-                      <p className={`text-sm font-medium truncate ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                        {currentUser?.email}
-                      </p>
-                      <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                        Administrador
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => {
-                        navigate('/');
-                        closeProfileMenu();
-                      }}
-                      className={`flex items-center w-full px-4 py-2 text-sm text-left ${
-                        theme === 'dark' 
-                          ? 'text-gray-300 hover:bg-gray-700' 
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                    >
-                      <FiHome className="mr-2" />
-                      Ir a la página
-                    </button>
-                    <button
-                      onClick={handleLogout}
-                      className={`flex items-center w-full px-4 py-2 text-sm text-left ${
-                        theme === 'dark' 
-                          ? 'text-gray-300 hover:bg-gray-700' 
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                    >
-                      <FiLogOut className="mr-2" />
-                      Cerrar Sesión
-                    </button>
-                  </div>
+                <div className={`absolute right-0 mt-4 w-64 rounded-3xl border shadow-2xl overflow-hidden z-[150] animate-in slide-in-from-top-4 duration-300 ${isDark ? 'bg-[#1a1b26] border-slate-800 shadow-black' : 'bg-white border-slate-100'}`}>
+                   <div className="p-2 space-y-1">
+                      <button 
+                         onClick={() => { navigate('/'); setIsProfileMenuOpen(false); }}
+                         className={`flex items-center w-full gap-4 px-5 py-4 rounded-2xl transition-all text-xs font-black uppercase tracking-widest ${isDark ? 'text-slate-300 hover:bg-slate-800 hover:text-white' : 'text-slate-600 hover:bg-slate-50 hover:text-black'}`}
+                      >
+                         <FiHome className="text-indigo-500" size={16} />
+                         <span>Volver a la Web</span>
+                      </button>
+                      <div className={`h-[1px] mx-4 ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`} />
+                      <button 
+                         onClick={() => { handleLogout(); setIsProfileMenuOpen(false); }}
+                         className="flex items-center w-full gap-4 px-5 py-4 rounded-2xl transition-all text-rose-500 hover:bg-rose-500/10 text-xs font-black uppercase tracking-widest"
+                      >
+                         <FiLogOut size={16} />
+                         <span>Cerrar Sesión</span>
+                      </button>
+                   </div>
                 </div>
               )}
             </div>
           </div>
         </header>
         
-        {/* Main Content Area */}
-        <main className="flex-1 w-full p-6 overflow-auto">
-          {isAdmin ? (
-            renderContent()
-          ) : (
-            <div className="flex flex-col items-center justify-center h-64">
-              <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}>
-                No tienes permisos para acceder al panel de administración.
-              </p>
-              <button
-                onClick={() => navigate('/')}
-                className={`px-4 py-2 mt-4 rounded-lg ${
-                  theme === 'dark' 
-                    ? 'text-white bg-blue-600 hover:bg-blue-700' 
-                    : 'text-white bg-blue-600 hover:bg-blue-700'
-                }`}
-              >
-                Volver al inicio
-              </button>
-            </div>
-          )}
+        {/* MAIN SCROLLABLE AREA */}
+        <main className="flex-1 overflow-auto p-10 lg:p-14">
+          <div className="max-w-[1600px] mx-auto">
+            {isAdmin ? renderContent() : (
+              <div className="flex flex-col items-center justify-center py-20">
+                <FiX className="text-rose-500 mb-4" size={48} />
+                <p className="text-xl font-black text-slate-400 uppercase tracking-widest">Acceso Denegado</p>
+                <button onClick={() => navigate('/')} className="mt-8 px-10 py-4 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest">Volver al Home</button>
+              </div>
+            )}
+          </div>
         </main>
       </div>
-      
-      {/* Product Modal */}
+
+      {/* MODALS INTEGRATION */}
       <AdminProductModal 
         isOpen={productModalOpen}
         onClose={() => setProductModalOpen(false)}
@@ -1388,264 +692,84 @@ const ModernAdminDashboard = () => {
         setPrimaryImage={setPrimaryImage}
       />
 
-      {/* Review Edit Modal */}
+      {/* LUXURY REVIEW MODAL */}
       {reviewModalOpen && editingReview && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div 
-              className="fixed transition-opacity bg-opacity-50" 
-              aria-hidden="true"
-              onClick={() => setReviewModalOpen(false)}
-            ></div>
-            
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            
-            {/* Modern Modal Design */}
-            <div className={`z-50 inline-block overflow-hidden text-left align-bottom transition-all transform shadow-xl rounded-2xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full ${
-              theme === 'dark' ? 'bg-gray-800' : 'bg-white'
-            }`} style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.1)', width: '650px' }}>
-              <div className="px-8 py-8">
-                <div className="mb-8 text-center">
-                  <h3 className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    Editar Reseña
-                  </h3>
-                  <p className={`mt-2 text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                    Modifica la calificación y el comentario de la reseña
-                  </p>
-                </div>
-                
-                <div className="mt-2">
-                  <form onSubmit={saveEditedReview} className="space-y-6">
-                    <div>
-                      <label className={`block mb-4 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Calificación</label>
-                      <div className="flex items-center justify-center space-x-2">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            type="button"
-                            onClick={() => handleEditRatingClick(star)}
-                            className="text-4xl transition-transform focus:outline-none hover:scale-110"
-                          >
-                            {star <= editingReview.rating ? (
-                              <span className="text-yellow-400">★</span>
-                            ) : (
-                              <span className={theme === 'dark' ? 'text-gray-600' : 'text-gray-300'}>☆</span>
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                      <div className="mt-3 text-center">
-                        <span className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                          {editingReview.rating} de 5 estrellas
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                        Comentario
-                      </label>
-                      <textarea
-                        name="comment"
-                        rows={6}
-                        value={editingReview.comment}
-                        onChange={handleReviewEditChange}
-                        className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                        }`}
-                        placeholder="Escribe tu reseña aquí..."
-                      />
-                    </div>
-                    
-                    <div className={`flex justify-between px-8 py-5 border-t ${
-                      theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
-                    }`}>
-                      <button
-                        type="button"
-                        onClick={() => setReviewModalOpen(false)}
-                        className={`inline-flex justify-center px-5 py-2.5 text-sm font-medium rounded-lg transition-all ${
-                          theme === 'dark' 
-                            ? 'text-gray-300 bg-gray-700 border border-gray-600 hover:bg-gray-600' 
-                            : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                        } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        type="submit"
-                        className={`inline-flex justify-center px-5 py-2.5 text-sm font-medium text-white rounded-lg transition-all ${
-                          theme === 'dark' 
-                            ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500' 
-                            : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
-                        } border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2`}
-                      >
-                        Guardar Cambios
-                      </button>
-                    </div>
-                  </form>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className={`w-full max-w-xl rounded-[2.5rem] border shadow-2xl relative animate-in zoom-in-95 duration-300 ${isDark ? 'bg-[#1a1b26] border-slate-800' : 'bg-white border-slate-100'} p-12`}>
+            <div className="mb-10 flex items-center justify-between">
+              <div>
+                <h3 className={`text-2xl font-black tracking-tight ${textTitle}`}>Moderación de Reseña</h3>
+                <p className={textSub}>Ajusta la calificación o el contenido del feedback.</p>
+              </div>
+              <button onClick={() => setReviewModalOpen(false)} className="p-3 bg-slate-100 dark:bg-slate-800 rounded-2xl"><FiX/></button>
+            </div>
+            <form onSubmit={saveEditedReview} className="space-y-8">
+              <div className="flex flex-col items-center">
+                <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-4">Nivel de Calificación</span>
+                <div className="flex gap-3">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <button key={s} type="button" onClick={() => setEditingReview({...editingReview, rating: s})} className="transition-transform active:scale-75">
+                      <FiStar size={32} className={`${s <= editingReview.rating ? 'fill-amber-400 text-amber-400 shadow-amber-500/20' : 'text-slate-200 fill-slate-200'}`} />
+                    </button>
+                  ))}
                 </div>
               </div>
-            </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-1">Comentario Editado</label>
+                <textarea name="comment" rows={5} value={editingReview.comment} onChange={(e) => setEditingReview({...editingReview, comment: e.target.value})} className={`w-full px-6 py-4 rounded-2xl border transition-all ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
+              </div>
+              <button type="submit" className="w-full py-5 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-600 transition-all">Guardar Cambios</button>
+            </form>
           </div>
         </div>
       )}
 
-      {/* Order Details Modal */}
-      {/* Category Modal */}
+      {/* LUXURY CATEGORY MODAL */}
       {categoryModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div 
-              className="fixed transition-opacity bg-opacity-50" 
-              aria-hidden="true"
-              onClick={() => setCategoryModalOpen(false)}
-            ></div>
-            
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            
-            {/* Modern Modal Design */}
-            <div className={`z-50 inline-block overflow-hidden text-left align-bottom transition-all transform shadow-xl rounded-2xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full ${
-              theme === 'dark' ? 'bg-gray-800' : 'bg-white'
-            }`} style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.1)', width: '650px' }}>
-              <div className="px-8 py-8">
-                <div className="mb-8 text-center">
-                  <h3 className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    {categoryModalMode === 'add' ? 'Añadir Categoría' : 'Editar Categoría'}
-                  </h3>
-                  <p className={`mt-2 text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                    {categoryModalMode === 'add' ? 'Ingresa los detalles de la nueva categoría' : 'Modifica la información de la categoría'}
-                  </p>
-                </div>
-                
-                <div className="mt-2">
-                  <form onSubmit={categoryModalMode === 'add' ? createCategoryHandler : updateCategoryHandler} className="space-y-6">
-                    <div>
-                      <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Nombre de la Categoría</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={categoryModalMode === 'add' ? newCategory.name : editingCategory?.name}
-                        onChange={categoryModalMode === 'add' ? handleCategoryChange : handleEditCategoryChange}
-                        className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                        }`}
-                        placeholder="Nombre de la categoría"
-                        required
-                      />
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className={`w-full max-w-xl rounded-[2.5rem] border shadow-2xl animate-in zoom-in-95 duration-300 ${isDark ? 'bg-[#1a1b26] border-slate-800' : 'bg-white border-slate-100'} p-12`}>
+            <div className="mb-10 flex items-center justify-between">
+              <div>
+                <h3 className={`text-2xl font-black tracking-tight ${textTitle}`}>{categoryModalMode === 'add' ? 'Nueva Colección' : 'Refinar Colección'}</h3>
+                <p className={textSub}>Define los parámetros de la categoría.</p>
+              </div>
+              <button onClick={() => setCategoryModalOpen(false)} className="p-3 bg-slate-100 dark:bg-slate-800 rounded-2xl"><FiX/></button>
+            </div>
+            <form onSubmit={categoryModalMode === 'add' ? createCategoryHandler : updateCategoryHandler} className="space-y-8">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-1">Título de Colección</label>
+                <input type="text" name="name" value={categoryModalMode === 'add' ? newCategory.name : editingCategory?.name} onChange={categoryModalMode === 'add' ? (e) => setNewCategory({...newCategory, name: e.target.value}) : (e) => setEditingCategory({...editingCategory, name: e.target.value})} className={`w-full px-6 py-4 rounded-2xl border ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`} required />
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-1">Descripción Conceptual</label>
+                <textarea name="description" rows={3} value={categoryModalMode === 'add' ? newCategory.description : editingCategory?.description} onChange={categoryModalMode === 'add' ? (e) => setNewCategory({...newCategory, description: e.target.value}) : (e) => setEditingCategory({...editingCategory, description: e.target.value})} className={`w-full px-6 py-4 rounded-2xl border ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-1">Visual Identitario</label>
+                <div className="flex items-center gap-6">
+                  {((categoryModalMode === 'add' && categoryImagePreview) || (categoryModalMode === 'edit' && (editingCategoryImagePreview || editingCategory?.imageUrl))) ? (
+                    <div className="relative group w-24 h-24 rounded-2xl overflow-hidden shadow-2xl">
+                      <img src={categoryModalMode === 'add' ? categoryImagePreview : (editingCategoryImagePreview || editingCategory?.imageUrl)} alt="Preview" className="w-full h-full object-cover" />
+                      <button type="button" onClick={() => clearCategoryImage(categoryModalMode === 'edit')} className="absolute inset-0 bg-rose-600/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity"><FiTrash2/></button>
                     </div>
-                    
-                    <div>
-                      <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Descripción</label>
-                      <textarea
-                        name="description"
-                        value={categoryModalMode === 'add' ? newCategory.description : editingCategory?.description}
-                        onChange={categoryModalMode === 'add' ? handleCategoryChange : handleEditCategoryChange}
-                        className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                        }`}
-                        rows="4"
-                        placeholder="Descripción de la categoría"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Imagen de la Categoría</label>
-                      <div className="mt-2">
-                        {/* Image preview */}
-                        {(categoryModalMode === 'add' && categoryImagePreview) || (categoryModalMode === 'edit' && (editingCategoryImagePreview || editingCategory?.imageUrl)) ? (
-                          <div className="relative mb-4">
-                            <img 
-                              src={categoryModalMode === 'add' ? categoryImagePreview : (editingCategoryImagePreview || editingCategory?.imageUrl)} 
-                              alt="Preview" 
-                              className="object-cover w-32 h-32 rounded-lg"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => clearCategoryImage(categoryModalMode === 'edit')}
-                              className="absolute top-0 right-0 p-1 text-white bg-red-600 rounded-full hover:bg-red-700"
-                            >
-                              <FiX size={16} />
-                            </button>
-                          </div>
-                        ) : null}
-                        
-                        {/* Upload button - only show if no image is selected */}
-                        {((categoryModalMode === 'add' && !categoryImagePreview) || (categoryModalMode === 'edit' && !editingCategoryImagePreview && !editingCategory?.imageUrl)) ? (
-                          <label className={`flex flex-col items-center justify-center px-4 py-6 border-2 border-dashed rounded-lg cursor-pointer ${
-                            theme === 'dark' 
-                              ? 'border-gray-600 hover:border-gray-500 bg-gray-700' 
-                              : 'border-gray-300 hover:border-gray-400 bg-gray-50'
-                          }`}>
-                            <FiPlus className={`w-8 h-8 mb-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
-                            <span className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                              Seleccionar imagen
-                            </span>
-                            <input 
-                              type="file" 
-                              className="hidden" 
-                              accept="image/*" 
-                              onChange={(e) => handleCategoryImageUpload(e, categoryModalMode === 'edit')}
-                            />
-                          </label>
-                        ) : null}
-                        <p className={`mt-2 text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                          PNG, JPG, GIF hasta 2MB
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className={`flex justify-between px-8 py-5 border-t ${
-                      theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
-                    }`}>
-                      <button
-                        type="button"
-                        onClick={() => setCategoryModalOpen(false)}
-                        className={`inline-flex justify-center px-5 py-2.5 text-sm font-medium rounded-lg transition-all ${
-                          theme === 'dark' 
-                            ? 'text-gray-300 bg-gray-700 border border-gray-600 hover:bg-gray-600' 
-                            : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                        } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        type="submit"
-                        className={`inline-flex justify-center px-5 py-2.5 text-sm font-medium text-white rounded-lg transition-all ${
-                          theme === 'dark' 
-                            ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500' 
-                            : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
-                        } border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2`}
-                      >
-                        {categoryModalMode === 'add' ? 'Añadir Categoría' : 'Actualizar Categoría'}
-                      </button>
-                    </div>
-                  </form>
+                  ) : (
+                    <label className={`w-24 h-24 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${isDark ? 'bg-slate-900 border-slate-700 hover:border-indigo-600' : 'bg-slate-50 border-slate-200 hover:border-indigo-600'}`}>
+                      <FiCamera className="text-slate-300" size={24}/>
+                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleCategoryImageUpload(e, categoryModalMode === 'edit')} />
+                    </label>
+                  )}
+                  <p className="text-[10px] text-slate-400 font-bold max-w-[150px]">Recomendado: 800x800px. Máximo 1MB.</p>
                 </div>
               </div>
-            </div>
+              <button type="submit" className="w-full py-5 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-600 shadow-2xl transition-all">
+                {categoryModalMode === 'add' ? 'Lanzar Colección' : 'Guardar Cambios'}
+              </button>
+            </form>
           </div>
         </div>
       )}
 
-      {/* Order Details Modal */}
-      {orderModalOpen && selectedOrder && (
-        <OrderDetailsModal 
-          order={selectedOrder}
-          isOpen={orderModalOpen}
-          onClose={closeOrderDetails}
-          formatDate={formatDate}
-          formatCurrency={formatCurrency}
-          getOrderStatusText={getOrderStatusText}
-          getStatusBadgeClass={getStatusBadgeClass}
-          theme={theme}
-        />
-      )}
+      <OrderDetailsModal isOpen={orderModalOpen} onClose={closeOrderDetails} order={selectedOrder} theme={theme} />
     </div>
   );
 };

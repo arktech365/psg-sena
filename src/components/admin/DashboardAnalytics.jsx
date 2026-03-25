@@ -5,7 +5,7 @@ import SalesByCategoryChart from '../charts/SalesByCategoryChart';
 import OrderStatusChart from '../charts/OrderStatusChart';
 import PaymentMethodChart from '../charts/PaymentMethodChart';
 import UserRegistrationChart from '../charts/UserRegistrationChart';
-import { FiShoppingBag, FiPackage, FiUsers, FiBarChart2 } from 'react-icons/fi';
+import { FiShoppingBag, FiPackage, FiUsers, FiBarChart2, FiActivity, FiTrendingUp, FiArrowRight } from 'react-icons/fi';
 
 const DashboardAnalytics = ({
   stats,
@@ -18,132 +18,160 @@ const DashboardAnalytics = ({
   getOrderStatusText
 }) => {
   if (loading) {
-    return <Loader text="Cargando datos analíticos..." size="lg" />;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+        <div className="w-16 h-16 border-4 border-indigo-600 border-b-transparent rounded-full animate-spin"></div>
+        <p className="text-sm font-black uppercase tracking-[0.3em] text-indigo-600 animate-pulse">Sincronizando Inteligencia...</p>
+      </div>
+    );
   }
 
-  // Stylish glassmorphism card classes
-  const cardClass = `p-6 transition-all duration-300 backdrop-blur-md bg-white/80 shadow-lg border border-gray-100 rounded-3xl ${
-    theme === 'dark' ? 'dark:bg-slate-800/80 dark:border-slate-700/50 dark:shadow-2xl' : ''
-  } w-full`;
+  const isDark = theme === 'dark';
+  
+  // Luxury UI Tokens
+  const bgMain = isDark ? 'bg-[#111218]' : 'bg-slate-50';
+  const bgCard = isDark ? 'bg-[#1a1b26] border-slate-800 shadow-2xl' : 'bg-white border-slate-100 shadow-sm';
+  const textTitle = isDark ? 'text-slate-100' : 'text-slate-900';
+  const textSub = isDark ? 'text-slate-400' : 'text-slate-500';
 
-  const btnClassActive = "px-5 py-2.5 text-sm font-medium rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 transform hover:scale-105 transition-all duration-200";
-  const btnClassInactive = `px-5 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 ${
-    theme === 'dark' ? 'bg-slate-700/50 text-gray-300 hover:bg-slate-600' : 'bg-gray-100/80 text-gray-600 hover:bg-gray-200 hover:text-gray-900 border border-transparent'
-  }`;
+  const btnBase = "px-6 py-3 text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all duration-300 active:scale-95";
+  const btnActive = `${btnBase} bg-indigo-600 text-white shadow-lg shadow-indigo-500/20`;
+  const btnInactive = `${btnBase} ${isDark ? 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-100'}`;
 
   return (
-    <div className="w-full space-y-8 animate-fadeIn">
-      {/* Date Range Selector */}
-      <div className={`${cardClass} flex flex-wrap items-center justify-between gap-4`}>
-        <h2 className={`text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${theme === 'dark' ? 'from-white to-gray-400' : 'from-gray-900 to-gray-600'}`}>
-          Visión General
-        </h2>
-        <div className="flex flex-wrap gap-3">
-          <button 
-            onClick={() => handleDateRangeChange('last7days')}
-            className={stats.dateRange === 'last7days' ? btnClassActive : btnClassInactive}
-          >
-            Últimos 7 días
-          </button>
-          <button 
-            onClick={() => handleDateRangeChange('last30days')}
-            className={stats.dateRange === 'last30days' ? btnClassActive : btnClassInactive}
-          >
-            Últimos 30 días
-          </button>
-          <button 
-            onClick={() => handleDateRangeChange('last90days')}
-            className={stats.dateRange === 'last90days' ? btnClassActive : btnClassInactive}
-          >
-            Últimos 90 días
-          </button>
-          <button 
-            onClick={() => handleDateRangeChange('lastYear')}
-            className={stats.dateRange === 'lastYear' ? btnClassActive : btnClassInactive}
-          >
-            Último año
-          </button>
+    <div className={`w-full space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 ${bgMain}`}>
+      
+      {/* Dynamic Header & Period Selector */}
+      <div className={`${bgCard} p-10 rounded-[2.5rem] border flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative overflow-hidden`}>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+        <div className="relative">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-8 h-1 bg-indigo-600 rounded-full"></div>
+            <span className={`text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600`}>Intelligence Center</span>
+          </div>
+          <h2 className={`text-4xl font-black tracking-tight ${textTitle}`}>Análisis Proyectivo</h2>
+          <p className={`${textSub} mt-1 text-base`}>Visualiza el rendimiento y crecimiento de tu ecosistema comercial.</p>
+        </div>
+
+        <div className="flex flex-wrap gap-3 relative">
+          {[
+            { id: 'last7days', label: '7 Días' },
+            { id: 'last30days', label: '30 Días' },
+            { id: 'last90days', label: '90 Días' },
+            { id: 'lastYear', label: 'Anual' },
+          ].map((period) => (
+            <button
+              key={period.id}
+              onClick={() => handleDateRangeChange(period.id)}
+              className={stats.dateRange === period.id ? btnActive : btnInactive}
+            >
+              {period.label}
+            </button>
+          ))}
         </div>
       </div>
       
-      {/* Key Metrics */}
-      <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Premium KPI Grid */}
+      <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { label: 'Total Productos', value: stats.totalProducts, icon: FiShoppingBag, colorId: 'blue', themeColor: theme === 'dark' ? 'text-blue-400' : 'text-blue-600', bgIcon: theme === 'dark' ? 'bg-blue-500/20' : 'bg-blue-100' },
-          { label: 'Total Pedidos', value: stats.totalOrders, icon: FiPackage, colorId: 'green', themeColor: theme === 'dark' ? 'text-green-400' : 'text-green-600', bgIcon: theme === 'dark' ? 'bg-green-500/20' : 'bg-green-100' },
-          { label: 'Total Usuarios', value: stats.totalUsers, icon: FiUsers, colorId: 'purple', themeColor: theme === 'dark' ? 'text-purple-400' : 'text-purple-600', bgIcon: theme === 'dark' ? 'bg-purple-500/20' : 'bg-purple-100' },
-          { label: 'Ingresos Totales', value: formatCurrency(stats.totalRevenue), icon: FiBarChart2, colorId: 'indigo', themeColor: theme === 'dark' ? 'text-indigo-400' : 'text-indigo-600', bgIcon: theme === 'dark' ? 'bg-indigo-500/20' : 'bg-indigo-100' },
+          { label: 'Productos', value: stats.totalProducts, icon: FiShoppingBag, color: 'blue', desc: 'Catálogo total' },
+          { label: 'Pedidos', value: stats.totalOrders, icon: FiPackage, color: 'emerald', desc: 'Flujo de ventas' },
+          { label: 'Comunidad', value: stats.totalUsers, icon: FiUsers, color: 'purple', desc: 'Usuarios registrados' },
+          { label: 'Ingresos', value: formatCurrency(stats.totalRevenue), icon: FiTrendingUp, color: 'indigo', desc: 'Valor total bruto' },
         ].map((metric, idx) => (
-          <div key={idx} className={`${cardClass} hover:-translate-y-1 transform transition-all duration-300 group`}>
-            <div className="flex items-center">
-              <div className={`p-4 rounded-2xl ${metric.bgIcon} group-hover:scale-110 transition-transform`}>
-                <metric.icon className={`${metric.themeColor}`} size={28} />
+          <div key={idx} className={`${bgCard} p-8 rounded-[2rem] border group hover:scale-[1.02] transition-all duration-300 relative overflow-hidden`}>
+            <div className={`absolute bottom-0 right-0 w-24 h-24 bg-${metric.color}-500/5 rounded-full -mb-12 -mr-12 blur-2xl group-hover:scale-150 transition-transform`}></div>
+            <div className="flex flex-col gap-6">
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${metric.color === 'blue' ? 'bg-blue-500/10 text-blue-500' : metric.color === 'emerald' ? 'bg-emerald-500/10 text-emerald-500' : metric.color === 'purple' ? 'bg-purple-500/10 text-purple-500' : 'bg-indigo-500/10 text-indigo-500'} shadow-inner`}>
+                <metric.icon size={26} />
               </div>
-              <div className="ml-5">
-                <p className={`text-sm font-semibold tracking-wide uppercase ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{metric.label}</p>
-                <p className={`mt-1 text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{metric.value}</p>
+              <div>
+                <p className={`text-[10px] font-black uppercase tracking-[0.2em] ${textSub} mb-1`}>{metric.label}</p>
+                <h4 className={`text-2xl font-black tracking-tight ${textTitle}`}>{metric.value}</h4>
+                <p className="text-[10px] text-slate-400 mt-2 font-medium opacity-60 flex items-center gap-1">
+                   {metric.desc}
+                </p>
               </div>
             </div>
           </div>
         ))}
       </div>
       
-      {/* Charts Section */}
-      <div className="grid w-full grid-cols-1 gap-8 lg:grid-cols-2">
-        <div className={cardClass}>
-          <h3 className={`mb-6 text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Tendencia de Ventas</h3>
+      {/* Charts Architecture */}
+      <div className="grid w-full grid-cols-1 gap-10 lg:grid-cols-2">
+        <div className={`${bgCard} p-10 rounded-[2.5rem] border`}>
+          <div className="flex items-center justify-between mb-8">
+            <h3 className={`text-xl font-black tracking-tight ${textTitle}`}>Tendencia de Ingresos</h3>
+            <FiActivity className="text-indigo-500 opacity-50" size={20} />
+          </div>
           <div className="w-full h-80">
             <SalesTrendChart data={stats.salesData} theme={theme} />
           </div>
         </div>
         
-        <div className={cardClass}>
-          <h3 className={`mb-6 text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Ventas por Categoría</h3>
+        <div className={`${bgCard} p-10 rounded-[2.5rem] border`}>
+          <div className="flex items-center justify-between mb-8">
+            <h3 className={`text-xl font-black tracking-tight ${textTitle}`}>Dominio de Categorías</h3>
+            <div className="px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full text-[9px] font-black uppercase tracking-widest">Share %</div>
+          </div>
           <div className="w-full h-80">
             <SalesByCategoryChart data={stats.salesByCategory} theme={theme} />
           </div>
         </div>
         
-        <div className={cardClass}>
-          <h3 className={`mb-6 text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Distribución de Estados de Pedido</h3>
+        <div className={`${bgCard} p-10 rounded-[2.5rem] border`}>
+          <div className="flex items-center justify-between mb-8">
+            <h3 className={`text-xl font-black tracking-tight ${textTitle}`}>Flujo de Operaciones</h3>
+            <span className={textSub}><FiPackage/></span>
+          </div>
           <div className="w-full h-80">
             <OrderStatusChart data={stats.orderStatusData} theme={theme} />
           </div>
         </div>
         
-        <div className={cardClass}>
-          <h3 className={`mb-6 text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Ingresos por Método de Pago</h3>
+        <div className={`${bgCard} p-10 rounded-[2.5rem] border`}>
+          <div className="flex items-center justify-between mb-8">
+            <h3 className={`text-xl font-black tracking-tight ${textTitle}`}>Capital por Canal</h3>
+            <span className={textSub}><FiBarChart2/></span>
+          </div>
           <div className="w-full h-80">
             <PaymentMethodChart data={stats.paymentMethodData} theme={theme} />
           </div>
         </div>
       </div>
       
-      {/* Tables Section */}
-      <div className="grid w-full grid-cols-1 gap-8 xl:grid-cols-2">
-        {/* Top Selling Products */}
-        <div className={`${cardClass} overflow-hidden`}>
-          <h3 className={`mb-6 text-xl font-bold px-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Productos Más Vendidos</h3>
-          <div className="overflow-x-auto rounded-xl">
-            <table className="min-w-full divide-y divide-gray-200/50 dark:divide-gray-700/50">
-              <thead className={theme === 'dark' ? 'bg-slate-800/90' : 'bg-gray-50/90'}>
-                <tr>
-                  <th className={`px-6 py-4 text-xs font-bold tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Producto</th>
-                  <th className={`px-6 py-4 text-xs font-bold tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Cantidad</th>
-                  <th className={`px-6 py-4 text-xs font-bold tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Ingresos</th>
+      {/* Advanced Intelligence Tables */}
+      <div className="grid w-full grid-cols-1 gap-10 xl:grid-cols-2">
+        
+        {/* Top Products Card */}
+        <div className={`${bgCard} rounded-[2.5rem] border overflow-hidden`}>
+          <div className="px-10 py-8 border-b border-inherit flex items-center justify-between">
+            <h3 className={`text-xl font-black tracking-tight ${textTitle}`}>Performance de Productos</h3>
+            <button className="text-[10px] font-black uppercase tracking-widest text-indigo-500 flex items-center gap-2 hover:gap-3 transition-all">Ver todos <FiArrowRight/></button>
+          </div>
+          <div className="overflow-x-auto p-4">
+            <table className="w-full text-left">
+              <thead>
+                <tr className={`text-[10px] font-black uppercase tracking-[0.2em] ${textSub}`}>
+                  <th className="px-8 py-6">Producto Estrella</th>
+                  <th className="px-8 py-6">Volumen</th>
+                  <th className="px-8 py-6 text-right pr-12">Valor Bruto</th>
                 </tr>
               </thead>
-              <tbody className={`divide-y ${theme === 'dark' ? 'divide-slate-700/50' : 'divide-gray-100'} bg-transparent`}>
-                {stats.topSellingProducts.map((product, index) => (
-                  <tr key={index} className={`transition-colors duration-150 ${theme === 'dark' ? 'hover:bg-slate-700/40' : 'hover:bg-gray-50/80'}`}>
-                    <td className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                      {product.productName}
+              <tbody className={`divide-y ${isDark ? 'divide-slate-800/10' : 'divide-slate-50'}`}>
+                {stats.topSellingProducts.map((p, idx) => (
+                  <tr key={idx} className="group hover:bg-slate-500/5 transition-all">
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-xl bg-slate-500/5 flex items-center justify-center font-black text-xs ${textSub}`}>{idx + 1}</div>
+                        <span className={`font-bold text-sm ${textTitle} tracking-tight`}>{p.productName}</span>
+                      </div>
                     </td>
-                    <td className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>
-                      {product.quantity}
+                    <td className="px-8 py-6">
+                      <span className={`px-3 py-1 rounded-lg text-xs font-black ${isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-600'}`}>{p.quantity} uds</span>
                     </td>
-                    <td className={`px-6 py-4 text-sm font-semibold whitespace-nowrap ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600'}`}>
-                      {formatCurrency(product.revenue)}
+                    <td className="px-8 py-6 text-right pr-12">
+                      <span className={`font-black text-sm text-emerald-500`}>{formatCurrency(p.revenue)}</span>
                     </td>
                   </tr>
                 ))}
@@ -152,32 +180,43 @@ const DashboardAnalytics = ({
           </div>
         </div>
         
-        {/* Recent Orders */}
-        <div className={`${cardClass} overflow-hidden`}>
-          <h3 className={`mb-6 text-xl font-bold px-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Pedidos Recientes</h3>
-          <div className="overflow-x-auto rounded-xl">
-            <table className="min-w-full divide-y divide-gray-200/50 dark:divide-gray-700/50">
-              <thead className={theme === 'dark' ? 'bg-slate-800/90' : 'bg-gray-50/90'}>
-                <tr>
-                  <th className={`px-6 py-4 text-xs font-bold tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>ID / Fecha</th>
-                  <th className={`px-6 py-4 text-xs font-bold tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Cliente</th>
-                  <th className={`px-6 py-4 text-xs font-bold tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Total</th>
-                  <th className={`px-6 py-4 text-xs font-bold tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Estado</th>
+        {/* Recent Traffic Card */}
+        <div className={`${bgCard} rounded-[2.5rem] border overflow-hidden`}>
+          <div className="px-10 py-8 border-b border-inherit flex items-center justify-between">
+            <h3 className={`text-xl font-black tracking-tight ${textTitle}`}>Monitoreo de Pedidos</h3>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live Flow</span>
+            </div>
+          </div>
+          <div className="overflow-x-auto p-4">
+            <table className="w-full text-left">
+              <thead>
+                <tr className={`text-[10px] font-black uppercase tracking-[0.2em] ${textSub}`}>
+                  <th className="px-8 py-6">Identificador</th>
+                  <th className="px-8 py-6">Cliente</th>
+                  <th className="px-8 py-6 text-right pr-12">Total</th>
                 </tr>
               </thead>
-              <tbody className={`divide-y ${theme === 'dark' ? 'divide-slate-700/50' : 'divide-gray-100'} bg-transparent`}>
-                {stats.recentOrders.map((order) => (
-                  <tr key={order.id} className={`transition-colors duration-150 ${theme === 'dark' ? 'hover:bg-slate-700/40' : 'hover:bg-gray-50/80'}`}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{order.id.substring(0, 8)}...</div>
-                      <div className={`text-xs ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>{formatDate(order.createdAt)}</div>
+              <tbody className={`divide-y ${isDark ? 'divide-slate-800/10' : 'divide-slate-50'}`}>
+                {stats.recentOrders.map((o) => (
+                  <tr key={o.id} className="group hover:bg-slate-500/5 transition-all">
+                    <td className="px-8 py-6">
+                      <div className="flex flex-col">
+                        <span className={`font-black text-xs ${textTitle} tracking-widest`}>#{o.id.substring(0, 8).toUpperCase()}</span>
+                        <span className="text-[10px] text-slate-400 mt-1">{formatDate(o.createdAt)}</span>
+                      </div>
                     </td>
-                    <td className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{order.userEmail || 'N/A'}</td>
-                    <td className={`px-6 py-4 text-sm font-semibold whitespace-nowrap ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600'}`}>{formatCurrency(order.totalAmount || 0)}</td>
-                    <td className={`px-6 py-4 whitespace-nowrap`}>
-                      <span className={`px-3 py-1 inline-flex text-xs font-bold rounded-full border ${getStatusBadgeClass(order.orderStatus || 'pending', theme)}`}>
-                        {getOrderStatusText(order.orderStatus || 'pending')}
-                      </span>
+                    <td className="px-8 py-6">
+                      <span className={`text-xs font-bold ${textSub}`}>{o.userEmail || 'Guest Account'}</span>
+                    </td>
+                    <td className="px-8 py-6 text-right pr-12">
+                      <div className="flex flex-col items-end">
+                        <span className={`font-black text-sm ${textTitle}`}>{formatCurrency(o.totalAmount || 0)}</span>
+                        <span className={`text-[8px] font-black uppercase tracking-tighter mt-1 px-2 py-0.5 rounded-full border ${getStatusBadgeClass(o.orderStatus || 'pending', theme)}`}>
+                          {getOrderStatusText(o.orderStatus || 'pending')}
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -187,9 +226,18 @@ const DashboardAnalytics = ({
         </div>
       </div>
       
-      {/* User Registration Trend */}
-      <div className={cardClass}>
-        <h3 className={`mb-6 text-xl font-bold px-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Crecimiento de Usuarios</h3>
+      {/* Expansion Growth Chart */}
+      <div className={`${bgCard} p-10 rounded-[2.5rem] border relative overflow-hidden`}>
+        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600"></div>
+        <div className="flex items-center justify-between mb-10">
+          <div>
+            <h3 className={`text-2xl font-black tracking-tight ${textTitle}`}>Tracción de Usuarios</h3>
+            <p className={textSub}>Incremento de la base instalada en el tiempo.</p>
+          </div>
+          <div className="p-4 rounded-[1.5rem] bg-indigo-600/10 text-indigo-600">
+            <FiActivity size={24} />
+          </div>
+        </div>
         <div className="w-full h-80">
           <UserRegistrationChart data={stats.userRegistrationData} theme={theme} />
         </div>

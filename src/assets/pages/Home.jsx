@@ -597,7 +597,7 @@ const Home = () => {
       <div className="py-16 bg-white  border border-gray-200">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="mb-16 lg:text-center">
-            <h2 className="text-base font-semibold tracking-wide text-black uppercase tracking-widest uppercase">Nuestros Beneficios</h2>
+            <h2 className="text-base font-semibold tracking-widest text-black uppercase">Nuestros Beneficios</h2>
             <p className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
               Por qué elegirnos
             </p>

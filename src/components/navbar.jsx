@@ -81,7 +81,7 @@ const Navbar = () => {
         <nav className="flex justify-between items-center px-4 mx-auto max-w-7xl h-16">
 
           {/* Left: Logo (Inspired by reference) */}
-          <div className="flex items-center gap-6">
+          <div className="flex gap-6 items-center">
             <button
               className="text-gray-600 transition-colors duration-150 hover:text-black md:hidden"
               onClick={toggleMenu}
@@ -90,16 +90,16 @@ const Navbar = () => {
               <FaBars size={20} />
             </button>
 
-            <Link to="/home" className="flex items-center gap-2 group select-none">
+            <Link to="/home" className="flex gap-2 items-center select-none group">
               <div className="w-8 h-8 bg-[#1e147e] rounded-lg flex items-center justify-center text-white shadow-sm group-hover:bg-indigo-700 transition-all">
                 <span className="font-black text-[10px]">P</span>
               </div>
-              <span className="text-xl font-bold tracking-tight text-[#1e147e] group-hover:text-indigo-600 transition-colors">psg shop</span>
+              <span className="text-xl font-bold tracking-tight text-[#1e147e] group-hover:text-indigo-600 transition-colors">PSG-SHOP</span>
             </Link>
           </div>
 
           {/* Center: Desktop Nav Links (Inspired by reference) */}
-          <ul className="hidden md:flex items-center gap-8">
+          <ul className="hidden gap-8 items-center md:flex">
             {navLinks.map(({ to, label }) => (
               <li key={to}>
                 <Link
@@ -250,7 +250,7 @@ const Navbar = () => {
       >
         {/* Sidebar header */}
         <div className="flex justify-between items-center px-5 py-4 border-b border-gray-100">
-          <Link to="/home" onClick={toggleMenu} className="flex items-center gap-2 group select-none">
+          <Link to="/home" onClick={toggleMenu} className="flex gap-2 items-center select-none group">
             <div className="w-8 h-8 bg-[#1e147e] rounded-lg flex items-center justify-center text-white">
               <span className="font-black text-[10px]">P</span>
             </div>

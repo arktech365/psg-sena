@@ -1,5 +1,4 @@
-import React from 'react';
-import { FiX } from 'react-icons/fi';
+import { FiX, FiPlus, FiCamera, FiCheck, FiStar, FiLayers, FiType, FiMic, FiBox, FiDollarSign, FiRefreshCw } from 'react-icons/fi';
 
 const AdminProductModal = ({
   isOpen,
@@ -20,305 +19,260 @@ const AdminProductModal = ({
 }) => {
   if (!isOpen) return null;
 
+  const isDark = theme === 'dark';
+  const bgCard = isDark ? 'bg-[#1a1b26] border-slate-800 shadow-2xl' : 'bg-white border-slate-100 shadow-sm';
+  const textTitle = isDark ? 'text-slate-100' : 'text-slate-900';
+  const textSub = isDark ? 'text-slate-400' : 'text-slate-500';
+  const modalOverlay = isDark ? 'bg-black/80 backdrop-blur-md' : 'bg-slate-900/40 backdrop-blur-md';
+
+  const productData = modalMode === 'add' ? newProduct : editingProduct;
+  const onChange = modalMode === 'add' ? handleProductChange : handleEditProductChange;
+
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto animate-fadeIn backdrop-blur-sm bg-black/40">
-      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div 
-          className="fixed inset-0 transition-opacity" 
-          aria-hidden="true"
-          onClick={onClose}
-        ></div>
-        
-        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        
-        <div className={`z-50 inline-block overflow-hidden text-left align-bottom transition-all transform shadow-2xl rounded-3xl sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full border ${
-          theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-white border-gray-100'
-        }`} style={{ width: '650px' }}>
-          <div className="px-8 py-8">
-            <div className="mb-8 text-center relative">
-              <button 
-                onClick={onClose}
-                className={`absolute right-0 top-0 p-2 rounded-full transition-colors ${
-                  theme === 'dark' ? 'text-gray-400 hover:bg-slate-800 hover:text-white' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
-                }`}
-              >
-                <FiX size={24} />
-              </button>
-              <h3 className={`text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${theme === 'dark' ? 'from-white to-gray-400' : 'from-gray-900 to-gray-600'}`}>
-                {modalMode === 'add' ? 'Añadir Producto' : 'Editar Producto'}
-              </h3>
-              <p className={`mt-2 text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                {modalMode === 'add' ? 'Ingresa los detalles del nuevo producto' : 'Modifica la información del producto'}
-              </p>
+    <div className={`fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 ${modalOverlay} animate-in fade-in duration-300`}>
+      <div 
+        className={`w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] border shadow-2xl relative animate-in zoom-in-95 duration-300 ${bgCard}`}
+      >
+        <div className="p-8 md:p-12 relative">
+          
+          {/* Close Button */}
+          <button 
+            onClick={onClose}
+            className={`absolute right-8 top-8 p-3 rounded-2xl transition-all active:scale-95 ${isDark ? 'bg-slate-800 text-slate-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+          >
+            <FiX size={20} />
+          </button>
+
+          {/* Header */}
+          <div className="mb-12">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-1 bg-indigo-600 rounded-full"></div>
+              <span className={`text-[10px] font-black uppercase tracking-[0.4em] text-indigo-600`}>Catalogue Engineering</span>
             </div>
+            <h3 className={`text-4xl font-black tracking-tight ${textTitle}`}>
+              {modalMode === 'add' ? 'Nuevo Ejemplar' : 'Editar Producto'}
+            </h3>
+            <p className={`${textSub} mt-1 text-base`}>Define los parámetros técnicos y estéticos de tu producto.</p>
+          </div>
+
+          <form onSubmit={modalMode === 'add' ? createProduct : updateProduct} className="space-y-10">
             
-            <div className="mt-2 text-left">
-              <form onSubmit={modalMode === 'add' ? createProduct : updateProduct} className="space-y-6">
-                <div>
-                  <label className={`block mb-2 text-sm font-semibold tracking-wide ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Nombre del Producto</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={modalMode === 'add' ? newProduct.name : editingProduct?.name}
-                    onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                    className={`w-full px-4 py-3 transition-all border-2 rounded-xl focus:ring-0 focus:border-blue-500 ${
-                      theme === 'dark' 
-                        ? 'bg-slate-800 border-slate-700 text-white placeholder-gray-500' 
-                        : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
-                    }`}
-                    placeholder="Ej. Bolso de cuero elegante"
-                    required
-                  />
+            {/* Basic Info */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="md:col-span-2 space-y-8">
+                <div className="space-y-3">
+                  <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Nombre de Identidad</label>
+                  <div className="relative group">
+                    <FiType className={`absolute left-5 top-1/2 -translate-y-1/2 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-indigo-400' : 'text-slate-400 group-focus-within:text-indigo-600'}`} />
+                    <input
+                      type="text"
+                      name="name"
+                      value={productData?.name}
+                      onChange={onChange}
+                      className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
+                        isDark ? 'bg-slate-900 border-slate-700 focus:ring-indigo-500/10 text-white' : 'bg-slate-50 border-slate-200 focus:ring-indigo-500/5 text-slate-900'
+                      }`}
+                      placeholder="Ej: Bolso Luxury Edition"
+                      required
+                    />
+                  </div>
                 </div>
-                
-                <div>
-                  <label className={`block mb-2 text-sm font-semibold tracking-wide ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Descripción</label>
+
+                <div className="space-y-3">
+                  <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Narrativa del Producto</label>
                   <textarea
                     name="description"
-                    value={modalMode === 'add' ? newProduct.description : editingProduct?.description}
-                    onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                    className={`w-full px-4 py-3 transition-all border-2 rounded-xl focus:ring-0 focus:border-blue-500 ${
-                      theme === 'dark' 
-                        ? 'bg-slate-800 border-slate-700 text-white placeholder-gray-500' 
-                        : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
+                    value={productData?.description}
+                    onChange={onChange}
+                    rows="4"
+                    className={`w-full px-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
+                      isDark ? 'bg-slate-900 border-slate-700 focus:ring-indigo-500/10 text-white' : 'bg-slate-50 border-slate-200 focus:ring-indigo-500/5 text-slate-900'
                     }`}
-                    rows="3"
-                    placeholder="Describe los detalles, materiales y cuidado..."
+                    placeholder="Detalla los materiales, el origen y la propuesta de valor..."
                   />
                 </div>
-                
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
-                    <label className={`block mb-2 text-sm font-semibold tracking-wide ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Precio (COP)</label>
+              </div>
+
+              <div className="space-y-8">
+                <div className="space-y-3">
+                  <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Inversión (COP)</label>
+                  <div className="relative group">
+                    <FiDollarSign className={`absolute left-5 top-1/2 -translate-y-1/2 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-emerald-400' : 'text-slate-400 group-focus-within:text-emerald-600'}`} />
                     <input
                       type="number"
                       name="price"
-                      step="0.01"
-                      min="0"
-                      value={modalMode === 'add' ? newProduct.price : editingProduct?.price}
-                      onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                      className={`w-full px-4 py-3 transition-all border-2 rounded-xl focus:ring-0 focus:border-emerald-500 ${
-                        theme === 'dark' 
-                          ? 'bg-slate-800 border-slate-700 text-white font-medium' 
-                          : 'bg-gray-50 border-gray-200 text-gray-900 font-medium'
+                      value={productData?.price}
+                      onChange={onChange}
+                      className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
+                        isDark ? 'bg-slate-900 border-slate-700 focus:ring-emerald-500/10 text-white font-bold' : 'bg-slate-50 border-slate-200 focus:ring-emerald-500/5 text-slate-900 font-bold'
                       }`}
                       placeholder="0.00"
                       required
                     />
                   </div>
-                  
-                  <div>
-                    <label className={`block mb-2 text-sm font-semibold tracking-wide ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Stock</label>
+                </div>
+
+                <div className="space-y-3">
+                  <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Existencias</label>
+                  <div className="relative group">
+                    <FiBox className={`absolute left-5 top-1/2 -translate-y-1/2 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-amber-400' : 'text-slate-400 group-focus-within:text-amber-600'}`} />
                     <input
                       type="number"
                       name="stock"
-                      min="0"
-                      value={modalMode === 'add' ? newProduct.stock : editingProduct?.stock}
-                      onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                      className={`w-full px-4 py-3 transition-all border-2 rounded-xl focus:ring-0 focus:border-blue-500 ${
-                        theme === 'dark' 
-                          ? 'bg-slate-800 border-slate-700 text-white' 
-                          : 'bg-gray-50 border-gray-200 text-gray-900'
+                      value={productData?.stock}
+                      onChange={onChange}
+                      className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all duration-300 outline-none focus:ring-4 ${
+                        isDark ? 'bg-slate-900 border-slate-700 focus:ring-amber-500/10 text-white' : 'bg-slate-50 border-slate-200 focus:ring-amber-500/5 text-slate-900'
                       }`}
-                      placeholder="Unidades disponibles"
+                      placeholder="Unidades"
                     />
                   </div>
                 </div>
-                
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
-                    <label className={`block mb-2 text-sm font-semibold tracking-wide ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Categoría</label>
-                    <select
-                      name="category"
-                      value={modalMode === 'add' ? newProduct.category : editingProduct?.category}
-                      onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                      className={`w-full px-4 py-3 transition-all border-2 rounded-xl focus:ring-0 focus:border-blue-500 ${
-                        theme === 'dark' 
-                          ? 'bg-slate-800 border-slate-700 text-white' 
-                          : 'bg-gray-50 border-gray-200 text-gray-900'
-                      }`}
-                    >
-                      <option value="">Seleccionar categoría</option>
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.name}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className={`block mb-2 text-sm font-semibold tracking-wide ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Calificación Base</label>
-                    <input
-                      type="number"
-                      name="rating"
-                      step="0.1"
-                      min="0"
-                      max="5"
-                      value={modalMode === 'add' ? newProduct.rating : editingProduct?.rating}
-                      onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                      className={`w-full px-4 py-3 transition-all border-2 rounded-xl focus:ring-0 focus:border-yellow-500 ${
-                        theme === 'dark' 
-                          ? 'bg-slate-800 border-slate-700 text-white' 
-                          : 'bg-gray-50 border-gray-200 text-gray-900'
-                      }`}
-                      placeholder="0.0 - 5.0"
-                    />
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  <div>
-                    <label className={`block mb-2 text-sm font-semibold tracking-wide ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Material</label>
-                    <input
-                      type="text"
-                      name="material"
-                      value={modalMode === 'add' ? newProduct.material : editingProduct?.material}
-                      onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                      className={`w-full px-4 py-3 transition-all border-2 rounded-xl focus:ring-0 focus:border-blue-500 ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-gray-50 border-gray-200 text-gray-900'}`}
-                      placeholder="Ej. Cuero"
-                    />
-                  </div>
-                  <div>
-                    <label className={`block mb-2 text-sm font-semibold tracking-wide ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Color</label>
-                    <input
-                      type="text"
-                      name="color"
-                      value={modalMode === 'add' ? newProduct.color : editingProduct?.color}
-                      onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                      className={`w-full px-4 py-3 transition-all border-2 rounded-xl focus:ring-0 focus:border-blue-500 ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-gray-50 border-gray-200 text-gray-900'}`}
-                      placeholder="Ej. Negro"
-                    />
-                  </div>
-                  <div>
-                    <label className={`block mb-2 text-sm font-semibold tracking-wide ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Tamaño/Estilo</label>
-                    <input
-                      type="text"
-                      name="style"
-                      value={modalMode === 'add' ? newProduct.style : editingProduct?.style}
-                      onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                      className={`w-full px-4 py-3 transition-all border-2 rounded-xl focus:ring-0 focus:border-blue-500 ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-gray-50 border-gray-200 text-gray-900'}`}
-                      placeholder="Ej. Mediano"
-                    />
-                  </div>
-                </div>
-                
-                <div className="pt-4 border-t border-gray-200 dark:border-slate-700">
-                  <label className={`block mb-2 text-sm font-semibold tracking-wide ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Imágenes del Producto (Máx. 4)
-                  </label>
-                  <div className="mt-3">
-                    <button
-                      type="button"
-                      onClick={() => handleImageSelect(modalMode === 'edit')}
-                      className={`inline-flex items-center justify-center px-6 py-3 text-sm font-semibold rounded-xl transition-all shadow-sm w-full sm:w-auto ${
-                        theme === 'dark' 
-                          ? 'text-white bg-slate-800 border-2 border-slate-600 hover:border-blue-500 hover:bg-slate-700' 
-                          : 'text-gray-700 bg-white border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50'
-                      }`}
-                      disabled={uploading || (modalMode === 'add' ? newProduct.imageUrls.length >= 4 : editingProduct?.imageUrls.length >= 4)}
-                    >
-                      {uploading ? (
-                        <div className="flex items-center">
-                          <div className={`w-5 h-5 mr-3 border-b-2 rounded-full animate-spin ${theme === 'dark' ? 'border-white' : 'border-gray-900'}`}></div>
-                          Subiendo...
-                        </div>
-                      ) : (
-                        `Seleccionar Imágenes ${modalMode === 'add' ? `(${newProduct.imageUrls.length}/4)` : `(${editingProduct?.imageUrls?.length || 0}/4)`}`
-                      )}
-                    </button>
-                    
-                    {modalMode === 'add' ? (
-                      newProduct.imageUrls.length > 0 && (
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-                          {newProduct.imageUrls.map((imageData, index) => (
-                            <div key={index} className="relative group rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-slate-700">
-                              <img 
-                                src={typeof imageData === 'string' ? imageData : imageData.data} 
-                                alt={`Preview ${index}`} 
-                                className="object-cover w-full h-24 transform group-hover:scale-110 transition-transform duration-300"
-                              />
-                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                              <button
-                                type="button"
-                                onClick={() => removeImage(index)}
-                                className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all shadow-lg transform translate-y-2 group-hover:translate-y-0"
-                              >
-                                <FiX size={14} />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setPrimaryImage(index)}
-                                className={`absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full shadow-lg ${
-                                  newProduct.primaryImageIndex === index 
-                                    ? 'bg-blue-600 text-white' 
-                                    : 'bg-white text-gray-800 opacity-0 group-hover:opacity-100 hover:bg-gray-100 translate-y-2 group-hover:translate-y-0 transition-all'
-                                }`}
-                              >
-                                {newProduct.primaryImageIndex === index ? 'Principal' : 'Fijar Principal'}
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )
-                    ) : (
-                      editingProduct?.imageUrls && editingProduct.imageUrls.length > 0 && (
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-                          {editingProduct.imageUrls.map((imageData, index) => (
-                            <div key={index} className="relative group rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-slate-700">
-                              <img 
-                                src={typeof imageData === 'string' ? imageData : imageData.data} 
-                                alt={`Preview ${index}`} 
-                                className="object-cover w-full h-24 transform group-hover:scale-110 transition-transform duration-300"
-                              />
-                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                              <button
-                                type="button"
-                                onClick={() => removeImage(index, true)}
-                                className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 hover:bg-red-600 transition-all shadow-lg transform translate-y-2 group-hover:translate-y-0"
-                              >
-                                <FiX size={14} />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setPrimaryImage(index, true)}
-                                className={`absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs font-semibold px-3 py-1 rounded-full shadow-lg ${
-                                  editingProduct.primaryImageIndex === index 
-                                    ? 'bg-blue-600 text-white' 
-                                    : 'bg-white text-gray-800 opacity-0 group-hover:opacity-100 hover:bg-gray-100 translate-y-2 group-hover:translate-y-0 transition-all'
-                                }`}
-                              >
-                                {editingProduct.primaryImageIndex === index ? 'Principal' : 'Fijar Principal'}
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-4 pt-6 mt-8 border-t border-gray-200 dark:border-slate-700">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className={`mt-3 sm:mt-0 w-full sm:w-auto px-6 py-3 text-sm font-semibold rounded-xl transition-all ${
-                      theme === 'dark' 
-                        ? 'text-gray-300 bg-slate-800 border-2 border-slate-700 hover:bg-slate-700' 
-                        : 'text-gray-700 bg-white border-2 border-gray-200 hover:bg-gray-50'
-                    }`}
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto px-6 py-3 text-sm font-bold text-white rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/30 transform hover:-translate-y-0.5 hover:shadow-blue-500/40 transition-all"
-                  >
-                    {modalMode === 'add' ? 'Guardar Producto' : 'Actualizar Producto'}
-                  </button>
-                </div>
-              </form>
+              </div>
             </div>
-          </div>
+
+            {/* Classification */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="space-y-3">
+                <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Categoría</label>
+                <select
+                  name="category"
+                  value={productData?.category}
+                  onChange={onChange}
+                  className={`w-full px-6 py-4 rounded-2xl border transition-all outline-none font-bold text-xs uppercase tracking-widest ${
+                    isDark ? 'bg-slate-900 border-slate-700 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-700'
+                  }`}
+                >
+                  <option value="">Clasificación</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.name}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-3">
+                <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Valoración Base</label>
+                <div className="relative group">
+                  <FiStar className={`absolute left-5 top-1/2 -translate-y-1/2 text-amber-500`} />
+                  <input
+                    type="number"
+                    step="0.1"
+                    name="rating"
+                    value={productData?.rating}
+                    onChange={onChange}
+                    className={`w-full pl-14 pr-6 py-4 rounded-2xl border transition-all outline-none ${
+                        isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                    }`}
+                    placeholder="0.0 - 5.0"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Material</label>
+                <input
+                  type="text"
+                  name="material"
+                  value={productData?.material}
+                  onChange={onChange}
+                  className={`w-full px-6 py-4 rounded-2xl border transition-all outline-none ${
+                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  }`}
+                  placeholder="Ej: Cuero Italiano"
+                />
+              </div>
+
+              <div className="space-y-3">
+                <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Color / Estilo</label>
+                <input
+                  type="text"
+                  name="color"
+                  value={productData?.color}
+                  onChange={onChange}
+                  className={`w-full px-6 py-4 rounded-2xl border transition-all outline-none ${
+                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  }`}
+                  placeholder="Ej: Midnight Blue"
+                />
+              </div>
+            </div>
+
+            {/* Media System */}
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <label className={`block text-[10px] font-black uppercase tracking-[0.2em] px-1 ${textSub}`}>Gestión de Assets Visuales (Máx 4)</label>
+                <button
+                  type="button"
+                  onClick={() => handleImageSelect(modalMode === 'edit')}
+                  disabled={uploading || (productData?.imageUrls?.length >= 4)}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl border-2 transition-all font-black text-[10px] uppercase tracking-widest ${
+                    isDark 
+                    ? 'border-indigo-600/30 text-indigo-400 hover:bg-indigo-600 hover:text-white' 
+                    : 'border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white'
+                  }`}
+                >
+                  {uploading ? <FiRefreshCw className="animate-spin" /> : <FiCamera size={16} />}
+                  {uploading ? 'Procesando...' : 'Cargar Assets'}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {productData?.imageUrls?.map((img, idx) => (
+                  <div key={idx} className={`relative rounded-3xl overflow-hidden border-2 group transition-all duration-300 ${isDark ? 'border-slate-800' : 'border-slate-100'} h-40`}>
+                    <img 
+                      src={typeof img === 'string' ? img : img.data} 
+                      alt="Product" 
+                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+                       <button 
+                         type="button" 
+                         onClick={() => setPrimaryImage(idx, modalMode === 'edit')}
+                         className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${
+                            productData.primaryImageIndex === idx ? 'bg-emerald-500 text-white' : 'bg-white text-slate-900 hover:bg-indigo-600 hover:text-white'
+                         }`}
+                       >
+                         {productData.primaryImageIndex === idx ? <FiCheck className="inline-block mr-1"/> : null}
+                         {productData.primaryImageIndex === idx ? 'Principal' : 'Fijar Portada'}
+                       </button>
+                       <button 
+                         type="button" 
+                         onClick={() => removeImage(idx, modalMode === 'edit')}
+                         className="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest bg-rose-600 text-white hover:bg-rose-700 transition-all"
+                       >
+                         Eliminar
+                       </button>
+                    </div>
+                  </div>
+                ))}
+                {[...Array(Math.max(0, 4 - (productData?.imageUrls?.length || 0)))].map((_, i) => (
+                  <div key={i} className={`rounded-3xl border-2 border-dashed flex flex-col items-center justify-center gap-3 h-40 ${isDark ? 'border-slate-800 bg-slate-900/40' : 'border-slate-100 bg-slate-50'}`}>
+                    <FiLayers className="text-slate-300" size={24} />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Empty Slot</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-4 pt-8">
+              <button
+                type="button"
+                onClick={onClose}
+                className={`flex-1 py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${
+                  isDark ? 'bg-slate-800 text-slate-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                Cancelar Operación
+              </button>
+              <button
+                type="submit"
+                className="flex-[2] py-5 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all hover:bg-indigo-600 hover:shadow-2xl hover:shadow-indigo-500/30 active:scale-[0.98]"
+              >
+                {modalMode === 'add' ? 'Lanzar al Mercado' : 'Actualizar Ejemplar'}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
