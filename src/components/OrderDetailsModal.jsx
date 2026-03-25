@@ -32,12 +32,12 @@ const OrderDetailsModal = ({ order, isOpen, onClose, formatDate, formatCurrency,
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-6 overflow-y-auto bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-[250] flex items-start justify-center p-3 sm:p-6 overflow-y-auto bg-black/70 backdrop-blur-md animate-in fade-in duration-300"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
         ref={modalRef}
-        className="relative w-full max-w-2xl mx-auto my-4 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
+        className="relative w-full max-w-2xl mx-auto my-4 bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden animate-in zoom-in-95 duration-300"
         style={{ fontFamily: 'Inter, sans-serif' }}
       >
         {/* Header */}

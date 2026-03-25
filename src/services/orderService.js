@@ -287,7 +287,11 @@ export const getAllOrders = async () => {
         throw fallbackErr;
       }
     } else {
-      console.error('Error fetching all orders:', error);
+      if (error.code === 'permission-denied') {
+        console.error('Firebase Permission Denied: Check Firestore rules for "orders" collection and ensure your user document in "users" collection has role: "admin".', error);
+      } else {
+        console.error('Error fetching all orders:', error);
+      }
       throw error;
     }
   }

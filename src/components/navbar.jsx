@@ -99,7 +99,7 @@ const Navbar = () => {
               <li key={to}>
                 <Link
                   to={to}
-                  className={`relative text-sm font-bold tracking-tight transition-all duration-300 flex items-center group ${
+                  className={`relative text-xs font-bold tracking-tight transition-all duration-300 flex items-center group ${
                     isActiveLink(to) ? 'text-[#1e147e]' : 'text-slate-400 hover:text-slate-900'
                   }`}
                 >

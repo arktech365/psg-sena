@@ -769,7 +769,16 @@ const ModernAdminDashboard = () => {
         </div>
       )}
 
-      <OrderDetailsModal isOpen={orderModalOpen} onClose={closeOrderDetails} order={selectedOrder} theme={theme} />
+      <OrderDetailsModal 
+        isOpen={orderModalOpen} 
+        onClose={closeOrderDetails} 
+        order={selectedOrder} 
+        formatDate={formatDate}
+        formatCurrency={formatCurrency}
+        getOrderStatusText={getOrderStatusText}
+        getStatusBadgeClass={getStatusBadgeClass}
+        theme={theme} 
+      />
     </div>
   );
 };
