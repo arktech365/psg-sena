@@ -701,7 +701,12 @@ const ModernAdminDashboard = () => {
                 <h3 className={`text-2xl font-black tracking-tight ${textTitle}`}>Moderación de Reseña</h3>
                 <p className={textSub}>Ajusta la calificación o el contenido del feedback.</p>
               </div>
-              <button onClick={() => setReviewModalOpen(false)} className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800"><FiX/></button>
+              <button 
+                onClick={() => setReviewModalOpen(false)} 
+                className={`p-3 rounded-2xl transition-all duration-300 active:scale-95 group ${isDark ? 'bg-slate-800 text-slate-400 hover:bg-rose-500/10 hover:text-rose-500' : 'bg-slate-50 text-slate-500 hover:bg-rose-500/10 hover:text-rose-500'}`}
+              >
+                <FiX size={20} className="transition-transform group-hover:rotate-90"/>
+              </button>
             </div>
             <form onSubmit={saveEditedReview} className="space-y-8">
               <div className="flex flex-col items-center">
@@ -733,7 +738,12 @@ const ModernAdminDashboard = () => {
                 <h3 className={`text-2xl font-black tracking-tight ${textTitle}`}>{categoryModalMode === 'add' ? 'Nueva Colección' : 'Refinar Colección'}</h3>
                 <p className={textSub}>Define los parámetros de la categoría.</p>
               </div>
-              <button onClick={() => setCategoryModalOpen(false)} className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800"><FiX/></button>
+              <button 
+                onClick={() => setCategoryModalOpen(false)} 
+                className={`p-3 rounded-2xl transition-all duration-300 active:scale-95 group ${isDark ? 'bg-slate-800 text-slate-400 hover:bg-rose-500/10 hover:text-rose-500' : 'bg-slate-50 text-slate-500 hover:bg-rose-500/10 hover:text-rose-500'}`}
+              >
+                <FiX size={20} className="transition-transform group-hover:rotate-90"/>
+              </button>
             </div>
             <form onSubmit={categoryModalMode === 'add' ? createCategoryHandler : updateCategoryHandler} className="space-y-8">
               <div className="space-y-3">

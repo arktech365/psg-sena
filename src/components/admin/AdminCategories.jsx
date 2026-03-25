@@ -94,20 +94,20 @@ const AdminCategories = ({
               
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
               
-              <div className="absolute top-6 right-6 flex gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+              <div className="absolute top-4 right-4 flex gap-2 transition-all duration-300">
                 <button 
                   onClick={() => openEditCategoryModal(cat)} 
-                  className="p-3 rounded-2xl bg-white text-indigo-600 hover:bg-indigo-600 hover:text-white shadow-xl transition-all active:scale-90"
+                  className="p-2.5 rounded-xl bg-white/90 backdrop-blur-md text-indigo-600 hover:bg-indigo-600 hover:text-white shadow-lg transition-all active:scale-90 border border-white/20"
                   title="Editar"
                 >
-                  <FiEdit3 size={16} />
+                  <FiEdit3 size={15} />
                 </button>
                 <button 
                   onClick={() => deleteCategoryHandler(cat.id, cat.name)} 
-                  className="p-3 rounded-2xl bg-white text-rose-600 hover:bg-rose-600 hover:text-white shadow-xl transition-all active:scale-90"
+                  className="p-2.5 rounded-xl bg-white/90 backdrop-blur-md text-rose-600 hover:bg-rose-600 hover:text-white shadow-lg transition-all active:scale-90 border border-white/20"
                   title="Eliminar"
                 >
-                  <FiTrash2 size={16} />
+                  <FiTrash2 size={15} />
                 </button>
               </div>
               
