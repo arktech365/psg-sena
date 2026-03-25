@@ -448,82 +448,91 @@ const Home = () => {
   
   const handleMouseLeave = () => {
     isDraggingRef.current = false;
-    startXRef.current = 0;
-    endXRef.current = 0;
   };
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section - New design with cards and gradient */}
-      <section className="flex flex-col gap-6 p-6 mx-auto lg:flex-row max-w-7xl">
-        {/* Bloque principal */}
-        <div className="flex flex-col items-center justify-between flex-1 p-8 shadow-2xl shadow-sm shadow-sm bg-gray-50 rounded-2xl lg:flex-row">
-          <div className="max-w-md">
-            {/* Etiqueta superior */}
-            <div className="flex items-center gap-2 mb-4">
-              <span className="px-3 py-1 text-xs font-semibold text-gray-800 bg-indigo-500/100/10 border border-gray-200 rounded-full">
+      {/* Hero Section - Restored Original Layout, Maximized Aesthetic */}
+      <section className="flex flex-col gap-8 p-6 mx-auto lg:flex-row max-w-7xl animate-fade-in">
+        {/* Bloque principal - Enhanced Original */}
+        <div className="flex flex-col md:flex-row items-center justify-between flex-1 p-10 md:p-16 bg-gray-50 rounded-[2.5rem] border border-gray-100 shadow-2xl shadow-indigo-50/50 group relative overflow-hidden">
+          {/* Subtle background decoration */}
+          <div className="absolute -top-24 -left-24 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl" />
+          
+          <div className="relative z-10 max-w-md">
+            {/* Etiqueta superior mejorada */}
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <span className="px-4 py-1.5 text-[10px] font-black tracking-widest text-indigo-600 bg-white border border-indigo-100 rounded-full shadow-sm">
                 NUEVO
               </span>
-              <span className="flex items-center gap-1 px-3 py-1 text-sm text-gray-900 rounded-full bg-black text-white ">
-                ¡Envío gratis en compras mayores a $100.000!
-                <span className="text-gray-900">→</span>
+              <span className="flex items-center gap-1.5 px-4 py-1.5 text-[10px] font-bold text-gray-500 rounded-full bg-white/80 border border-gray-100 shadow-sm">
+                <svg className="w-3.5 h-3.5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                ¡Envío gratis hoy!
               </span>
             </div>
 
-            {/* Título */}
-            <h1 className="mb-4 text-3xl font-semibold leading-snug text-gray-900 md:text-4xl">
-              Elegancia en cada{" "}
-              <span className="text-transparent bg-clip-text bg-black text-white ">detalle</span>{" "}
-              perfecto
+            {/* Título Premium */}
+            <h1 className="mb-6 text-4xl font-black leading-tight text-gray-900 md:text-5xl tracking-tighter">
+              Elegancia en <br />
+              cada <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">detalle</span> perfecto
             </h1>
 
             {/* Descripción */}
-            <p className="mb-6 text-sm text-gray-500">
-              Colección exclusiva de moños artesanales para todas las ocasiones. Calidad premium, diseño único y entrega rápida.
+            <p className="mb-10 text-lg text-gray-500 leading-relaxed font-medium">
+              Colección exclusiva de moños artesanales. Calidad premium, diseño único y entrega inmediata.
             </p>
 
-            {/* Botón */}
+            {/* Botón Mejorado */}
             <Link
               to="/shop"
-              className="px-6 py-3 text-sm font-semibold text-white transition rounded-none bg-black hover:bg-gray-800 border border-black  hover:from-indigo-400 hover:to-purple-500 hover:shadow-2xl shadow-sm"
+              className="inline-flex items-center justify-center px-8 py-4 text-sm font-black tracking-widest text-white transition-all bg-black rounded-2xl hover:bg-indigo-600 hover:shadow-2xl hover:shadow-indigo-200 active:scale-95 group/btn"
             >
               VER CATÁLOGO
+              <svg className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </Link>
           </div>
 
-          {/* Imagen principal */}
-          <div className="mt-6 lg:mt-0">
+          {/* Imagen principal mejorada */}
+          <div className="mt-12 md:mt-0 relative group-hover:rotate-1 transition-transform duration-700">
+            <div className="absolute inset-0 bg-indigo-500 rounded-[2rem] blur-2xl opacity-10 group-hover:opacity-20 transition-opacity" />
             <img
               src="/psg-shop/mejores.jpg"
-              alt="Elegante colección de moños"
-              className="object-cover w-64 md:w-72 rounded-xl rotate-270"
+              alt="Elegante colección"
+              className="relative object-cover w-64 md:w-80 h-auto rounded-[2rem] shadow-2xl grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
               onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = 'https://via.placeholder.com/600x600.png?text=Elegante+Colecci%C3%B3n+de+Mo%C3%B1os';
+                e.target.src = 'https://via.placeholder.com/600x600.png?text=Elegante+Colecci%C3%B3n';
               }}
             />
           </div>
         </div>
 
-        {/* Panel lateral derecho */}
-        <div className="flex flex-col gap-6 md:w-1/3">
-          {/* Tarjeta 1 */}
-          <div className="flex items-center justify-between h-full p-6 bg-indigo-500/100/10 border border-gray-200 shadow-2xl shadow-sm shadow-sm rounded-2xl">
-            <div className="flex-1">
-              <h3 className="mb-2 text-xl font-semibold text-gray-900">
-                Mejores <span className="text-transparent bg-clip-text bg-black text-white ">moños</span>
+        {/* Panel lateral derecho - Enhanced Original Cards */}
+        <div className="flex flex-col gap-6 lg:w-1/3">
+          {/* Tarjeta 1: Mejores Moños */}
+          <div className="group flex items-center justify-between flex-1 p-8 bg-indigo-50/50 border border-indigo-100/50 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl" />
+            
+            <div className="flex-1 relative z-10">
+              <h3 className="mb-2 text-2xl font-bold text-gray-900 leading-tight">
+                Mejores <span className="text-indigo-600">moños</span>
               </h3>
-              <p className="mb-4 text-sm text-gray-500">
-                Descubre nuestra selección premium de moños artesanales
+              <p className="mb-6 text-sm text-gray-500 font-medium">
+                Selección artesanal premium.
               </p>
-              <Link to="/shop" className="inline-flex items-center gap-1 px-4 py-2 text-sm text-white transition rounded-none bg-black hover:bg-gray-800 border border-black  hover:from-indigo-400 hover:to-purple-500">
-                Ver más →
+              <Link to="/shop" className="inline-flex items-center gap-2 group/link text-xs font-black uppercase tracking-widest text-gray-900">
+                Ver más
+                <span className="w-8 h-px bg-gray-200 group-hover/link:w-12 transition-all duration-500" />
               </Link>
             </div>
             <img
               src="/psg-shop/counteer.jpg"
-              alt="Moño elegante"
-              className="object-contain w-20 h-20 ml-4 rounded-lg"
+              alt="Moño"
+              className="object-contain w-24 h-24 ml-4 rounded-2xl group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = 'https://via.placeholder.com/100x100.png?text=Moño';
@@ -531,23 +540,26 @@ const Home = () => {
             />
           </div>
 
-          {/* Tarjeta 2 */}
-          <div className="flex items-center justify-between h-full p-6 bg-purple-500/100/10 border border-gray-200 shadow-2xl shadow-sm shadow-sm rounded-2xl">
-            <div className="flex-1">
-              <h3 className="mb-2 text-xl font-semibold text-gray-900">
-                <span className="text-transparent bg-clip-text bg-black text-white ">20%</span> de descuento
+          {/* Tarjeta 2: Descuento */}
+          <div className="group flex items-center justify-between flex-1 p-8 bg-purple-50/50 border border-purple-100/50 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden relative">
+            <div className="absolute bottom-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl" />
+            
+            <div className="flex-1 relative z-10">
+              <h3 className="mb-2 text-2xl font-bold text-gray-900 leading-tight">
+                <span className="text-purple-600">20%</span> Descuento
               </h3>
-              <p className="mb-4 text-sm text-gray-500">
-                En nuestra colección de moños especiales por tiempo limitado
+              <p className="mb-6 text-sm text-gray-500 font-medium">
+                Colección especial limitada.
               </p>
-              <Link to="/shop" className="inline-flex items-center gap-1 px-4 py-2 text-sm text-white transition rounded-none bg-black hover:bg-gray-800 border border-black  hover:from-indigo-400 hover:to-purple-500">
-                Ver más →
+              <Link to="/shop" className="inline-flex items-center gap-2 group/link text-xs font-black uppercase tracking-widest text-gray-900">
+                Ver más
+                <span className="w-8 h-px bg-gray-200 group-hover/link:w-12 transition-all duration-500" />
               </Link>
             </div>
             <img
               src="/psg-shop/discount.jpg"
-              alt="Moño en oferta"
-              className="object-contain w-20 h-20 ml-4 rounded-lg"
+              alt="Oferta"
+              className="object-contain w-24 h-24 ml-4 rounded-2xl group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = 'https://via.placeholder.com/100x100.png?text=Oferta';
@@ -557,25 +569,25 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Stats Section - Added to match blog style */}
-      <div className="py-12 bg-white  border border-gray-200">
+      {/* Stats Section - Refined for Minimalist Premium Look */}
+      <div className="relative py-12 bg-white">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
-            <div className="p-4">
-              <div className="text-3xl font-bold text-black">500+</div>
-              <div className="mt-2 text-gray-500">Clientes Satisfechos</div>
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4 border-y border-gray-100 py-12">
+            <div className="text-center md:border-r border-gray-50 last:border-0 px-4">
+              <div className="text-4xl font-black text-gray-900 tracking-tighter mb-1">500+</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Clientes Reales</div>
             </div>
-            <div className="p-4">
-              <div className="text-3xl font-bold text-black">100+</div>
-              <div className="mt-2 text-gray-500">Diseños Únicos</div>
+            <div className="text-center md:border-r border-gray-50 last:border-0 px-4">
+              <div className="text-4xl font-black text-gray-900 tracking-tighter mb-1">100%</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Artesanal</div>
             </div>
-            <div className="p-4">
-              <div className="text-3xl font-bold text-black">24/7</div>
-              <div className="mt-2 text-gray-500">Soporte</div>
+            <div className="text-center md:border-r border-gray-50 last:border-0 px-4">
+              <div className="text-4xl font-black text-gray-900 tracking-tighter mb-1">24h</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Envío Rápido</div>
             </div>
-            <div className="p-4">
-              <div className="text-3xl font-bold text-black">5.0</div>
-              <div className="mt-2 text-gray-500">Calificación Promedio</div>
+            <div className="text-center px-4">
+              <div className="text-4xl font-black text-gray-900 tracking-tighter mb-1">5.0</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Satisfacción</div>
             </div>
           </div>
         </div>
