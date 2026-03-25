@@ -442,13 +442,13 @@ const ModernAdminDashboard = () => {
   };
 
   const navItems = [
-    { id: 'analytics', label: 'Estrategia', icon: <FiActivity /> },
-    { id: 'products', label: 'Inventario', icon: <FiGrid /> },
-    { id: 'categories', label: 'Colecciones', icon: <FiLayers /> },
+    { id: 'analytics', label: 'Analytics', icon: <FiActivity /> },
+    { id: 'products', label: 'Productos', icon: <FiGrid /> },
+    { id: 'categories', label: 'Categorías', icon: <FiLayers /> },
     { id: 'users', label: 'Clientes', icon: <FiUsers /> },
     { id: 'reviews', label: 'Feedback', icon: <FiStar /> },
     { id: 'coupons', label: 'Cupones', icon: <FiTag /> },
-    { id: 'orders', label: 'Logística', icon: <FiPackage /> },
+    { id: 'orders', label: 'Órdenes', icon: <FiPackage /> },
   ];
 
   const renderContent = () => {
@@ -735,8 +735,8 @@ const ModernAdminDashboard = () => {
           <div className={`w-full max-w-xl rounded-[2.5rem] border shadow-2xl animate-in zoom-in-95 duration-300 ${isDark ? 'bg-[#1a1b26] border-slate-800' : 'bg-white border-slate-100'} p-12`}>
             <div className="flex justify-between items-center mb-10">
               <div>
-                <h3 className={`text-2xl font-black tracking-tight ${textTitle}`}>{categoryModalMode === 'add' ? 'Nueva Colección' : 'Refinar Colección'}</h3>
-                <p className={textSub}>Define los parámetros de la categoría.</p>
+                <h3 className={`text-2xl font-black tracking-tight ${textTitle}`}>{categoryModalMode === 'add' ? 'Nueva Categoría' : 'Editar Categoría'}</h3>
+                <p className={textSub}>Define los parámetros de tu categoría.</p>
               </div>
               <button 
                 onClick={() => setCategoryModalOpen(false)} 
@@ -747,7 +747,7 @@ const ModernAdminDashboard = () => {
             </div>
             <form onSubmit={categoryModalMode === 'add' ? createCategoryHandler : updateCategoryHandler} className="space-y-8">
               <div className="space-y-3">
-                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-1">Título de Colección</label>
+                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-1">Nombre de la Categoría</label>
                 <input type="text" name="name" value={categoryModalMode === 'add' ? newCategory.name : editingCategory?.name} onChange={categoryModalMode === 'add' ? (e) => setNewCategory({...newCategory, name: e.target.value}) : (e) => setEditingCategory({...editingCategory, name: e.target.value})} className={`w-full px-6 py-4 rounded-2xl border ${isDark ? 'text-white bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200 text-slate-900'}`} required />
               </div>
               <div className="space-y-3">
@@ -772,7 +772,7 @@ const ModernAdminDashboard = () => {
                 </div>
               </div>
               <button type="submit" className="py-5 w-full text-xs font-black tracking-widest text-white uppercase bg-black rounded-2xl shadow-2xl transition-all hover:bg-indigo-600">
-                {categoryModalMode === 'add' ? 'Lanzar Colección' : 'Guardar Cambios'}
+                {categoryModalMode === 'add' ? 'Crear Categoría' : 'Guardar Cambios'}
               </button>
             </form>
           </div>

@@ -114,7 +114,7 @@ const AdminCategories = ({
               <div className="absolute bottom-6 left-6 right-6">
                 <div className="flex items-center gap-2 mb-1">
                   <div className="w-4 h-0.5 bg-indigo-500 rounded-full"></div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">Collection</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">Categoría</span>
                 </div>
                 <h3 className="text-xl font-black text-white tracking-tight">{cat.name}</h3>
               </div>
