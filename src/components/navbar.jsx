@@ -85,7 +85,7 @@ const Navbar = () => {
 
             <Link to="/home" className="flex items-center gap-2 group select-none">
               <div className="w-8 h-8 bg-[#111218] rounded-lg flex items-center justify-center text-white shadow-2xl transition-transform group-hover:scale-105 active:scale-95">
-                <span className="font-black italic text-xs">P</span>
+                <span className="font-bold italic text-xs">P</span>
               </div>
               <div className="hidden sm:block">
                 <span className="text-base font-bold tracking-tighter text-[#111218] block leading-none">PSG SHOP</span>
@@ -119,7 +119,7 @@ const Navbar = () => {
               className="p-2.5 rounded-xl transition-all duration-300 relative group text-slate-900 hover:text-black"
             >
               <FaRegHeart size={20} strokeWidth={1} />
-              <span className="absolute top-1 right-1 flex items-center justify-center w-[18px] h-[18px] bg-[#111218] text-white text-[9px] font-black rounded-full border-2 border-white shadow-sm">
+              <span className="absolute top-1 right-1 flex items-center justify-center w-[18px] h-[18px] bg-[#111218] text-white text-[9px] font-bold rounded-full border-2 border-white shadow-sm">
                 {wishlistItemCount}
               </span>
             </Link>
@@ -130,7 +130,7 @@ const Navbar = () => {
               className="p-2.5 rounded-xl transition-all duration-300 relative group text-slate-900 hover:text-black"
             >
               <FiShoppingBag size={20} strokeWidth={2} />
-              <span className="absolute top-1 right-1 flex items-center justify-center w-[18px] h-[18px] bg-[#111218] text-white text-[9px] font-black rounded-full border-2 border-white shadow-sm">
+              <span className="absolute top-1 right-1 flex items-center justify-center w-[18px] h-[18px] bg-[#111218] text-white text-[9px] font-bold rounded-full border-2 border-white shadow-sm">
                 {cartItemCount}
               </span>
             </Link>
@@ -142,7 +142,7 @@ const Navbar = () => {
                   onClick={toggleProfileMenu}
                   className="flex items-center gap-3 p-1.5 pr-4 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-all border border-transparent hover:border-slate-200 group active:scale-95"
                 >
-                  <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center font-black text-white text-[11px] shadow-lg shadow-indigo-600/20 overflow-hidden">
+                  <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-white text-[11px] shadow-lg shadow-indigo-600/20 overflow-hidden">
                     {userProfile?.profileImage ? (
                       <img src={userProfile.profileImage} alt="Profile" className="w-full h-full object-cover" />
                     ) : (
@@ -169,7 +169,7 @@ const Navbar = () => {
               {currentUser && isProfileMenuOpen && (
                 <div className="absolute right-0 mt-4 w-64 bg-white rounded-3xl border border-slate-100 shadow-2xl overflow-hidden z-[150] animate-in slide-in-from-top-4 duration-300">
                   <div className="p-3 bg-slate-50 border-b border-slate-100 flex items-center gap-3">
-                     <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-black italic text-[10px]">
+                     <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-bold italic text-[10px]">
                         {currentUser.email?.charAt(0).toUpperCase()}
                      </div>
                      <div className="flex-1 min-w-0">
@@ -221,8 +221,8 @@ const Navbar = () => {
       >
         <div className="p-8 flex items-center justify-between border-b border-slate-50">
           <Link to="/home" onClick={toggleMenu} className="flex items-center gap-3">
-             <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-black italic text-xs">P</div>
-             <span className="text-lg font-black tracking-tighter">PSG SHOP</span>
+             <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-bold italic text-xs">P</div>
+             <span className="text-lg font-bold tracking-tighter">PSG SHOP</span>
           </Link>
           <button onClick={toggleMenu} className="p-2 text-slate-400 hover:text-black">
             <FiX size={24} />
@@ -253,7 +253,7 @@ const Navbar = () => {
            {currentUser ? (
               <div className="flex flex-col gap-4">
                  <div className="px-6 py-4 bg-slate-50 rounded-3xl flex items-center gap-4">
-                    <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-black italic text-sm">
+                    <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-bold italic text-sm">
                        {currentUser.email?.charAt(0).toUpperCase()}
                     </div>
                     <div className="min-w-0">

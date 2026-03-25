@@ -462,7 +462,7 @@ const Home = () => {
           <div className="relative z-10 max-w-md">
             {/* Etiqueta superior mejorada */}
             <div className="flex flex-wrap items-center gap-3 mb-6">
-              <span className="px-4 py-1.5 text-[10px] font-black tracking-widest text-indigo-600 bg-white border border-indigo-100 rounded-full shadow-sm">
+              <span className="px-4 py-1.5 text-[10px] font-bold tracking-widest text-indigo-600 bg-white border border-indigo-100 rounded-full shadow-sm">
                 NUEVO
               </span>
               <span className="flex items-center gap-1.5 px-4 py-1.5 text-[10px] font-bold text-gray-500 rounded-full bg-white/80 border border-gray-100 shadow-sm">
@@ -474,7 +474,7 @@ const Home = () => {
             </div>
 
             {/* Título Premium */}
-            <h1 className="mb-6 text-4xl font-black leading-tight text-gray-900 md:text-5xl tracking-tighter">
+            <h1 className="mb-6 text-4xl font-bold leading-tight text-gray-900 md:text-5xl tracking-tighter">
               Elegancia en <br />
               cada <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">detalle</span> perfecto
             </h1>
@@ -487,7 +487,7 @@ const Home = () => {
             {/* Botón Mejorado */}
             <Link
               to="/shop"
-              className="inline-flex items-center justify-center px-8 py-4 text-sm font-black tracking-widest text-white transition-all bg-black rounded-2xl hover:bg-indigo-600 hover:shadow-2xl hover:shadow-indigo-200 active:scale-95 group/btn"
+              className="inline-flex items-center justify-center px-8 py-4 text-sm font-bold tracking-widest text-white transition-all bg-black rounded-2xl hover:bg-indigo-600 hover:shadow-2xl hover:shadow-indigo-200 active:scale-95 group/btn"
             >
               VER CATÁLOGO
               <svg className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -524,7 +524,7 @@ const Home = () => {
               <p className="mb-6 text-sm text-gray-500 font-medium">
                 Selección artesanal premium.
               </p>
-              <Link to="/shop" className="inline-flex items-center gap-2 group/link text-xs font-black uppercase tracking-widest text-gray-900">
+              <Link to="/shop" className="inline-flex items-center gap-2 group/link text-xs font-bold uppercase tracking-widest text-gray-900">
                 Ver más
                 <span className="w-8 h-px bg-gray-200 group-hover/link:w-12 transition-all duration-500" />
               </Link>
@@ -551,7 +551,7 @@ const Home = () => {
               <p className="mb-6 text-sm text-gray-500 font-medium">
                 Colección especial limitada.
               </p>
-              <Link to="/shop" className="inline-flex items-center gap-2 group/link text-xs font-black uppercase tracking-widest text-gray-900">
+              <Link to="/shop" className="inline-flex items-center gap-2 group/link text-xs font-bold uppercase tracking-widest text-gray-900">
                 Ver más
                 <span className="w-8 h-px bg-gray-200 group-hover/link:w-12 transition-all duration-500" />
               </Link>
@@ -574,20 +574,20 @@ const Home = () => {
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4 border-y border-gray-100 py-12">
             <div className="text-center md:border-r border-gray-50 last:border-0 px-4">
-              <div className="text-4xl font-black text-gray-900 tracking-tighter mb-1">500+</div>
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Clientes Reales</div>
+              <div className="text-4xl font-bold text-gray-900 tracking-tighter mb-1">500+</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Clientes Reales</div>
             </div>
             <div className="text-center md:border-r border-gray-50 last:border-0 px-4">
-              <div className="text-4xl font-black text-gray-900 tracking-tighter mb-1">100%</div>
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Artesanal</div>
+              <div className="text-4xl font-bold text-gray-900 tracking-tighter mb-1">100%</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Artesanal</div>
             </div>
             <div className="text-center md:border-r border-gray-50 last:border-0 px-4">
-              <div className="text-4xl font-black text-gray-900 tracking-tighter mb-1">24h</div>
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Envío Rápido</div>
+              <div className="text-4xl font-bold text-gray-900 tracking-tighter mb-1">24h</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Envío Rápido</div>
             </div>
             <div className="text-center px-4">
-              <div className="text-4xl font-black text-gray-900 tracking-tighter mb-1">5.0</div>
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Satisfacción</div>
+              <div className="text-4xl font-bold text-gray-900 tracking-tighter mb-1">5.0</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Satisfacción</div>
             </div>
           </div>
         </div>
@@ -747,7 +747,7 @@ const Home = () => {
             <span className="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-widest text-indigo-600 uppercase bg-indigo-100 rounded-full">
               Testimonios
             </span>
-            <h2 className="text-4xl font-black tracking-tight text-gray-900 sm:text-5xl">
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
               Lo que dicen de nosotros
             </h2>
             <p className="max-w-2xl mx-auto mt-4 text-lg text-gray-500">
@@ -865,10 +865,10 @@ const Home = () => {
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
             <div className="max-w-2xl">
-              <span className="inline-block px-3 py-1 mb-4 text-xs font-black tracking-[0.2em] text-indigo-600 uppercase bg-indigo-50 rounded-full">
+              <span className="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-wider text-indigo-600 uppercase bg-indigo-50 rounded-full">
                 Nuestra Esencia
               </span>
-              <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
                 Artesanía que cuenta <br /> una <span className="text-indigo-600">historia</span>
               </h2>
             </div>
@@ -887,7 +887,7 @@ const Home = () => {
                   className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <span className="absolute top-4 left-4 inline-flex items-center px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white bg-indigo-600/90 backdrop-blur-md rounded-full">
+                <span className="absolute top-4 left-4 inline-flex items-center px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white bg-indigo-600/90 backdrop-blur-md rounded-full">
                   Desde 2015
                 </span>
               </div>
@@ -917,7 +917,7 @@ const Home = () => {
                   className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <span className="absolute top-4 left-4 inline-flex items-center px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white bg-purple-600/90 backdrop-blur-md rounded-full">
+                <span className="absolute top-4 left-4 inline-flex items-center px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white bg-purple-600/90 backdrop-blur-md rounded-full">
                   Hecho a Mano
                 </span>
               </div>
@@ -947,7 +947,7 @@ const Home = () => {
                   className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <span className="absolute top-4 left-4 inline-flex items-center px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white bg-gray-900/90 backdrop-blur-md rounded-full">
+                <span className="absolute top-4 left-4 inline-flex items-center px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white bg-gray-900/90 backdrop-blur-md rounded-full">
                   Talento Local
                 </span>
               </div>
@@ -992,7 +992,7 @@ const Home = () => {
               <span className="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-widest text-indigo-600 uppercase bg-indigo-50 rounded-full">
                 Contacto
               </span>
-              <h2 className="text-4xl font-black tracking-tight text-gray-900 mb-6">
+              <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-6">
                 Hablemos de tu próximo moño favorito
               </h2>
               <p className="text-lg text-gray-500 mb-10 leading-relaxed">
@@ -1064,7 +1064,7 @@ const Home = () => {
                   <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
                     <div className="grid grid-cols-1 md:gap-8 gap-6 md:grid-cols-2">
                       <div className="space-y-2">
-                        <label htmlFor="name" className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">
+                        <label htmlFor="name" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">
                           Nombre Completo
                         </label>
                         <input
@@ -1080,7 +1080,7 @@ const Home = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <label htmlFor="email" className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">
+                        <label htmlFor="email" className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">
                           Correo Electrónico
                         </label>
                         <input

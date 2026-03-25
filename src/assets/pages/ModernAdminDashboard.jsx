@@ -587,7 +587,7 @@ const ModernAdminDashboard = () => {
                 }`}
               >
                 <span className={`mr-4 transition-transform group-hover:scale-110 ${activeSection === item.id ? 'text-white' : 'text-slate-500'}`}>{item.icon}</span>
-                <span className="text-xs font-black uppercase tracking-widest">{item.label}</span>
+                <span className="text-sm font-bold tracking-tight">{item.label}</span>
                 {activeSection === item.id && <FiChevronRight className="ml-auto opacity-50" />}
               </button>
             ))}
@@ -628,8 +628,8 @@ const ModernAdminDashboard = () => {
                   {currentUser?.email?.charAt(0).toUpperCase()}
                 </div>
                 <div className="hidden md:block text-left">
-                  <p className={`text-[11px] font-black uppercase tracking-widest ${textTitle}`}>{currentUser?.email?.split('@')[0]}</p>
-                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Administrator</p>
+                  <p className={`text-[12px] font-bold tracking-tight ${textTitle}`}>{currentUser?.email?.split('@')[0]}</p>
+                  <p className="text-[10px] font-bold text-slate-400 tracking-wider">Administrator</p>
                 </div>
               </div>
 
@@ -639,7 +639,7 @@ const ModernAdminDashboard = () => {
                    <div className="p-2 space-y-1">
                       <button 
                          onClick={() => { navigate('/'); setIsProfileMenuOpen(false); }}
-                         className={`flex items-center w-full gap-4 px-5 py-4 rounded-2xl transition-all text-xs font-black uppercase tracking-widest ${isDark ? 'text-slate-300 hover:bg-slate-800 hover:text-white' : 'text-slate-600 hover:bg-slate-50 hover:text-black'}`}
+                         className={`flex items-center w-full gap-4 px-5 py-4 rounded-2xl transition-all text-sm font-bold tracking-tight ${isDark ? 'text-slate-300 hover:bg-slate-800 hover:text-white' : 'text-slate-600 hover:bg-slate-50 hover:text-black'}`}
                       >
                          <FiHome className="text-indigo-500" size={16} />
                          <span>Volver a la Web</span>
@@ -647,7 +647,7 @@ const ModernAdminDashboard = () => {
                       <div className={`h-[1px] mx-4 ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`} />
                       <button 
                          onClick={() => { handleLogout(); setIsProfileMenuOpen(false); }}
-                         className="flex items-center w-full gap-4 px-5 py-4 rounded-2xl transition-all text-rose-500 hover:bg-rose-500/10 text-xs font-black uppercase tracking-widest"
+                         className="flex items-center w-full gap-4 px-5 py-4 rounded-2xl transition-all text-rose-500 hover:bg-rose-500/10 text-sm font-bold tracking-tight"
                       >
                          <FiLogOut size={16} />
                          <span>Cerrar Sesión</span>
