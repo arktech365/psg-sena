@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Blog = () => {
-  // Información de la empresa
   const companyInfo = {
     name: "PSG SHOP",
     tagline: "Elegancia en cada detalle",
@@ -10,178 +9,166 @@ const Blog = () => {
     mission: "Ofrecer productos de la más alta calidad con un servicio excepcional, ayudando a nuestros clientes a expresar su estilo único a través de accesorios elegantes.",
     vision: "Ser la marca líder en accesorios de moda en Latinoamérica, reconocida por nuestra calidad, innovación y compromiso con la sostenibilidad.",
     values: [
-      "Calidad Premium: Cada moño es creado con materiales de la más alta calidad.",
-      "Diseño Único: Cada pieza es única y cuidadosamente diseñada.",
-      "Sostenibilidad: Comprometidos con prácticas ecológicas responsables.",
-      "Atención Personalizada: Servicio al cliente excepcional en cada interacción.",
-      "Innovación: Siempre a la vanguardia de las tendencias de moda."
+      { title: "Calidad Premium", desc: "Cada moño es creado con materiales de la más alta calidad." },
+      { title: "Diseño Único", desc: "Cada pieza es única y cuidadosamente diseñada." },
+      { title: "Sostenibilidad", desc: "Comprometidos con prácticas ecológicas responsables." },
+      { title: "Atención Personalizada", desc: "Servicio al cliente excepcional en cada interacción." },
+      { title: "Innovación", desc: "Siempre a la vanguardia de las tendencias de moda." },
     ]
   };
 
-  // Equipo
   const team = [
     {
       id: 1,
       name: "María González",
       role: "Fundadora & Directora Creativa",
       bio: "Con más de 10 años de experiencia en moda y accesorios, María lidera nuestro equipo con visión artística y pasión por la excelencia.",
-      image: "https://ui-avatars.com/api/?name=María+González&background=4f46e5&color=ffffff"
+      image: "https://ui-avatars.com/api/?name=María+González&background=111827&color=ffffff&size=128"
     },
     {
       id: 2,
       name: "Carlos Rodríguez",
       role: "Director de Operaciones",
       bio: "Experto en logística y atención al cliente, Carlos asegura que cada pedido sea procesado con eficiencia y cuidado.",
-      image: "https://ui-avatars.com/api/?name=Carlos+Rodríguez&background=7c3aed&color=ffffff"
+      image: "https://ui-avatars.com/api/?name=Carlos+Rodríguez&background=374151&color=ffffff&size=128"
     },
     {
       id: 3,
       name: "Ana Martínez",
       role: "Diseñadora Principal",
       bio: "Artista del textil con un ojo meticuloso para el detalle, Ana crea cada diseño con inspiración y precisión.",
-      image: "https://ui-avatars.com/api/?name=Ana+Martínez&background=ec4899&color=ffffff"
+      image: "https://ui-avatars.com/api/?name=Ana+Martínez&background=4b5563&color=ffffff&size=128"
     }
   ];
 
-  // Logros
   const achievements = [
-    {
-      id: 1,
-      number: "500+",
-      label: "Clientes Satisfechos"
-    },
-    {
-      id: 2,
-      number: "100+",
-      label: "Diseños Únicos"
-    },
-    {
-      id: 3,
-      number: "5.0",
-      label: "Calificación Promedio"
-    },
-    {
-      id: 4,
-      number: "24/7",
-      label: "Soporte al Cliente"
-    }
+    { number: "500+", label: "Clientes Satisfechos" },
+    { number: "100+", label: "Diseños Únicos" },
+    { number: "5.0★", label: "Calificación Promedio" },
+    { number: "24/7", label: "Soporte al Cliente" },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative py-20 text-white bg-gradient-to-r from-indigo-700 to-purple-800">
-        <div className="absolute inset-0 bg-black opacity-20"></div>
-        <div className="container relative z-10 px-4 mx-auto text-center">
-          <h1 className="mb-4 text-4xl font-bold md:text-5xl">Sobre Nosotros</h1>
-          <p className="max-w-2xl mx-auto mb-8 text-xl">
+    <div className="min-h-screen bg-white" style={{ fontFamily: 'Inter, sans-serif' }}>
+
+      {/* ─── Hero ─── */}
+      <section className="bg-gray-900 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '28px 28px' }} />
+        <div className="relative z-10 max-w-4xl mx-auto px-4 py-20 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Sobre Nosotros</p>
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-5 leading-tight">
+            {companyInfo.tagline}
+          </h1>
+          <p className="text-lg text-gray-400 max-w-xl mx-auto">
             {companyInfo.description}
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* Stats Section */}
-      <div className="py-8 bg-white">
-        <div className="container px-4 mx-auto">
-          <div className="grid grid-cols-2 gap-6 text-center md:grid-cols-4">
-            {achievements.map((achievement) => (
-              <div key={achievement.id} className="p-4 transition-all duration-300 hover:shadow-lg rounded-xl">
-                <div className="text-3xl font-bold text-indigo-700">{achievement.number}</div>
-                <div className="text-gray-600">{achievement.label}</div>
+      {/* ─── Stats ─── */}
+      <section className="border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100">
+            {achievements.map((item, i) => (
+              <div key={i} className="py-10 px-6 text-center">
+                <p className="text-3xl font-black text-gray-900 mb-1">{item.number}</p>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{item.label}</p>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* About Content */}
-      <div className="container px-4 py-12 mx-auto">
-        <div className="flex flex-col gap-8 lg:flex-row">
-          {/* Main Content */}
-          <div className="lg:w-2/3">
+      {/* ─── Main Content ─── */}
+      <section className="max-w-7xl mx-auto px-4 py-14 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row gap-10">
+
+          {/* Left column */}
+          <div className="lg:flex-1 space-y-8">
+
             {/* Our Story */}
-            <div className="p-8 mb-8 transition-shadow duration-300 bg-white shadow-md rounded-xl hover:shadow-lg">
-              <h2 className="pb-2 mb-6 text-2xl font-bold text-gray-900 border-b border-gray-200">Nuestra Historia</h2>
-              <p className="mb-6 text-gray-600">
-                PSG SHOP nació de la pasión por la elegancia y el detalle. Fundada en 2015 por María González, 
-                nuestra tienda comenzó como un pequeño taller artesanal en el corazón de Cajamarca, Tolima. 
-                Con el tiempo, hemos crecido hasta convertirnos en un referente de calidad en accesorios de moda.
-              </p>
-              <p className="mb-6 text-gray-600">
-                Cada moño que creamos es una obra de arte, elaborada con materiales premium y técnicas tradicionales 
-                que han sido perfeccionadas a lo largo de generaciones. Nuestro compromiso es ayudarte a expresar 
-                tu estilo único con accesorios que no solo complementan tu look, sino que también cuentan tu historia.
-              </p>
-              <div className="flex justify-center my-6">
-                <img 
-                  src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
-                  alt="Nuestro taller" 
-                  className="h-auto max-w-full shadow-md rounded-xl"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://via.placeholder.com/800x400.png?text=Nuestro+Taller';
-                  }}
+            <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+              <div className="px-8 pt-8 pb-6">
+                <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">Nuestra Historia</span>
+                <h2 className="text-2xl font-bold text-gray-900 mt-2 mb-4">Cómo comenzamos</h2>
+                <p className="text-gray-600 leading-relaxed mb-4">
+                  PSG SHOP nació de la pasión por la elegancia y el detalle. Fundada en 2015 por María González,
+                  nuestra tienda comenzó como un pequeño taller artesanal en el corazón de Cajamarca, Tolima.
+                  Con el tiempo, hemos crecido hasta convertirnos en un referente de calidad en accesorios de moda.
+                </p>
+                <p className="text-gray-600 leading-relaxed">
+                  Cada moño que creamos es una obra de arte, elaborada con materiales premium y técnicas tradicionales
+                  que han sido perfeccionadas a lo largo de generaciones. Nuestro compromiso es ayudarte a expresar
+                  tu estilo único con accesorios que no solo complementan tu look, sino que también cuentan tu historia.
+                </p>
+              </div>
+              <div className="px-8 pb-8">
+                <img
+                  src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80"
+                  alt="Nuestro taller"
+                  className="w-full h-56 object-cover rounded-xl border border-gray-100"
+                  onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/900x350.png?text=PSG+SHOP'; }}
                 />
               </div>
             </div>
 
             {/* Mission & Vision */}
-            <div className="grid gap-8 mb-8 md:grid-cols-2">
-              <div className="p-8 transition-shadow duration-300 bg-white shadow-md rounded-xl hover:shadow-lg">
-                <h3 className="flex items-center mb-4 text-xl font-bold text-gray-900">
-                  <span className="w-3 h-3 mr-3 bg-indigo-600 rounded-full"></span>
-                  Nuestra Misión
-                </h3>
-                <p className="text-gray-600">
-                  {companyInfo.mission}
-                </p>
+            <div className="grid gap-5 md:grid-cols-2">
+              <div className="bg-white border border-gray-200 rounded-2xl p-7 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-black flex-shrink-0" />
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400">Misión</h3>
+                </div>
+                <p className="text-gray-700 leading-relaxed text-sm">{companyInfo.mission}</p>
               </div>
-              <div className="p-8 transition-shadow duration-300 bg-white shadow-md rounded-xl hover:shadow-lg">
-                <h3 className="flex items-center mb-4 text-xl font-bold text-gray-900">
-                  <span className="w-3 h-3 mr-3 bg-purple-600 rounded-full"></span>
-                  Nuestra Visión
-                </h3>
-                <p className="text-gray-600">
-                  {companyInfo.vision}
-                </p>
+              <div className="bg-white border border-gray-200 rounded-2xl p-7 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-gray-400 flex-shrink-0" />
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400">Visión</h3>
+                </div>
+                <p className="text-gray-700 leading-relaxed text-sm">{companyInfo.vision}</p>
               </div>
             </div>
 
             {/* Values */}
-            <div className="p-8 mb-8 transition-shadow duration-300 bg-white shadow-md rounded-xl hover:shadow-lg">
-              <h2 className="pb-2 mb-6 text-2xl font-bold text-gray-900 border-b border-gray-200">Nuestros Valores</h2>
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">Nuestros Valores</span>
+              <h2 className="text-2xl font-bold text-gray-900 mt-2 mb-6">Lo que nos define</h2>
               <ul className="space-y-4">
                 {companyInfo.values.map((value, index) => (
-                  <li key={index} className="flex items-start p-4 transition-colors duration-300 rounded-lg hover:bg-gray-50">
-                    <span className="flex items-center justify-center flex-shrink-0 w-6 h-6 mt-1 mr-3 text-xs font-bold text-white rounded-full bg-gradient-to-r from-indigo-500 to-purple-600">
+                  <li key={index} className="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors duration-150">
+                    <span className="flex items-center justify-center flex-shrink-0 w-7 h-7 bg-black text-white text-xs font-bold rounded-full">
                       {index + 1}
                     </span>
-                    <span className="text-gray-600">{value}</span>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">{value.title}</p>
+                      <p className="text-sm text-gray-500 mt-0.5">{value.desc}</p>
+                    </div>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="lg:w-1/3">
-            {/* Our Team */}
-            <div className="p-6 mb-8 transition-shadow duration-300 bg-white shadow-md rounded-xl hover:shadow-lg">
-              <h3 className="mb-4 text-xl font-bold text-gray-900">Nuestro Equipo</h3>
+          {/* Right sidebar */}
+          <div className="lg:w-80 space-y-6">
+
+            {/* Team */}
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">Equipo</span>
+              <h3 className="text-lg font-bold text-gray-900 mt-1 mb-5">Las personas detrás de PSG</h3>
               <div className="space-y-6">
                 {team.map((member) => (
-                  <div key={member.id} className="flex group">
-                    <div className="flex-shrink-0 w-16 h-16 overflow-hidden rounded-full">
-                      <img 
-                        src={member.image} 
-                        alt={member.name} 
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                    <div className="ml-4">
-                      <h4 className="font-bold text-gray-900 transition-colors duration-300 group-hover:text-indigo-700">{member.name}</h4>
-                      <p className="mb-2 text-sm text-indigo-600">{member.role}</p>
-                      <p className="text-sm text-gray-600">{member.bio}</p>
+                  <div key={member.id} className="flex gap-3">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-12 h-12 rounded-full object-cover border border-gray-200 flex-shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 leading-snug">{member.name}</p>
+                      <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">{member.role}</p>
+                      <p className="text-xs text-gray-500 leading-relaxed">{member.bio}</p>
                     </div>
                   </div>
                 ))}
@@ -189,35 +176,40 @@ const Blog = () => {
             </div>
 
             {/* Contact CTA */}
-            <div className="p-6 mb-8 text-white transition-shadow duration-300 shadow-md bg-gradient-to-r from-indigo-600 to-purple-700 rounded-xl hover:shadow-lg">
-              <h3 className="mb-2 text-xl font-bold">¿Tienes preguntas?</h3>
-              <p className="mb-4 opacity-90">
-                Estamos aquí para ayudarte. Contáctanos y nuestro equipo te atenderá personalmente.
-              </p>
-              <Link 
-                to="/contact" 
-                className="inline-block px-4 py-2 font-medium text-indigo-700 transition-all duration-300 bg-white rounded-lg shadow-md hover:bg-gray-100"
-              >
-                Contáctanos
-              </Link>
+            <div className="bg-gray-900 rounded-2xl p-6 relative overflow-hidden">
+              <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '20px 20px' }} />
+              <div className="relative z-10">
+                <h3 className="text-base font-bold text-white mb-2">¿Tienes preguntas?</h3>
+                <p className="text-sm text-gray-400 mb-5 leading-relaxed">
+                  Estamos aquí para ayudarte. Nuestro equipo te atenderá personalmente.
+                </p>
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white rounded-lg hover:bg-gray-100 transition-colors duration-150"
+                >
+                  Contáctanos
+                  <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                </Link>
+              </div>
             </div>
 
             {/* Shop CTA */}
-            <div className="p-6 transition-shadow duration-300 bg-white shadow-md rounded-xl hover:shadow-lg">
-              <h3 className="mb-4 text-xl font-bold text-gray-900">Descubre Nuestra Colección</h3>
-              <p className="mb-4 text-gray-600">
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+              <h3 className="text-base font-bold text-gray-900 mb-2">Descubre la Colección</h3>
+              <p className="text-sm text-gray-500 mb-5 leading-relaxed">
                 Explora nuestra exclusiva colección de moños artesanales, diseñados para cada ocasión especial.
               </p>
-              <Link 
-                to="/shop" 
-                className="inline-block px-4 py-2 text-white transition-all duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 hover:shadow-lg"
+              <Link
+                to="/shop"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-800 transition-colors duration-150"
               >
                 Ver Productos
+                <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
               </Link>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

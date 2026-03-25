@@ -225,7 +225,7 @@ const Home = () => {
       title: "Envío Gratis",
       description: "En pedidos superiores a $100.000 COP",
       icon: (
-        <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-8 h-8 text-black uppercase tracking-widest" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
         </svg>
       )
@@ -235,7 +235,7 @@ const Home = () => {
       title: "Devolución Gratuita",
       description: "30 días para devoluciones sin complicaciones",
       icon: (
-        <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-8 h-8 text-black uppercase tracking-widest" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
         </svg>
       )
@@ -245,7 +245,7 @@ const Home = () => {
       title: "Soporte 24/7",
       description: "Asistencia dedicada en cualquier momento",
       icon: (
-        <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-8 h-8 text-black uppercase tracking-widest" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
         </svg>
       )
@@ -255,7 +255,7 @@ const Home = () => {
       title: "Pago Seguro",
       description: "Protegemos tus datos de pago",
       icon: (
-        <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-8 h-8 text-black uppercase tracking-widest" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 11-8 0v4h8z"></path>
         </svg>
       )
@@ -331,39 +331,39 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Hero Section - New design with cards and gradient */}
       <section className="flex flex-col gap-6 p-6 mx-auto lg:flex-row max-w-7xl">
         {/* Bloque principal */}
-        <div className="flex flex-col items-center justify-between flex-1 p-8 shadow-sm bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl lg:flex-row">
+        <div className="flex flex-col items-center justify-between flex-1 p-8 shadow-2xl shadow-sm shadow-sm bg-gray-50 rounded-2xl lg:flex-row">
           <div className="max-w-md">
             {/* Etiqueta superior */}
             <div className="flex items-center gap-2 mb-4">
-              <span className="px-3 py-1 text-xs font-semibold text-indigo-800 bg-indigo-100 rounded-full">
+              <span className="px-3 py-1 text-xs font-semibold text-gray-800 bg-indigo-500/100/10 border border-gray-200 rounded-full">
                 NUEVO
               </span>
-              <span className="flex items-center gap-1 px-3 py-1 text-sm text-white rounded-full bg-gradient-to-r from-indigo-600 to-purple-700">
+              <span className="flex items-center gap-1 px-3 py-1 text-sm text-gray-900 rounded-full bg-black text-white ">
                 ¡Envío gratis en compras mayores a $100.000!
-                <span className="text-white">→</span>
+                <span className="text-gray-900">→</span>
               </span>
             </div>
 
             {/* Título */}
             <h1 className="mb-4 text-3xl font-semibold leading-snug text-gray-900 md:text-4xl">
               Elegancia en cada{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-700">detalle</span>{" "}
+              <span className="text-transparent bg-clip-text bg-black text-white ">detalle</span>{" "}
               perfecto
             </h1>
 
             {/* Descripción */}
-            <p className="mb-6 text-sm text-gray-600">
+            <p className="mb-6 text-sm text-gray-500">
               Colección exclusiva de moños artesanales para todas las ocasiones. Calidad premium, diseño único y entrega rápida.
             </p>
 
             {/* Botón */}
             <Link
               to="/shop"
-              className="px-6 py-3 text-sm font-semibold text-white transition rounded-lg shadow-md bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 hover:shadow-lg"
+              className="px-6 py-3 text-sm font-semibold text-white transition rounded-none bg-black hover:bg-gray-800 border border-black  hover:from-indigo-400 hover:to-purple-500 hover:shadow-2xl shadow-sm"
             >
               VER CATÁLOGO
             </Link>
@@ -386,15 +386,15 @@ const Home = () => {
         {/* Panel lateral derecho */}
         <div className="flex flex-col gap-6 md:w-1/3">
           {/* Tarjeta 1 */}
-          <div className="flex items-center justify-between h-full p-6 bg-indigo-100 shadow-sm rounded-2xl">
+          <div className="flex items-center justify-between h-full p-6 bg-indigo-500/100/10 border border-gray-200 shadow-2xl shadow-sm shadow-sm rounded-2xl">
             <div className="flex-1">
               <h3 className="mb-2 text-xl font-semibold text-gray-900">
-                Mejores <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-700">moños</span>
+                Mejores <span className="text-transparent bg-clip-text bg-black text-white ">moños</span>
               </h3>
-              <p className="mb-4 text-sm text-gray-600">
+              <p className="mb-4 text-sm text-gray-500">
                 Descubre nuestra selección premium de moños artesanales
               </p>
-              <Link to="/shop" className="inline-flex items-center gap-1 px-4 py-2 text-sm text-white transition rounded-lg bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800">
+              <Link to="/shop" className="inline-flex items-center gap-1 px-4 py-2 text-sm text-white transition rounded-none bg-black hover:bg-gray-800 border border-black  hover:from-indigo-400 hover:to-purple-500">
                 Ver más →
               </Link>
             </div>
@@ -410,15 +410,15 @@ const Home = () => {
           </div>
 
           {/* Tarjeta 2 */}
-          <div className="flex items-center justify-between h-full p-6 bg-purple-100 shadow-sm rounded-2xl">
+          <div className="flex items-center justify-between h-full p-6 bg-purple-500/100/10 border border-gray-200 shadow-2xl shadow-sm shadow-sm rounded-2xl">
             <div className="flex-1">
               <h3 className="mb-2 text-xl font-semibold text-gray-900">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-700">20%</span> de descuento
+                <span className="text-transparent bg-clip-text bg-black text-white ">20%</span> de descuento
               </h3>
-              <p className="mb-4 text-sm text-gray-600">
+              <p className="mb-4 text-sm text-gray-500">
                 En nuestra colección de moños especiales por tiempo limitado
               </p>
-              <Link to="/shop" className="inline-flex items-center gap-1 px-4 py-2 text-sm text-white transition rounded-lg bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800">
+              <Link to="/shop" className="inline-flex items-center gap-1 px-4 py-2 text-sm text-white transition rounded-none bg-black hover:bg-gray-800 border border-black  hover:from-indigo-400 hover:to-purple-500">
                 Ver más →
               </Link>
             </div>
@@ -436,34 +436,34 @@ const Home = () => {
       </section>
 
       {/* Stats Section - Added to match blog style */}
-      <div className="py-12 bg-white">
+      <div className="py-12 bg-white  border border-gray-200">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
             <div className="p-4">
-              <div className="text-3xl font-bold text-indigo-700">500+</div>
-              <div className="mt-2 text-gray-600">Clientes Satisfechos</div>
+              <div className="text-3xl font-bold text-black">500+</div>
+              <div className="mt-2 text-gray-500">Clientes Satisfechos</div>
             </div>
             <div className="p-4">
-              <div className="text-3xl font-bold text-indigo-700">100+</div>
-              <div className="mt-2 text-gray-600">Diseños Únicos</div>
+              <div className="text-3xl font-bold text-black">100+</div>
+              <div className="mt-2 text-gray-500">Diseños Únicos</div>
             </div>
             <div className="p-4">
-              <div className="text-3xl font-bold text-indigo-700">24/7</div>
-              <div className="mt-2 text-gray-600">Soporte</div>
+              <div className="text-3xl font-bold text-black">24/7</div>
+              <div className="mt-2 text-gray-500">Soporte</div>
             </div>
             <div className="p-4">
-              <div className="text-3xl font-bold text-indigo-700">5.0</div>
-              <div className="mt-2 text-gray-600">Calificación Promedio</div>
+              <div className="text-3xl font-bold text-black">5.0</div>
+              <div className="mt-2 text-gray-500">Calificación Promedio</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Features Section - Enhanced with better spacing and design */}
-      <div className="py-16 bg-white">
+      <div className="py-16 bg-white  border border-gray-200">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="mb-16 lg:text-center">
-            <h2 className="text-base font-semibold tracking-wide text-indigo-600 uppercase">Nuestros Beneficios</h2>
+            <h2 className="text-base font-semibold tracking-wide text-black uppercase tracking-widest uppercase">Nuestros Beneficios</h2>
             <p className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
               Por qué elegirnos
             </p>
@@ -476,7 +476,7 @@ const Home = () => {
             <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
               {features.map((feature) => (
                 <div key={feature.id} className="text-center group">
-                  <div className="flex items-center justify-center w-16 h-16 mx-auto transition-all duration-300 rounded-full bg-indigo-50 group-hover:bg-indigo-100">
+                  <div className="flex items-center justify-center w-16 h-16 mx-auto transition-all duration-300 rounded-full bg-indigo-500/10 group-hover:bg-indigo-500/100/10 border border-gray-200">
                     {feature.icon}
                   </div>
                   <h3 className="mt-6 text-lg font-medium text-gray-900">{feature.title}</h3>
@@ -491,10 +491,10 @@ const Home = () => {
       </div>
 
       {/* Categories Section - Enhanced with gradient overlays and better design */}
-      <div className="py-16 bg-gradient-to-r from-indigo-50 to-purple-50">
+      <div className="py-16 bg-gray-50">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="mb-16 lg:text-center">
-            <h2 className="text-base font-semibold tracking-wide text-indigo-600 uppercase">Categorías</h2>
+            <h2 className="text-base font-semibold tracking-wide text-black uppercase tracking-widest uppercase">Categorías</h2>
             <p className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
               Nuestra colección
             </p>
@@ -503,7 +503,7 @@ const Home = () => {
           <div className="grid grid-cols-1 gap-8 mt-10 sm:grid-cols-2 lg:grid-cols-4">
             {categoryList.length > 0 ? (
               categoryList.slice(0, 8).map((category) => (
-                <div key={category.id} className="relative overflow-hidden transition-all duration-300 transform shadow-lg group rounded-2xl hover:shadow-xl hover:-translate-y-1">
+                <div key={category.id} className="relative overflow-hidden transition-all duration-300 transform shadow-2xl shadow-sm group rounded-2xl hover:shadow-xl hover:-translate-y-1">
                   <div className="relative w-full h-80">
                     <img
                       src={category.imageUrl || '/psg-shop/clasicos.jpg'}
@@ -517,10 +517,10 @@ const Home = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
                   </div>
                   <div className="absolute inset-0 flex flex-col justify-end p-6">
-                    <h3 className="mb-2 text-xl font-bold text-white">{category.name}</h3>
+                    <h3 className="mb-2 text-xl font-bold text-gray-900">{category.name}</h3>
                     <Link 
                       to="/shop" 
-                      className="inline-flex items-center font-medium text-indigo-200 transition-colors duration-300 hover:text-white"
+                      className="inline-flex items-center font-medium text-indigo-200 transition-colors duration-300 hover:text-gray-900"
                     >
                       Explorar
                       <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -538,10 +538,10 @@ const Home = () => {
               <div className="flex flex-col items-center justify-center w-full col-span-4 py-16">
                 <div className="mb-4 text-5xl">📁</div>
                 <h3 className="mb-2 text-xl font-semibold text-gray-900">No hay categorías creadas</h3>
-                <p className="mb-6 text-gray-600">Actualmente no hay categorías disponibles en la tienda.</p>
+                <p className="mb-6 text-gray-500">Actualmente no hay categorías disponibles en la tienda.</p>
                 <Link 
                   to="/shop" 
-                  className="inline-flex items-center px-6 py-3 text-base font-medium text-white transition-all duration-300 border border-transparent rounded-lg shadow-md bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800"
+                  className="inline-flex items-center px-6 py-3 text-base font-medium text-gray-900 transition-all duration-300 border border-transparent rounded-lg shadow-xl shadow-sm bg-black text-white  hover:from-indigo-400 hover:to-purple-500"
                 >
                   Explorar productos
                 </Link>
@@ -552,10 +552,10 @@ const Home = () => {
       </div>
 
       {/* Featured Products Section - Enhanced with better card design */}
-      <div className="py-16 bg-white">
+      <div className="py-16 bg-white  border border-gray-200">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="mb-16 lg:text-center">
-            <h2 className="text-base font-semibold tracking-wide text-indigo-600 uppercase">Productos Destacados</h2>
+            <h2 className="text-base font-semibold tracking-wide text-black uppercase tracking-widest uppercase">Productos Destacados</h2>
             <p className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
               Lo más vendido
             </p>
@@ -573,7 +573,7 @@ const Home = () => {
           ) : (
             <div className="grid grid-cols-1 mt-10 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
               {featuredProducts.map((product) => (
-                <div key={product.id} className="overflow-hidden transition-all duration-300 transform bg-white border border-gray-100 rounded-lg shadow-md hover:shadow-lg hover:-translate-y-2">
+                <div key={product.id} className="overflow-hidden transition-all duration-300 transform bg-white  border border-gray-200 border border-gray-200 rounded-lg shadow-xl shadow-sm hover:shadow-2xl shadow-sm hover:-translate-y-2">
                   <div className="relative">
                     <Link to={`/product/${product.id}`}>
                       <div className="w-full overflow-hidden aspect-w-1 aspect-h-1">
@@ -592,8 +592,8 @@ const Home = () => {
                       <div className="absolute z-20 top-4 right-4">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           product.stock > 0 
-                            ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-sm' 
-                            : 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-sm'
+                            ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 shadow-2xl shadow-sm shadow-sm' 
+                            : 'bg-gradient-to-r from-red-500 to-red-600 text-gray-900 shadow-2xl shadow-sm shadow-sm'
                         }`}>
                           {product.stock > 0 ? `Solo ${product.stock} disponibles` : 'Agotado'}
                         </span>
@@ -603,12 +603,12 @@ const Home = () => {
                   
                   <div className="p-4">
                     <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-indigo-900/50 to-purple-900/50 text-gray-800">
                         {product.category}
                       </span>
                     </div>
                     
-                    <h3 className="mt-2 text-lg font-medium text-gray-900 transition-colors duration-300 group-hover:text-indigo-700">
+                    <h3 className="mt-2 text-lg font-medium text-gray-900 transition-colors duration-300 group-hover:text-black">
                       <Link to={`/product/${product.id}`} className="block">
                         {product.name}
                       </Link>
@@ -621,12 +621,12 @@ const Home = () => {
                     )}
                     
                     <div className="mt-2">
-                      <span className="text-lg font-semibold text-indigo-700">${parseFloat(product.price).toLocaleString('es-CO')}</span>
+                      <span className="text-lg font-semibold text-black">${parseFloat(product.price).toLocaleString('es-CO')}</span>
                     </div>
                     
                     <div className="flex gap-2 mt-4">
                       <button 
-                        className="flex-1 px-4 py-2 text-sm font-medium text-white transition-all duration-300 border border-transparent rounded-md shadow-sm bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 transition-all duration-300 border border-transparent rounded-md shadow-2xl shadow-sm shadow-sm bg-black text-white  hover:from-indigo-400 hover:to-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         onClick={(e) => {
                           e.preventDefault();
                           handleAddToCart(product);
@@ -635,7 +635,7 @@ const Home = () => {
                         Agregar al Carrito
                       </button>
                       <button 
-                        className="flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-300 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-300 bg-white  border border-gray-200 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
@@ -656,7 +656,7 @@ const Home = () => {
           <div className="mt-16 text-center">
             <Link
               to="/shop"
-              className="inline-flex items-center px-8 py-4 text-base font-medium text-white transition-all duration-300 border border-transparent rounded-lg shadow-lg bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 hover:shadow-xl"
+              className="inline-flex items-center px-8 py-4 text-base font-medium text-gray-900 transition-all duration-300 border border-transparent rounded-lg shadow-2xl shadow-sm bg-black text-white  hover:from-indigo-400 hover:to-purple-500 hover:shadow-xl"
             >
               Ver todos los productos
             </Link>
@@ -665,11 +665,11 @@ const Home = () => {
       </div>
 
       {/* Testimonials Section - Enhanced slider design with white background and purple colors */}
-      <div className="py-16 bg-white">
+      <div className="py-16 bg-white  border border-gray-200">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-4xl font-semibold text-gray-900">Lo que dicen nuestros clientes</h2>
-            <p className="max-w-2xl mx-auto mb-12 text-gray-600">
+            <p className="max-w-2xl mx-auto mb-12 text-gray-500">
               Descubre lo que nuestros clientes satisfechos tienen que decir sobre sus experiencias con nuestros productos/servicios.
             </p>
           </div>
@@ -698,7 +698,7 @@ const Home = () => {
                       key={testimonial.id} 
                       className="flex-shrink-0 w-full px-4"
                     >
-                      <div className="relative mx-auto transition bg-white border border-gray-100 shadow-lg rounded-2xl hover:shadow-xl testimonial-card">
+                      <div className="relative mx-auto transition bg-white  border border-gray-200 border border-gray-200 shadow-2xl shadow-sm rounded-2xl hover:shadow-xl testimonial-card">
                         <div className="p-6 md:p-8">
                           <div className="flex flex-col items-center text-center">
                             {/* Testimonial Image */}
@@ -715,7 +715,7 @@ const Home = () => {
                             {/* Testimonial Content */}
                             <div className="flex-1">
                               <h3 className="mb-1 text-lg font-semibold text-gray-900">{testimonial.name}</h3>
-                              <p className="mb-2 text-sm text-indigo-600">{testimonial.role}</p>
+                              <p className="mb-2 text-sm text-black uppercase tracking-widest">{testimonial.role}</p>
                               
                               <div className="flex justify-center mb-3">
                                 {[...Array(testimonial.rating)].map((_, i) => (
@@ -726,9 +726,9 @@ const Home = () => {
                                 <span className="ml-2 text-sm text-gray-500">({testimonial.rating})</span>
                               </div>
                               
-                              <div className="my-4 border-t border-gray-200"></div>
+                              <div className="my-4 border-t border-white/10"></div>
                               
-                              <blockquote className="px-2 text-sm italic text-gray-600 md:text-base">
+                              <blockquote className="px-2 text-sm italic text-gray-500 md:text-base">
                                 "{testimonial.text}"
                               </blockquote>
                             </div>
@@ -759,10 +759,10 @@ const Home = () => {
       </div>
 
       {/* Sobre Nosotros Section - Replaces blog preview */}
-      <div className="py-16 bg-gradient-to-r from-indigo-50 to-purple-50">
+      <div className="py-16 bg-gray-50">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="mb-16 lg:text-center">
-            <h2 className="text-base font-semibold tracking-wide text-indigo-600 uppercase">Nuestra Historia</h2>
+            <h2 className="text-base font-semibold tracking-wide text-black uppercase tracking-widest uppercase">Nuestra Historia</h2>
             <p className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
               Conoce nuestro compromiso
             </p>
@@ -773,7 +773,7 @@ const Home = () => {
 
           <div className="grid grid-cols-1 gap-8 mt-10 sm:grid-cols-2 lg:grid-cols-3">
             {/* Nuestra Historia */}
-            <div className="overflow-hidden transition-all duration-300 bg-white shadow-md rounded-2xl hover:shadow-xl">
+            <div className="overflow-hidden transition-all duration-300 bg-white  border border-gray-200 shadow-xl shadow-sm rounded-2xl hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
                   src="/psg-shop/trayectoria.jpg" 
@@ -783,15 +783,15 @@ const Home = () => {
               </div>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-indigo-800 bg-indigo-100 rounded-full">
+                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-800 bg-indigo-500/100/10 border border-gray-200 rounded-full">
                     Historia
                   </span>
                 </div>
                 <h3 className="mb-3 text-xl font-bold text-gray-900">Nuestra Trayectoria</h3>
-                <p className="mb-4 text-gray-600">Desde 2015, hemos crecido desde un pequeño taller artesanal hasta convertirnos en referentes de calidad en accesorios de moda.</p>
+                <p className="mb-4 text-gray-500">Desde 2015, hemos crecido desde un pequeño taller artesanal hasta convertirnos en referentes de calidad en accesorios de moda.</p>
                 <Link 
                   to="/blog" 
-                  className="inline-flex items-center font-medium text-indigo-600 transition-colors duration-300 hover:text-indigo-800"
+                  className="inline-flex items-center font-medium text-black uppercase tracking-widest transition-colors duration-300 hover:text-gray-800"
                 >
                   Leer más
                   <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -802,7 +802,7 @@ const Home = () => {
             </div>
 
             {/* Nuestros Valores */}
-            <div className="overflow-hidden transition-all duration-300 bg-white shadow-md rounded-2xl hover:shadow-xl">
+            <div className="overflow-hidden transition-all duration-300 bg-white  border border-gray-200 shadow-xl shadow-sm rounded-2xl hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
                   src="/psg-shop/compromiso.jpg" 
@@ -812,15 +812,15 @@ const Home = () => {
               </div>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-indigo-800 bg-indigo-100 rounded-full">
+                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-800 bg-indigo-500/100/10 border border-gray-200 rounded-full">
                     Valores
                   </span>
                 </div>
                 <h3 className="mb-3 text-xl font-bold text-gray-900">Compromiso con la Calidad</h3>
-                <p className="mb-4 text-gray-600">Cada moño es creado con materiales premium y técnicas tradicionales perfeccionadas a lo largo de generaciones.</p>
+                <p className="mb-4 text-gray-500">Cada moño es creado con materiales premium y técnicas tradicionales perfeccionadas a lo largo de generaciones.</p>
                 <Link 
                   to="/blog" 
-                  className="inline-flex items-center font-medium text-indigo-600 transition-colors duration-300 hover:text-indigo-800"
+                  className="inline-flex items-center font-medium text-black uppercase tracking-widest transition-colors duration-300 hover:text-gray-800"
                 >
                   Leer más
                   <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -831,7 +831,7 @@ const Home = () => {
             </div>
 
             {/* Nuestro Equipo */}
-            <div className="overflow-hidden transition-all duration-300 bg-white shadow-md rounded-2xl hover:shadow-xl">
+            <div className="overflow-hidden transition-all duration-300 bg-white  border border-gray-200 shadow-xl shadow-sm rounded-2xl hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
                  src="/psg-shop/calidad.jpg" 
@@ -841,15 +841,15 @@ const Home = () => {
               </div>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-indigo-800 bg-indigo-100 rounded-full">
+                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-800 bg-indigo-500/100/10 border border-gray-200 rounded-full">
                     Equipo
                   </span>
                 </div>
                 <h3 className="mb-3 text-xl font-bold text-gray-900">Conoce a Nuestro Talento</h3>
-                <p className="mb-4 text-gray-600">Un equipo apasionado de diseñadores y artesanos dedicados a crear accesorios únicos para cada ocasión.</p>
+                <p className="mb-4 text-gray-500">Un equipo apasionado de diseñadores y artesanos dedicados a crear accesorios únicos para cada ocasión.</p>
                 <Link 
                   to="/blog" 
-                  className="inline-flex items-center font-medium text-indigo-600 transition-colors duration-300 hover:text-indigo-800"
+                  className="inline-flex items-center font-medium text-black uppercase tracking-widest transition-colors duration-300 hover:text-gray-800"
                 >
                   Leer más
                   <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -863,7 +863,7 @@ const Home = () => {
           <div className="mt-12 text-center">
             <Link
               to="/blog"
-              className="inline-flex items-center px-6 py-3 text-base font-medium text-white transition-all duration-300 border border-transparent rounded-lg shadow-md bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800"
+              className="inline-flex items-center px-6 py-3 text-base font-medium text-gray-900 transition-all duration-300 border border-transparent rounded-lg shadow-xl shadow-sm bg-black text-white  hover:from-indigo-400 hover:to-purple-500"
             >
               Conoce más sobre nosotros
             </Link>
@@ -872,10 +872,10 @@ const Home = () => {
       </div>
 
       {/* Contact Section - Added below blog preview */}
-      <div className="py-16 bg-white">
+      <div className="py-16 bg-white  border border-gray-200">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="mb-16 lg:text-center">
-            <h2 className="text-base font-semibold tracking-wide text-indigo-600 uppercase">Contáctanos</h2>
+            <h2 className="text-base font-semibold tracking-wide text-black uppercase tracking-widest uppercase">Contáctanos</h2>
             <p className="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl">
               ¿Tienes preguntas?
             </p>
@@ -885,7 +885,7 @@ const Home = () => {
           </div>
 
           <div className="max-w-4xl mx-auto mt-10">
-            <div className="p-8 shadow-sm bg-gray-50 rounded-2xl">
+            <div className="p-8 shadow-2xl shadow-sm shadow-sm bg-white rounded-2xl">
               {state.succeeded ? (
                 <div className="p-4 mb-8 rounded-md bg-green-50">
                   <div className="flex">
@@ -910,7 +910,7 @@ const Home = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div>
-                      <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-700">
+                      <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-600">
                         Nombre
                       </label>
                       <input
@@ -920,12 +920,12 @@ const Home = () => {
                         required
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 transition-colors duration-300 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-4 py-3 transition-colors duration-300 border border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                         placeholder="Tu nombre completo"
                       />
                     </div>
                     <div>
-                      <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700">
+                      <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-600">
                         Email
                       </label>
                       <input
@@ -935,7 +935,7 @@ const Home = () => {
                         required
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 transition-colors duration-300 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-4 py-3 transition-colors duration-300 border border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                         placeholder="tu@email.com"
                       />
                       <ValidationError 
@@ -946,7 +946,7 @@ const Home = () => {
                     </div>
                   </div>
                   <div>
-                    <label htmlFor="subject" className="block mb-2 text-sm font-medium text-gray-700">
+                    <label htmlFor="subject" className="block mb-2 text-sm font-medium text-gray-600">
                       Asunto
                     </label>
                     <input
@@ -956,12 +956,12 @@ const Home = () => {
                       required
                       value={formData.subject}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 transition-colors duration-300 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-4 py-3 transition-colors duration-300 border border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                       placeholder="¿Sobre qué te gustaría hablar?"
                     />
                   </div>
                   <div>
-                    <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-700">
+                    <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-600">
                       Mensaje
                     </label>
                     <textarea
@@ -971,7 +971,7 @@ const Home = () => {
                       required
                       value={formData.message}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 transition-colors duration-300 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-4 py-3 transition-colors duration-300 border border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                       placeholder="Escribe tu mensaje aquí..."
                     />
                     <ValidationError 
@@ -984,13 +984,13 @@ const Home = () => {
                     <button
                       type="submit"
                       disabled={state.submitting}
-                      className={`w-full flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 ${
+                      className={`w-full flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-2xl shadow-sm shadow-sm text-base font-medium text-gray-900 bg-black text-white  hover:from-indigo-400 hover:to-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 ${
                         state.submitting ? 'opacity-75 cursor-not-allowed' : ''
                       }`}
                     >
                       {state.submitting ? (
                         <>
-                          <svg className="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5 mr-3 -ml-1 text-gray-900 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>

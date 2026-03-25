@@ -132,13 +132,13 @@ const FirebaseTest = () => {
         </div>
         <button 
           onClick={handleTestRegistration}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+          className="bg-blue-500 hover:bg-blue-700 text-gray-900 font-bold py-2 px-4 rounded mr-2"
         >
           Test Registration
         </button>
         <button 
           onClick={handleSignOut}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-red-500 hover:bg-red-700 text-gray-900 font-bold py-2 px-4 rounded"
         >
           Sign Out Test
         </button>

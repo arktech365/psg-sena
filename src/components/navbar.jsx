@@ -4,11 +4,10 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { signOut } from 'firebase/auth';
-import { auth, db } from '../firebase';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { auth } from '../firebase';
 import { BsCart3 } from "react-icons/bs";
 import { GoHeart } from "react-icons/go";
-import { FiSearch, FiUser, FiSettings, FiList, FiLogOut, FiMenu, FiX, FiYoutube, FiLinkedin, FiFacebook, FiTwitter, FiHome, FiPackage, FiBook, FiMail } from "react-icons/fi";
+import { FiUser, FiSettings, FiList, FiLogOut, FiMenu, FiX, FiHome, FiPackage, FiBook, FiMail } from "react-icons/fi";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,38 +19,20 @@ const Navbar = () => {
   const location = useLocation();
   const profileMenuRef = useRef(null);
 
-  // Debug log to see if isAdmin is updating
-  useEffect(() => {
-    console.log('Navbar isAdmin value:', isAdmin);
-  }, [isAdmin]);
-
-  // Close profile menu when clicking outside
+  // Close profile menu on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
         setIsProfileMenuOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const toggleProfileMenu = () => {
-    console.log('Toggling profile menu, current state:', isProfileMenuOpen);
-    setIsProfileMenuOpen(!isProfileMenuOpen);
-  };
-
-  const closeProfileMenu = () => {
-    console.log('Closing profile menu');
-    setIsProfileMenuOpen(false);
-  };
+  const toggleMenu = () => setIsMenuOpen(v => !v);
+  const toggleProfileMenu = () => setIsProfileMenuOpen(v => !v);
+  const closeProfileMenu = () => setIsProfileMenuOpen(false);
 
   const handleLogout = async () => {
     try {
@@ -63,195 +44,180 @@ const Navbar = () => {
     }
   };
 
-  const navLinkClasses = "text-slate-600 hover:text-slate-900 transition-colors duration-300";
-  const iconClasses = "relative text-slate-600 hover:text-slate-900 transition-colors duration-300 cursor-pointer";
-
-  // Calculate total items in cart and wishlist
   const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
   const wishlistItemCount = wishlistItems.length;
+  const isActiveLink = (path) => location.pathname === path;
 
-  // Function to determine if a link is active
-  const isActiveLink = (path) => {
-    return location.pathname === path;
-  };
+  const navLinks = [
+    { to: '/home', label: 'Inicio' },
+    { to: '/shop', label: 'Productos' },
+    { to: '/blog', label: 'Sobre Nosotros' },
+    { to: '/contact', label: 'Contacto' },
+  ];
+
+  const mobileLinks = [
+    { to: '/home', label: 'Inicio', icon: FiHome },
+    { to: '/shop', label: 'Productos', icon: FiPackage },
+    { to: '/blog', label: 'Sobre Nosotros', icon: FiBook },
+    { to: '/contact', label: 'Contacto', icon: FiMail },
+    { to: '/cart', label: 'Carrito', icon: BsCart3 },
+    { to: '/wishlist', label: 'Favoritos', icon: GoHeart },
+  ];
 
   return (
     <>
-      <header className="sticky top-0 z-50 font-sans bg-white shadow-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
-        <nav className="flex items-center justify-between p-4 mx-auto max-w-7xl">
-          {/* Left section with menu button and logo */}
-          <div className="flex items-center">
-            {/* Mobile Menu Button - Moved to the left with minimal spacing */}
-            <div className="mr-0 text-2xl cursor-pointer md:hidden text-slate-800" onClick={toggleMenu}>
-              <FiMenu />
-              {/* Menu badge removed - was showing "11" unnecessarily */}
-            </div>
-            
-            {/* Logo */}
-            <div className="text-2xl font-bold">
-              <Link to="/home">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">PSG</span>
-                <span className="text-slate-800">SHOP</span>
-              </Link>
-            </div>
+      {/* ─── Header ─── */}
+      <header className="sticky top-0 z-50 bg-white border-b border-gray-100" style={{ fontFamily: 'Inter, sans-serif' }}>
+        <nav className="flex items-center justify-between px-4 mx-auto max-w-7xl h-16">
+
+          {/* Left: hamburger + Logo */}
+          <div className="flex items-center gap-3">
+            <button
+              className="text-gray-600 hover:text-black transition-colors duration-150 md:hidden"
+              onClick={toggleMenu}
+              aria-label="Abrir menú"
+            >
+              <FiMenu size={22} />
+            </button>
+
+            <Link to="/home" className="flex items-center gap-0.5 select-none" aria-label="PSG Shop - Inicio">
+              <span className="text-xl font-black tracking-tight text-black">PSG</span>
+              <span className="w-1 h-1 mx-1 rounded-full bg-black inline-block mb-0.5" />
+              <span className="text-xs font-light tracking-widest text-gray-500 uppercase">SHOP</span>
+            </Link>
           </div>
 
-          {/* Desktop Navigation Menu */}
-          <ul className="items-center hidden space-x-8 md:flex">
-            <li>
-              <Link 
-                to="/home" 
-                className={isActiveLink('/home') 
-                  ? "text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600 font-medium" 
-                  : navLinkClasses}
-              >
-                Inicio
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/shop" 
-                className={isActiveLink('/shop') 
-                  ? "text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600 font-medium" 
-                  : navLinkClasses}
-              >
-                Productos
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/blog" 
-                className={isActiveLink('/blog') 
-                  ? "text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600 font-medium" 
-                  : navLinkClasses}
-              >
-                Sobre Nosotros
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/contact" 
-                className={isActiveLink('/contact') 
-                  ? "text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600 font-medium" 
-                  : navLinkClasses}
-              >
-                Contacto
-              </Link>
-            </li>
+          {/* Center: desktop nav links */}
+          <ul className="items-center hidden gap-1 md:flex">
+            {navLinks.map(({ to, label }) => (
+              <li key={to}>
+                <Link
+                  to={to}
+                  className={`relative px-3 py-5 text-sm font-medium block transition-colors duration-200 group ${
+                    isActiveLink(to) ? 'text-black' : 'text-gray-500 hover:text-black'
+                  }`}
+                >
+                  {label}
+                  <span className={`absolute bottom-0 left-3 right-3 h-0.5 bg-black rounded-full transition-transform duration-200 origin-left ${
+                    isActiveLink(to) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  }`} />
+                </Link>
+              </li>
+            ))}
           </ul>
 
-          {/* Right-aligned Icons */}
-          <div className="flex items-center space-x-4">
-            {/* Wishlist Icon */}
-            <Link to="/wishlist" className={`${iconClasses} text-xl flex items-center justify-center relative`}>
-              <GoHeart />
+          {/* Right: icon actions */}
+          <div className="flex items-center gap-1">
+            {/* Wishlist */}
+            <Link
+              to="/wishlist"
+              className="relative flex items-center justify-center w-9 h-9 rounded-full text-gray-600 hover:text-black hover:bg-gray-100 transition-all duration-150"
+              aria-label="Lista de deseos"
+            >
+              <GoHeart size={20} />
               {wishlistItemCount > 0 && (
-                <span className="absolute flex items-center justify-center w-5 h-5 text-xs font-semibold text-white rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 -top-2 -right-3">
+                <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-black rounded-full">
                   {wishlistItemCount}
                 </span>
               )}
             </Link>
-            
-            {/* Cart Icon */}
-            <Link to="/cart" className={`${iconClasses} text-xl flex items-center justify-center relative`}>
-              <BsCart3 />
+
+            {/* Cart */}
+            <Link
+              to="/cart"
+              className="relative flex items-center justify-center w-9 h-9 rounded-full text-gray-600 hover:text-black hover:bg-gray-100 transition-all duration-150"
+              aria-label="Carrito"
+            >
+              <BsCart3 size={19} />
               {cartItemCount > 0 && (
-                <span className="absolute flex items-center justify-center w-5 h-5 text-xs font-semibold text-white rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 -top-2 -right-3">
+                <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-black rounded-full">
                   {cartItemCount}
                 </span>
               )}
             </Link>
-            
-            {/* User Profile Icon */}
-            <div className="relative" ref={profileMenuRef}>
+
+            {/* Profile */}
+            <div className="relative ml-1" ref={profileMenuRef}>
               {currentUser ? (
-                // User profile image or initial
-                <div className="flex items-center justify-center w-8 h-8 bg-gray-200 border border-gray-300 rounded-full cursor-pointer" onClick={toggleProfileMenu}>
+                <button
+                  onClick={toggleProfileMenu}
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-900 text-white text-xs font-bold hover:ring-2 hover:ring-gray-300 transition-all duration-150 overflow-hidden"
+                  aria-label="Perfil"
+                  aria-expanded={isProfileMenuOpen}
+                >
                   {userProfile?.profileImage ? (
-                    <img 
-                      src={userProfile.profileImage} 
-                      alt="Profile" 
-                      className="object-cover w-full h-full rounded-full"
-                    />
+                    <img src={userProfile.profileImage} alt="Profile" className="object-cover w-full h-full" />
                   ) : (
-                    <span className="text-xs font-bold text-gray-600">
-                      {userProfile?.displayName?.charAt(0).toUpperCase() || currentUser.email?.charAt(0).toUpperCase() || 'U'}
-                    </span>
+                    <span>{userProfile?.displayName?.charAt(0).toUpperCase() || currentUser.email?.charAt(0).toUpperCase() || 'U'}</span>
                   )}
-                </div>
+                </button>
               ) : (
-                // Default user icon for non-logged in users - redirect to login
-                <Link to="/login" className="flex items-center justify-center w-8 h-8 bg-gray-200 border border-gray-300 rounded-full cursor-pointer">
-                  <FiUser className="text-gray-600" />
+                <Link
+                  to="/login"
+                  className="flex items-center justify-center w-9 h-9 rounded-full text-gray-600 hover:text-black hover:bg-gray-100 transition-all duration-150"
+                  aria-label="Iniciar sesión"
+                >
+                  <FiUser size={18} />
                 </Link>
               )}
-              
-              {/* User Dropdown Menu */}
+
+              {/* Dropdown */}
               {currentUser && isProfileMenuOpen && (
-                <div className="absolute right-0 z-50 w-64 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
-                  <div className="p-4 border-b border-gray-200">
-                    <div className="flex items-center">
-                      <div className="flex items-center justify-center w-10 h-10 bg-gray-200 border border-gray-300 rounded-full">
+                <div className="absolute right-0 z-50 w-60 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden">
+                  {/* User info header */}
+                  <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-900 text-white text-sm font-bold overflow-hidden flex-shrink-0">
                         {userProfile?.profileImage ? (
-                          <img 
-                            src={userProfile.profileImage} 
-                            alt="Profile" 
-                            className="object-cover w-full h-full rounded-full"
-                          />
+                          <img src={userProfile.profileImage} alt="Profile" className="object-cover w-full h-full" />
                         ) : (
-                          <span className="text-sm font-bold text-gray-600">
-                            {userProfile?.displayName?.charAt(0).toUpperCase() || currentUser.email?.charAt(0).toUpperCase() || 'U'}
-                          </span>
+                          <span>{userProfile?.displayName?.charAt(0).toUpperCase() || currentUser.email?.charAt(0).toUpperCase() || 'U'}</span>
                         )}
                       </div>
-                      <div className="ml-3">
-                        <p className="text-sm font-bold text-gray-900">
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-gray-900 truncate">
                           {userProfile?.displayName || currentUser.email?.split('@')[0] || 'Usuario'}
                         </p>
-                        <p className="text-xs text-gray-500">{currentUser.email}</p>
+                        <p className="text-xs text-gray-500 truncate">{currentUser.email}</p>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="py-1">
-                    {console.log('Rendering admin link, isAdmin:', isAdmin)}
                     {isAdmin && (
-                      <Link 
-                        to="/admin" 
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      <Link
+                        to="/admin"
                         onClick={closeProfileMenu}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-900 hover:text-white transition-colors duration-150 group"
                       >
-                        <FiSettings className="mr-3 text-gray-400" />
+                        <FiSettings size={14} className="text-gray-400 group-hover:text-white" />
                         <span>Administrar página</span>
                       </Link>
                     )}
-                    
-                    <Link 
-                      to="/profile" 
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    <Link
+                      to="/profile"
                       onClick={closeProfileMenu}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-900 hover:text-white transition-colors duration-150 group"
                     >
-                      <FiUser className="mr-3 text-gray-400" />
+                      <FiUser size={14} className="text-gray-400 group-hover:text-white" />
                       <span>Editar perfil</span>
                     </Link>
-                    
-                    {/* Orders Link */}
-                    <div className="border-t border-gray-200">
-                      <Link 
-                        to="/orders" 
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={closeProfileMenu}
-                      >
-                        <FiList className="mr-3 text-gray-400" />
-                        <span>Mis Pedidos</span>
-                      </Link>
-                    </div>
-                    
-                    <button 
-                      onClick={handleLogout}
-                      className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
+                    <Link
+                      to="/orders"
+                      onClick={closeProfileMenu}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-900 hover:text-white transition-colors duration-150 group"
                     >
-                      <FiLogOut className="mr-3 text-gray-400" />
+                      <FiList size={14} className="text-gray-400 group-hover:text-white" />
+                      <span>Mis Pedidos</span>
+                    </Link>
+                  </div>
+
+                  <div className="border-t border-gray-100">
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-600 hover:text-white transition-colors duration-150 group"
+                    >
+                      <FiLogOut size={14} className="group-hover:text-white" />
                       <span>Cerrar sesión</span>
                     </button>
                   </div>
@@ -262,126 +228,94 @@ const Navbar = () => {
         </nav>
       </header>
 
-      {/* Mobile Menu (Off-canvas) */}
-      <>
-        {isMenuOpen && <div className="fixed inset-0 z-40 bg-black/40" onClick={toggleMenu}></div>}
-        <aside className={`fixed top-0 left-0 h-full w-72 bg-white shadow-xl transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out z-50 p-5 flex flex-col font-sans`} style={{ fontFamily: 'Inter, sans-serif' }}>
-          <div className="flex items-center justify-between mb-10">
-            <div className="text-xl font-bold">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">CART</span>
-              <span className="text-slate-800">SHOP</span>
-            </div>
-            <button onClick={toggleMenu} className="text-2xl cursor-pointer text-slate-600 hover:text-slate-900">
-              <FiX />
-            </button>
-          </div>
-          <ul className="flex-grow space-y-4">
-            <li>
-              <Link 
-                to="/home" 
-                className={`text-lg ${isActiveLink('/home') ? 'text-indigo-600 font-medium' : 'text-slate-800'}`} 
-                onClick={toggleMenu}
-              >
-                <div className="flex items-center">
-                  <FiHome className={`mr-3 ${isActiveLink('/home') ? 'text-indigo-600' : 'text-slate-800'}`} />
-                  <span>Inicio</span>
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/shop" 
-                className={`text-lg ${isActiveLink('/shop') ? 'text-indigo-600 font-medium' : 'text-slate-800'}`} 
-                onClick={toggleMenu}
-              >
-                <div className="flex items-center">
-                  <FiPackage className={`mr-3 ${isActiveLink('/shop') ? 'text-indigo-600' : 'text-slate-800'}`} />
-                  <span>Productos</span>
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/blog" 
-                className={`text-lg ${isActiveLink('/blog') ? 'text-indigo-600 font-medium' : 'text-slate-800'}`} 
-                onClick={toggleMenu}
-              >
-                <div className="flex items-center">
-                  <FiBook className={`mr-3 ${isActiveLink('/blog') ? 'text-indigo-600' : 'text-slate-800'}`} />
-                  <span>Sobre Nosotros</span>
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/contact" 
-                className={`text-lg ${isActiveLink('/contact') ? 'text-indigo-600 font-medium' : 'text-slate-800'}`} 
-                onClick={toggleMenu}
-              >
-                <div className="flex items-center">
-                  <FiMail className={`mr-3 ${isActiveLink('/contact') ? 'text-indigo-600' : 'text-slate-800'}`} />
-                  <span>Contacto</span>
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/cart" 
-                className={`text-lg ${isActiveLink('/cart') ? 'text-indigo-600 font-medium' : 'text-slate-800'}`} 
-                onClick={toggleMenu}
-              >
-                <div className="flex items-center">
-                  <BsCart3 className={`mr-3 ${isActiveLink('/cart') ? 'text-indigo-600' : 'text-slate-800'}`} />
-                  <span>Carrito</span>
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/wishlist" 
-                className={`text-lg ${isActiveLink('/wishlist') ? 'text-indigo-600 font-medium' : 'text-slate-800'}`} 
-                onClick={toggleMenu}
-              >
-                <div className="flex items-center">
-                  <GoHeart className={`mr-3 ${isActiveLink('/wishlist') ? 'text-indigo-600' : 'text-slate-800'}`} />
-                  <span>Favoritos</span>
-                </div>
-              </Link>
-            </li>
-          </ul>
-          <div className="mt-4">
-            {currentUser ? (
-              <>
-                {/* Admin Panel button - only visible to admin users */}
-                {isAdmin && (
-                  <Link 
-                    to="/admin" 
-                    className="block w-full px-4 py-2 mb-2 text-sm font-medium text-center text-white border border-transparent rounded-md shadow-sm bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    onClick={toggleMenu}
-                  >
-                    Panel administrativo 
-                  </Link>
-                )}
-                
-                <button 
-                  onClick={() => { handleLogout(); toggleMenu(); }}
-                  className="w-full px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      {/* ─── Mobile Overlay ─── */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" onClick={toggleMenu} />
+      )}
+
+      {/* ─── Mobile Sidebar ─── */}
+      <aside
+        className={`fixed top-0 left-0 h-full w-72 bg-white z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
+          isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        style={{ fontFamily: 'Inter, sans-serif' }}
+      >
+        {/* Sidebar header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <Link to="/home" onClick={toggleMenu} className="flex items-center gap-0.5 select-none">
+            <span className="text-lg font-black tracking-tight text-black">PSG</span>
+            <span className="w-1 h-1 mx-1 rounded-full bg-black inline-block" />
+            <span className="text-[10px] font-light tracking-widest text-gray-500 uppercase">SHOP</span>
+          </Link>
+          <button onClick={toggleMenu} className="text-gray-500 hover:text-black transition-colors">
+            <FiX size={20} />
+          </button>
+        </div>
+
+        {/* Nav links */}
+        <nav className="flex-1 overflow-y-auto py-4">
+          <ul className="space-y-0.5 px-3">
+            {mobileLinks.map(({ to, label, icon: Icon }) => (
+              <li key={to}>
+                <Link
+                  to={to}
+                  onClick={toggleMenu}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+                    isActiveLink(to) ? 'bg-black text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-black'
+                  }`}
                 >
-                  Cerrar Sesión
-                </button>
-              </>
-            ) : (
-              <Link 
-                to="/login" 
-                className="block w-full px-4 py-2 text-sm font-medium text-center text-white border border-transparent rounded-md shadow-sm bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                onClick={toggleMenu}
+                  <Icon size={16} />
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Sidebar footer */}
+        <div className="p-4 border-t border-gray-100 space-y-2">
+          {currentUser ? (
+            <>
+              <div className="flex items-center gap-3 px-3 py-2 mb-2">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-900 text-white text-xs font-bold overflow-hidden flex-shrink-0">
+                  {userProfile?.profileImage ? (
+                    <img src={userProfile.profileImage} alt="Profile" className="object-cover w-full h-full" />
+                  ) : (
+                    <span>{userProfile?.displayName?.charAt(0).toUpperCase() || currentUser.email?.charAt(0).toUpperCase() || 'U'}</span>
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-gray-900 truncate">{userProfile?.displayName || currentUser.email?.split('@')[0]}</p>
+                  <p className="text-xs text-gray-400 truncate">{currentUser.email}</p>
+                </div>
+              </div>
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={toggleMenu}
+                  className="flex items-center justify-center w-full px-4 py-2.5 text-sm font-medium text-white bg-black hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  Panel Administrativo
+                </Link>
+              )}
+              <button
+                onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                className="flex items-center justify-center w-full px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
               >
-                Iniciar Sesión
-              </Link>
-            )}
-          </div>
-        </aside>
-      </>
+                Cerrar Sesión
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              onClick={toggleMenu}
+              className="flex items-center justify-center w-full px-4 py-2.5 text-sm font-medium text-white bg-black hover:bg-gray-800 rounded-lg transition-colors"
+            >
+              Iniciar Sesión
+            </Link>
+          )}
+        </div>
+      </aside>
     </>
   );
 };

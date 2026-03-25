@@ -625,14 +625,14 @@ const Profile = () => {
           <h1 className="mb-8 text-3xl font-bold text-gray-900">Mi Perfil</h1>
           
           {/* Tabs */}
-          <div className="mb-8 border-b border-gray-200">
+          <div className="mb-8 border-b border-white/10">
             <nav className="flex -mb-px space-x-8">
               <button
                 onClick={() => setActiveTab('profile')}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === 'profile'
-                    ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-indigo-500 text-black uppercase tracking-widest'
+                    : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-slate-600'
                 }`}
               >
                 Perfil
@@ -641,8 +641,8 @@ const Profile = () => {
                 onClick={() => setActiveTab('security')}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === 'security'
-                    ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-indigo-500 text-black uppercase tracking-widest'
+                    : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-slate-600'
                 }`}
               >
                 Seguridad
@@ -651,8 +651,8 @@ const Profile = () => {
                 onClick={() => setActiveTab('addresses')}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === 'addresses'
-                    ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-indigo-500 text-black uppercase tracking-widest'
+                    : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-slate-600'
                 }`}
               >
                 Direcciones
@@ -662,7 +662,7 @@ const Profile = () => {
           
           {/* Profile Tab */}
           {activeTab === 'profile' && (
-            <div className="overflow-hidden bg-white rounded-lg shadow">
+            <div className="overflow-hidden bg-white  border border-gray-200 rounded-lg shadow">
               <div className="px-6 py-8">
                 <form onSubmit={handleSaveProfile}>
                   {/* Profile Image Section */}
@@ -674,10 +674,10 @@ const Profile = () => {
                           <img 
                             src={profileData.profileImage} 
                             alt="Profile" 
-                            className="object-cover w-24 h-24 border-2 border-gray-300 rounded-full"
+                            className="object-cover w-24 h-24 border-2 border-slate-600 rounded-full"
                           />
                         ) : (
-                          <div className="flex items-center justify-center w-24 h-24 bg-gray-200 border-2 border-gray-300 rounded-full">
+                          <div className="flex items-center justify-center w-24 h-24 bg-gray-100 border-2 border-slate-600 rounded-full">
                             <span className="text-3xl font-bold text-gray-500">
                               {profileData.displayName?.charAt(0) || profileData.email?.charAt(0) || 'U'}
                             </span>
@@ -686,7 +686,7 @@ const Profile = () => {
                       </div>
                       <div className="ml-6">
                         <label className="block">
-                          <span className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm cursor-pointer hover:bg-gray-50">
+                          <span className="px-4 py-2 text-sm font-medium text-gray-600 bg-white  border border-gray-200 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm cursor-pointer hover:bg-white">
                             Cambiar foto
                           </span>
                           <input 
@@ -708,7 +708,7 @@ const Profile = () => {
                     <h2 className="mb-4 text-lg font-medium text-gray-900">Información Personal</h2>
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <div>
-                        <label htmlFor="displayName" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="displayName" className="block text-sm font-medium text-gray-600">
                           Nombre Completo
                         </label>
                         <input
@@ -717,12 +717,12 @@ const Profile = () => {
                           id="displayName"
                           value={profileData.displayName}
                           onChange={handleProfileChange}
-                          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-600">
                           Correo Electrónico
                         </label>
                         <input
@@ -731,7 +731,7 @@ const Profile = () => {
                           id="email"
                           value={profileData.email}
                           disabled
-                          className="block w-full px-3 py-2 mt-1 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 bg-gray-100 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                         <p className="mt-1 text-sm text-gray-500">
                           El correo no puede ser modificado
@@ -739,7 +739,7 @@ const Profile = () => {
                       </div>
                       
                       <div>
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-600">
                           Teléfono
                         </label>
                         <input
@@ -748,13 +748,13 @@ const Profile = () => {
                           id="phone"
                           value={profileData.phone}
                           onChange={handleProfileChange}
-                          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                       </div>
                       
                       {/* Role Display (Read-only) */}
                       <div>
-                        <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="role" className="block text-sm font-medium text-gray-600">
                           Rol
                         </label>
                         <input
@@ -763,7 +763,7 @@ const Profile = () => {
                           id="role"
                           value={userRole || 'customer'}
                           disabled
-                          className="block w-full px-3 py-2 mt-1 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 bg-gray-100 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                         <p className="mt-1 text-sm text-gray-500">
                           El rol no puede ser modificado
@@ -777,7 +777,7 @@ const Profile = () => {
                     <button
                       type="submit"
                       disabled={saving}
-                      className="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                      className="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-gray-900 border border-transparent rounded-md shadow-2xl shadow-sm shadow-sm bg-gradient-to-r from-blue-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                     >
                       {saving ? 'Guardando...' : 'Guardar Cambios'}
                     </button>
@@ -789,14 +789,14 @@ const Profile = () => {
           
           {/* Security Tab */}
           {activeTab === 'security' && (
-            <div className="overflow-hidden bg-white rounded-lg shadow">
+            <div className="overflow-hidden bg-white  border border-gray-200 rounded-lg shadow">
               <div className="px-6 py-8">
                 <form onSubmit={handleChangePassword}>
                   <div className="mb-8">
                     <h2 className="mb-4 text-lg font-medium text-gray-900">Cambiar Contraseña</h2>
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <div>
-                        <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-600">
                           Contraseña Actual
                         </label>
                         <input
@@ -805,14 +805,14 @@ const Profile = () => {
                           id="currentPassword"
                           value={securityData.currentPassword}
                           onChange={handleSecurityChange}
-                          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                       </div>
                     </div>
                     
                     <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                       <div>
-                        <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="newPassword" className="block text-sm font-medium text-gray-600">
                           Nueva Contraseña
                         </label>
                         <input
@@ -821,12 +821,12 @@ const Profile = () => {
                           id="newPassword"
                           value={securityData.newPassword}
                           onChange={handleSecurityChange}
-                          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="confirmNewPassword" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="confirmNewPassword" className="block text-sm font-medium text-gray-600">
                           Confirmar Nueva Contraseña
                         </label>
                         <input
@@ -835,7 +835,7 @@ const Profile = () => {
                           id="confirmNewPassword"
                           value={securityData.confirmNewPassword}
                           onChange={handleSecurityChange}
-                          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                       </div>
                     </div>
@@ -846,7 +846,7 @@ const Profile = () => {
                     <button
                       type="submit"
                       disabled={securitySaving}
-                      className="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                      className="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-gray-900 border border-transparent rounded-md shadow-2xl shadow-sm shadow-sm bg-gradient-to-r from-blue-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                     >
                       {securitySaving ? 'Guardando...' : 'Cambiar Contraseña'}
                     </button>
@@ -856,11 +856,11 @@ const Profile = () => {
                 {/* Active Devices Section */}
                 <div className="mt-12">
                   <h2 className="mb-4 text-lg font-medium text-gray-900">Dispositivos Activos</h2>
-                  <div className="p-4 rounded-lg bg-gray-50">
+                  <div className="p-4 rounded-lg bg-white">
                     <div className="flex items-center">
                       <div className="flex-shrink-0">
-                        <div className="flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-full">
-                          <svg className="w-6 h-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="flex items-center justify-center w-10 h-10 bg-indigo-500/100/10 border border-gray-200 rounded-full">
+                          <svg className="w-6 h-6 text-black uppercase tracking-widest" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                           </svg>
                         </div>
@@ -887,7 +887,7 @@ const Profile = () => {
           
           {/* Addresses Tab */}
           {activeTab === 'addresses' && (
-            <div className="overflow-hidden bg-white rounded-lg shadow">
+            <div className="overflow-hidden bg-white  border border-gray-200 rounded-lg shadow">
               <div className="px-6 py-8">
                 {/* Add/Edit Address Form */}
                 <div className="mb-8">
@@ -897,7 +897,7 @@ const Profile = () => {
                   <form onSubmit={editingAddress ? saveEditedAddress : handleAddAddress}>
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <div>
-                        <label htmlFor="addressName" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="addressName" className="block text-sm font-medium text-gray-600">
                           Nombre de la Dirección
                         </label>
                         <input
@@ -907,12 +907,12 @@ const Profile = () => {
                           value={editingAddress ? editAddressData.name : newAddress.name}
                           onChange={editingAddress ? handleEditAddressChange : handleAddressChange}
                           placeholder="Ej: Casa, Trabajo"
-                          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="addressStreet" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="addressStreet" className="block text-sm font-medium text-gray-600">
                           Calle y Número
                         </label>
                         <input
@@ -922,12 +922,12 @@ const Profile = () => {
                           value={editingAddress ? editAddressData.street : newAddress.street}
                           onChange={editingAddress ? handleEditAddressChange : handleAddressChange}
                           placeholder="Ej: Av. Principal 123"
-                          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="addressCity" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="addressCity" className="block text-sm font-medium text-gray-600">
                           Ciudad
                         </label>
                         <input
@@ -936,12 +936,12 @@ const Profile = () => {
                           id="addressCity"
                           value={editingAddress ? editAddressData.city : newAddress.city}
                           onChange={editingAddress ? handleEditAddressChange : handleAddressChange}
-                          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="addressState" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="addressState" className="block text-sm font-medium text-gray-600">
                           Estado/Provincia
                         </label>
                         <input
@@ -950,12 +950,12 @@ const Profile = () => {
                           id="addressState"
                           value={editingAddress ? editAddressData.state : newAddress.state}
                           onChange={editingAddress ? handleEditAddressChange : handleAddressChange}
-                          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="addressZipCode" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="addressZipCode" className="block text-sm font-medium text-gray-600">
                           Código Postal
                         </label>
                         <input
@@ -964,12 +964,12 @@ const Profile = () => {
                           id="addressZipCode"
                           value={editingAddress ? editAddressData.zipCode : newAddress.zipCode}
                           onChange={editingAddress ? handleEditAddressChange : handleAddressChange}
-                          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="addressCountry" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="addressCountry" className="block text-sm font-medium text-gray-600">
                           País
                         </label>
                         <input
@@ -978,7 +978,7 @@ const Profile = () => {
                           id="addressCountry"
                           value="Colombia"
                           disabled
-                          className="block w-full px-3 py-2 mt-1 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block w-full px-3 py-2 mt-1 bg-gray-100 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                         <p className="mt-1 text-sm text-gray-500">
                           Este ecommerce solo opera en Colombia
@@ -990,7 +990,7 @@ const Profile = () => {
                       <button
                         type="submit"
                         disabled={addressSaving}
-                        className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                        className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-900 border border-transparent rounded-md shadow-2xl shadow-sm shadow-sm bg-gradient-to-r from-blue-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                       >
                         {addressSaving ? 'Guardando...' : (editingAddress ? 'Guardar Cambios' : 'Agregar Dirección')}
                       </button>
@@ -999,7 +999,7 @@ const Profile = () => {
                         <button
                           type="button"
                           onClick={cancelEditingAddress}
-                          className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-600 bg-white  border border-gray-200 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         >
                           Cancelar
                         </button>
@@ -1023,7 +1023,7 @@ const Profile = () => {
                   ) : (
                     <div className="space-y-4">
                       {addresses.map((address) => (
-                        <div key={address.id} className="p-4 transition-shadow duration-200 border border-gray-200 rounded-lg hover:shadow-md">
+                        <div key={address.id} className="p-4 transition-shadow duration-200 border border-white/10 rounded-lg hover:shadow-xl shadow-sm">
                           <div className="flex flex-col md:flex-row md:justify-between md:items-start">
                             <div className="flex-1">
                               <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-4">
@@ -1031,12 +1031,12 @@ const Profile = () => {
                                   <div className="flex items-start space-x-2">
                                     <h3 className="text-base font-medium text-gray-900">{address.name}</h3>
                                     {address.isDefault && (
-                                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-500/100/10 border border-gray-200 text-gray-800">
                                         Predeterminada
                                       </span>
                                     )}
                                   </div>
-                                  <div className="mt-2 text-sm text-gray-600">
+                                  <div className="mt-2 text-sm text-gray-500">
                                     <p>{address.street}</p>
                                     <p>{address.city}, {address.state} {address.zipCode}</p>
                                     <p>{address.country}</p>
@@ -1047,7 +1047,7 @@ const Profile = () => {
                             <div className="flex flex-col mt-4 space-y-2 md:mt-0 sm:flex-row sm:space-x-2 sm:space-y-0">
                               <button
                                 onClick={() => startEditingAddress(address)}
-                                className="inline-flex items-center justify-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded-md text-indigo-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                                className="inline-flex items-center justify-center px-3 py-1.5 border border-slate-600 text-xs font-medium rounded-md text-black bg-white  border border-gray-200 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
                               >
                                 <svg className="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -1059,11 +1059,11 @@ const Profile = () => {
                                 disabled={address.isDefault}
                                 className={`inline-flex items-center justify-center px-3 py-1.5 border text-xs font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ${
                                   address.isDefault 
-                                    ? 'border-gray-300 text-gray-500 bg-gray-100 cursor-not-allowed' 
-                                    : 'border-indigo-300 text-indigo-700 bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100'
+                                    ? 'border-slate-600 text-gray-500 bg-gray-100 cursor-not-allowed' 
+                                    : 'border-indigo-300 text-black bg-gray-50 hover:from-indigo-100 hover:to-purple-100'
                                 }`}
                               >
-                                <svg className={`mr-1 h-4 w-4 ${address.isDefault ? 'text-gray-400' : 'text-indigo-500'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className={`mr-1 h-4 w-4 ${address.isDefault ? 'text-gray-400' : 'text-black'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                 </svg>
                                 {address.isDefault ? 'Predeterminada' : 'Predeterminada'}

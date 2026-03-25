@@ -1,53 +1,50 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../../components/navbar';
+import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const CheckoutSuccess = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Show success message
     Swal.fire({
       title: '¡Pago exitoso!',
       text: 'Tu pago ha sido procesado correctamente.',
       icon: 'success',
-      confirmButtonText: 'Aceptar',
-      cancelButtonText: 'Ir a mis pedidos',
-      showCancelButton: true
+      confirmButtonText: 'Ir a mis pedidos',
+      cancelButtonText: 'Ir al inicio',
+      showCancelButton: true,
+      confirmButtonColor: '#111827',
+      cancelButtonColor: '#6b7280',
     }).then((result) => {
       if (result.isConfirmed) {
-        // Prompt to leave reviews
         Swal.fire({
           title: '¿Te gustaría dejar una reseña?',
-          text: 'Ayuda a otros clientes compartiendo tu experiencia con los productos que compraste.',
+          text: 'Ayuda a otros clientes compartiendo tu experiencia.',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Dejar reseñas',
-          cancelButtonText: 'Más tarde'
+          cancelButtonText: 'Más tarde',
+          confirmButtonColor: '#111827',
         }).then((reviewResult) => {
-          if (reviewResult.isConfirmed) {
-            navigate('/orders');
-          } else {
-            navigate('/home');
-          }
+          navigate(reviewResult.isConfirmed ? '/orders' : '/home');
         });
       } else {
-        navigate('/orders');
+        navigate('/home');
       }
     });
   }, [navigate]);
 
   return (
-    <div>
-      <Navbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-center items-center h-64">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Procesando tu pago...</p>
-          </div>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4" style={{ fontFamily: 'Inter, sans-serif' }}>
+      <div className="text-center max-w-sm">
+        <div className="flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mx-auto mb-5">
+          <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 13l4 4L19 7" />
+          </svg>
         </div>
+        <h1 className="text-xl font-bold text-gray-900 mb-2">¡Pago procesado!</h1>
+        <p className="text-sm text-gray-500 mb-6">Estamos preparando tu pedido. Serás redirigido automáticamente.</p>
+        <div className="w-8 h-8 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mx-auto" />
       </div>
     </div>
   );

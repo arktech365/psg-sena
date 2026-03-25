@@ -44,14 +44,14 @@ const DatabaseTest = () => {
                     <button 
                         onClick={testRead}
                         disabled={loading}
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+                        className="bg-blue-500 text-gray-900 px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
                     >
                         {loading ? 'Probando...' : 'Probar Lectura'}
                     </button>
                     <button 
                         onClick={testWrite}
                         disabled={loading}
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50"
+                        className="bg-green-500 text-gray-900 px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50"
                     >
                         {loading ? 'Probando...' : 'Probar Escritura'}
                     </button>

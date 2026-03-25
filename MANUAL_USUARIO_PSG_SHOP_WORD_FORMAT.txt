@@ -218,7 +218,418 @@ Actualización del Sistema:
    - Confirmar que los datos se mantienen intactos
 
 
-ANTECEDENTES DEL SISTEMA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MANUAL DEL ADMINISTRADOR DEL SISTEMA
+
+Introducción para Administradores
+El panel de administración de PSG SHOP es una herramienta integral diseñada para permitir la gestión completa de todos los aspectos del sistema. Este manual proporciona instrucciones detalladas sobre cómo utilizar todas las funcionalidades administrativas.
+
+Acceso al Panel de Administración
+1. Requisitos Previos:
+   - Tener una cuenta de usuario con rol de administrador
+   - Iniciar sesión con credenciales válidas
+   - Acceder a la ruta /admin desde el navegador
+
+2. Primer Acceso como Administrador:
+   - Navegar a /admin-setup si es la primera vez
+   - Crear la cuenta de administrador inicial
+   - Utilizar email y contraseña seguros
+   - Una vez creado, iniciar sesión en /admin
+
+Estructura del Panel Administrativo
+El panel de administración está organizado en las siguientes secciones principales:
+- Dashboard/Analíticas: Vista general con estadísticas y gráficos
+- Productos: Gestión completa del catálogo de productos
+- Pedidos: Administración de pedidos y estados
+- Usuarios: Gestión de cuentas de usuario
+- Reseñas: Moderación de reseñas de productos
+- Cupones: Gestión de promociones y descuentos
+- Categorías: Administración de categorías de productos
+
+Dashboard y Analíticas
+Funcionalidades del Dashboard:
+1. Métricas Principales:
+   - Total de productos registrados
+   - Total de pedidos realizados
+   - Total de usuarios registrados
+   - Total de reseñas recibidas
+   - Ingresos totales acumulados
+
+2. Gráficos Interactivos:
+   - Tendencia de ventas por período (7, 30, 90 días o último año)
+   - Ventas por categoría de productos
+   - Distribución de estados de pedidos
+   - Productos más vendidos
+   - Registro de usuarios por período
+   - Ingresos por método de pago
+
+3. Pedidos Recientes:
+   - Lista de los últimos 5 pedidos
+   - Estado actual de cada pedido
+   - Información básica del cliente
+   - Opción de ver detalles completos
+
+4. Usuarios Recientes:
+   - Lista de los últimos 5 usuarios registrados
+   - Información de contacto
+   - Fecha de registro
+
+5. Filtros de Período:
+   - Últimos 7 días
+   - Últimos 30 días (predeterminado)
+   - Últimos 90 días
+   - Último año completo
+
+Gestión de Productos
+Crear Nuevo Producto:
+1. Haga clic en "Agregar Producto"
+2. Complete el formulario con:
+   - Nombre del producto (obligatorio)
+   - Descripción detallada
+   - Precio (debe ser número válido)
+   - Categoría (seleccione del menú desplegable)
+   - Material del producto
+   - Color disponible
+   - Tamaño/dimensiones
+   - Estilo
+   - Stock inicial (cantidad disponible)
+   - Calificación inicial (0-5)
+3. Suba imágenes del producto:
+   - Puede subir hasta 4 imágenes
+   - Formatos aceptados: JPEG, JPG, PNG, GIF
+   - Tamaño máximo por imagen: 1MB
+   - Seleccione la imagen principal (primera que se mostrará)
+4. Haga clic en "Guardar Producto"
+
+Editar Producto Existente:
+1. Busque el producto en la lista de productos
+2. Use filtros por nombre, categoría o descripción
+3. Haga clic en el botón "Editar" junto al producto
+4. Modifique los campos necesarios
+5. Actualice imágenes si es necesario
+6. Haga clic en "Actualizar Producto"
+
+Eliminar Producto:
+1. Localice el producto en la lista
+2. Haga clic en el botón "Eliminar"
+3. Confirme la eliminación en el mensaje de confirmación
+4. El producto será eliminado permanentemente
+
+Filtrar y Buscar Productos:
+- Use la barra de búsqueda para encontrar productos por nombre
+- Filtre por categoría específica
+- Ordene por precio, nombre o fecha de creación
+
+Gestión de Pedidos
+Ver Todos los Pedidos:
+1. Navegue a la sección "Pedidos"
+2. Visualice la lista completa de pedidos
+3. Cada pedido muestra:
+   - Número de pedido y fecha
+   - Cliente que realizó la compra
+   - Total del pedido
+   - Estado actual
+   - Método de pago
+
+Actualizar Estado del Pedido:
+1. Localice el pedido a actualizar
+2. Haga clic en "Ver Detalles" o en el estado actual
+3. Seleccione el nuevo estado:
+   - Pendiente: Pedido recibido pero no procesado
+   - Procesando: Pedido en preparación
+   - Enviado: Pedido despachado al cliente
+   - Entregado: Pedido recibido por el cliente
+   - Cancelado: Pedido cancelado
+4. El cambio se reflejará inmediatamente
+5. El cliente recibirá notificación del cambio
+
+Ver Detalles del Pedido:
+1. Haga clic en "Ver Detalles" en cualquier pedido
+2. Visualice información completa:
+   - Productos comprados con cantidades y precios
+   - Dirección de envío completa
+   - Método de pago seleccionado
+   - Cupones aplicados
+   - Historial de cambios de estado
+3. Opciones disponibles:
+   - Imprimir pedido
+   - Contactar al cliente
+   - Eliminar pedido (con confirmación)
+
+Eliminar Pedido:
+1. En la vista de detalles del pedido
+2. Haga clic en "Eliminar Pedido"
+3. Confirme que desea eliminar permanentemente
+4. Esta acción no se puede deshacer
+
+Gestión de Usuarios
+Ver Lista de Usuarios:
+1. Navegue a la sección "Usuarios"
+2. Visualice todos los usuarios registrados
+3. Información mostrada:
+   - Nombre completo
+   - Correo electrónico
+   - Rol actual (cliente/administrador)
+   - Fecha de registro
+   - Última actividad
+
+Filtrar Usuarios:
+- Por rol: Todos, Clientes, Administradores
+- Por nombre o correo electrónico
+- Por fecha de registro
+
+Cambiar Rol de Usuario:
+1. Localice el usuario en la lista
+2. Haga clic en el botón "Editar Rol"
+3. Seleccione el nuevo rol:
+   - Cliente: Acceso básico de compra
+   - Administrador: Acceso completo al panel
+4. Confirme el cambio
+5. El usuario tendrá nuevos permisos inmediatamente
+
+Actualizar Perfil de Usuario:
+1. Haga clic en "Ver Perfil" del usuario
+2. Modifique información según sea necesario
+3. Guarde los cambios realizados
+
+Gestión de Reseñas
+Ver Todas las Reseñas:
+1. Navegue a la sección "Reseñas"
+2. Visualice todas las reseñas de productos
+3. Información mostrada:
+   - Producto reseñado
+   - Usuario que dejó la reseña
+   - Calificación (estrellas)
+   - Comentario completo
+   - Fecha de publicación
+
+Filtrar Reseñas:
+- Por producto específico
+- Por usuario
+- Por calificación
+- Por fecha
+
+Editar Reseña:
+1. Localice la reseña a editar
+2. Haga clic en "Editar Reseña"
+3. Modifique:
+   - Calificación (1-5 estrellas)
+   - Comentario
+4. Guarde los cambios
+
+Eliminar Reseña:
+1. Identifique la reseña inapropiada
+2. Haga clic en "Eliminar Reseña"
+3. Confirme la eliminación
+4. La reseña desaparecerá del sistema
+
+Gestión de Cupones
+Crear Nuevo Cupón:
+1. Navegue a la sección "Cupones"
+2. Haga clic en "Crear Cupón"
+3. Complete el formulario:
+   - Código del cupón (único)
+   - Tipo de descuento:
+     * Porcentaje: Descuento porcentual (ej. 10%)
+     * Monto fijo: Descuento en dinero (ej. $5000 COP)
+   - Valor del descuento
+   - Fecha de expiración (opcional)
+   - Estado: Activo/Inactivo
+4. Guarde el cupón
+
+Ver Cupones Disponibles:
+1. Visualice lista de todos los cupones
+2. Información mostrada:
+   - Código del cupón
+   - Tipo y valor de descuento
+   - Fecha de creación
+   - Fecha de expiración
+   - Estado actual
+
+Editar Cupón:
+1. Localice el cupón a modificar
+2. Haga clic en "Editar Cupón"
+3. Actualice campos según sea necesario
+4. Guarde los cambios
+
+Activar/Desactivar Cupón:
+1. Encuentre el cupón en la lista
+2. Cambie el interruptor de estado
+3. El cambio es inmediato
+4. Los cupones inactivos no pueden ser usados
+
+Eliminar Cupón:
+1. Identifique el cupón a eliminar
+2. Haga clic en "Eliminar Cupón"
+3. Confirme la eliminación
+4. El cupón ya no estará disponible
+
+Gestión de Categorías
+Crear Nueva Categoría:
+1. Navegue a la sección "Categorías"
+2. Haga clic en "Agregar Categoría"
+3. Complete:
+   - Nombre de la categoría (obligatorio)
+   - Descripción detallada
+   - Imagen representativa (opcional)
+     * Subir imagen (máx. 1MB)
+     * Formatos: JPEG, JPG, PNG, GIF
+4. Guarde la categoría
+
+Editar Categoría:
+1. Localice la categoría en la lista
+2. Haga clic en "Editar Categoría"
+3. Modifique nombre, descripción o imagen
+4. Guarde los cambios
+
+Eliminar Categoría:
+1. Encuentre la categoría a eliminar
+2. Haga clic en "Eliminar Categoría"
+3. Confirme la eliminación
+4. Advertencia: Los productos en esta categoría quedarán sin categoría
+
+Configuración del Sistema
+Perfil del Administrador:
+1. Haga clic en su nombre o ícono de perfil
+2. Acceda a configuración de perfil
+3. Actualice:
+   - Información personal
+   - Contraseña
+   - Preferencias de notificación
+
+Temas y Apariencia:
+1. El panel admite modo claro y oscuro
+2. Haga clic en el ícono de sol/luna
+3. Seleccione preferencia de tema
+4. La preferencia se guarda automáticamente
+
+Cerrar Sesión:
+1. Haga clic en su perfil
+2. Seleccione "Cerrar Sesión"
+3. Será redirigido a la página de login
+
+Seguridad para Administradores
+Mejores Prácticas:
+- Use contraseñas seguras y únicas
+- Active verificación en dos pasos si está disponible
+- No comparta sus credenciales de acceso
+- Cierre sesión cuando termine
+- Revise regularmente la actividad de su cuenta
+
+Permisos de Administrador:
+- Acceso completo a todas las secciones del sistema
+- Capacidad de crear, editar y eliminar productos
+- Gestión de todos los pedidos
+- Administración de usuarios y roles
+- Moderación de reseñas
+- Creación y gestión de cupones
+- Visualización de estadísticas y reportes
+
+Reportes y Estadísticas
+Generar Reportes:
+1. Navegue a la sección de analíticas
+2. Seleccione período de tiempo
+3. Elija tipo de reporte:
+   - Ventas totales
+   - Productos más vendidos
+   - Rendimiento por categoría
+   - Registro de usuarios
+   - Estados de pedidos
+4. Exporte datos si está disponible
+
+Métricas Clave a Monitorear:
+- Ingresos diarios, semanales y mensuales
+- Tasa de conversión de visitantes a compradores
+- Productos con mayor rotación
+- Métodos de pago más utilizados
+- Patrones de comportamiento de usuarios
+- Efectividad de cupones y promociones
+
+Soporte Técnico para Administradores
+Contactar Soporte:
+- Email: soporte@psgshop.com
+- Teléfono: +1 (555) 123-4567
+- Horario: Lunes a Viernes, 9:00 AM - 6:00 PM
+
+Problemas Comunes de Administradores:
+1. No puedo acceder al panel administrativo
+   - Verifique que tenga rol de administrador
+   - Confirme que inició sesión correctamente
+   - Intente limpiar caché del navegador
+
+2. Los cambios no se guardan
+   - Verifique conexión a internet
+   - Asegúrese de tener permisos de escritura
+   - Revise reglas de seguridad de Firestore
+
+3. Las imágenes no se cargan
+   - Verifique tamaño de archivo (máx. 1MB)
+   - Confirme formato de imagen válido
+   - Intente con otra imagen
+
+4. Error al crear índices de Firestore
+   - Siga el enlace proporcionado en el error
+   - Cree índices manualmente en Firebase Console
+   - Espere unos minutos para que se propaguen
+
+5. Datos no aparecen actualizados
+   - Refresque la página (F5)
+   - Limpie caché del navegador
+   - Verifique conexión a Firebase
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ANTERIOR CONTENIDO DEL MANUAL DE USUARIO
 
 El sistema PSG SHOP surge como respuesta a la necesidad de contar con una plataforma digital integral para la comercialización de productos de moda femenina, en particular moños decorativos, en el mercado colombiano. La evolución del comercio electrónico y la creciente demanda de productos fashion accesibles ha impulsado el desarrollo de soluciones tecnológicas que permitan a pequeños y medianos empresarios competir en el mercado digital.
 

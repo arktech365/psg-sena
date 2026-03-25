@@ -33,6 +33,14 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { FiMenu, FiX, FiHome, FiShoppingBag, FiUsers, FiMessageSquare, FiTag, FiPackage, FiBarChart2, FiPlus, FiEdit, FiTrash2, FiLogOut, FiShoppingCart, FiSun, FiMoon, FiList } from 'react-icons/fi';
+import DashboardAnalytics from '../../components/admin/DashboardAnalytics';
+import AdminProducts from '../../components/admin/AdminProducts';
+import AdminUsers from '../../components/admin/AdminUsers';
+import AdminReviews from '../../components/admin/AdminReviews';
+import AdminOrders from '../../components/admin/AdminOrders';
+import AdminCategories from '../../components/admin/AdminCategories';
+import AdminProductModal from '../../components/admin/AdminProductModal';
+
 
 const ModernAdminDashboard = () => {
   const { currentUser, isAdmin } = useAuth();
@@ -1092,686 +1100,77 @@ const ModernAdminDashboard = () => {
   const renderContent = () => {
     switch (activeSection) {
       case 'analytics':
-        if (loading) {
-          return <Loader text="Cargando datos analíticos..." size="lg" />;
-        }
-        return (
-          <div className="w-full space-y-6">
-            {/* Date Range Selector */}
-            <div className={`flex flex-wrap items-center justify-between gap-4 p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-              <h2 className={`text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Analíticas</h2>
-              <div className="flex flex-wrap gap-2">
-                <button 
-                  onClick={() => handleDateRangeChange('last7days')}
-                  className={`px-4 py-2 text-sm rounded-lg ${
-                    stats.dateRange === 'last7days' 
-                      ? 'bg-blue-600 text-white' 
-                      : theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  Últimos 7 días
-                </button>
-                <button 
-                  onClick={() => handleDateRangeChange('last30days')}
-                  className={`px-4 py-2 text-sm rounded-lg ${
-                    stats.dateRange === 'last30days' 
-                      ? 'bg-blue-600 text-white' 
-                      : theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  Últimos 30 días
-                </button>
-                <button 
-                  onClick={() => handleDateRangeChange('last90days')}
-                  className={`px-4 py-2 text-sm rounded-lg ${
-                    stats.dateRange === 'last90days' 
-                      ? 'bg-blue-600 text-white' 
-                      : theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  Últimos 90 días
-                </button>
-                <button 
-                  onClick={() => handleDateRangeChange('lastYear')}
-                  className={`px-4 py-2 text-sm rounded-lg ${
-                    stats.dateRange === 'lastYear' 
-                      ? 'bg-blue-600 text-white' 
-                      : theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  Último año
-                </button>
-              </div>
-            </div>
-            
-            {/* Key Metrics */}
-            <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
-                <div className="flex items-center">
-                  <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-blue-900' : 'bg-blue-100'}`}>
-                    <FiShoppingBag className={`${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`} size={24} />
-                  </div>
-                  <div className="ml-4">
-                    <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Total Productos</p>
-                    <p className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{stats.totalProducts}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
-                <div className="flex items-center">
-                  <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-green-900' : 'bg-green-100'}`}>
-                    <FiPackage className={`${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`} size={24} />
-                  </div>
-                  <div className="ml-4">
-                    <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Total Pedidos</p>
-                    <p className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{stats.totalOrders}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
-                <div className="flex items-center">
-                  <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-purple-900' : 'bg-purple-100'}`}>
-                    <FiUsers className={`${theme === 'dark' ? 'text-purple-400' : 'text-purple-600'}`} size={24} />
-                  </div>
-                  <div className="ml-4">
-                    <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Total Usuarios</p>
-                    <p className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{stats.totalUsers}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
-                <div className="flex items-center">
-                  <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-indigo-900' : 'bg-indigo-100'}`}>
-                    <FiBarChart2 className={`${theme === 'dark' ? 'text-indigo-400' : 'text-indigo-600'}`} size={24} />
-                  </div>
-                  <div className="ml-4">
-                    <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Ingresos Totales</p>
-                    <p className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{formatCurrency(stats.totalRevenue)}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Charts Section */}
-            <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-2">
-              {/* Sales Trend Chart */}
-              <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-                <h3 className={`mb-4 text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Tendencia de Ventas</h3>
-                <div className="w-full h-80">
-                  <SalesTrendChart data={stats.salesData} theme={theme} />
-                </div>
-              </div>
-              
-              {/* Sales by Category Chart */}
-              <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-                <h3 className={`mb-4 text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Ventas por Categoría</h3>
-                <div className="w-full h-80">
-                  <SalesByCategoryChart data={stats.salesByCategory} theme={theme} />
-                </div>
-              </div>
-              
-              {/* Order Status Distribution */}
-              <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-                <h3 className={`mb-4 text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Distribución de Estados de Pedido</h3>
-                <div className="w-full h-80">
-                  <OrderStatusChart data={stats.orderStatusData} theme={theme} />
-                </div>
-              </div>
-              
-              {/* Revenue by Payment Method */}
-              <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-                <h3 className={`mb-4 text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Ingresos por Método de Pago</h3>
-                <div className="w-full h-80">
-                  <PaymentMethodChart data={stats.paymentMethodData} theme={theme} />
-                </div>
-              </div>
-            </div>
-            
-            {/* Top Selling Products */}
-            <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-              <h3 className={`mb-4 text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Productos Más Vendidos</h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead>
-                    <tr>
-                      <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Producto</th>
-                      <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Cantidad Vendida</th>
-                      <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Ingresos</th>
-                    </tr>
-                  </thead>
-                  <tbody className={`divide-y ${theme === 'dark' ? 'divide-gray-700 bg-gray-800' : 'divide-gray-200 bg-white'}`}>
-                    {stats.topSellingProducts.map((product, index) => (
-                      <tr key={index} className={theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
-                        <td className={`px-6 py-4 text-sm whitespace-nowrap ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{product.productName}</td>
-                        <td className={`px-6 py-4 text-sm whitespace-nowrap ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{product.quantity}</td>
-                        <td className={`px-6 py-4 text-sm whitespace-nowrap ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{formatCurrency(product.revenue)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-            {/* User Registration Trend */}
-            <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-              <h3 className={`mb-4 text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Tendencia de Registro de Usuarios</h3>
-              <div className="w-full h-80">
-                <UserRegistrationChart data={stats.userRegistrationData} theme={theme} />
-              </div>
-            </div>
-            
-            {/* Recent Orders */}
-            <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-              <h3 className={`mb-4 text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Pedidos Recientes</h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead>
-                    <tr>
-                      <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>ID</th>
-                      <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Cliente</th>
-                      <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Fecha</th>
-                      <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Total</th>
-                      <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Estado</th>
-                    </tr>
-                  </thead>
-                  <tbody className={`divide-y ${theme === 'dark' ? 'divide-gray-700 bg-gray-800' : 'divide-gray-200 bg-white'}`}>
-                    {stats.recentOrders.map((order) => (
-                      <tr key={order.id} className={theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
-                        <td className={`px-6 py-4 text-sm whitespace-nowrap ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{order.id.substring(0, 8)}...</td>
-                        <td className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{order.userEmail || 'N/A'}</td>
-                        <td className={`px-6 py-4 text-sm whitespace-nowrap ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{formatDate(order.createdAt)}</td>
-                        <td className={`px-6 py-4 text-sm whitespace-nowrap ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{formatCurrency(order.totalAmount || 0)}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap`}>
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(order.orderStatus || 'pending', theme)}`}>
-                            {getOrderStatusText(order.orderStatus || 'pending')}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        );
+        return <DashboardAnalytics 
+          stats={stats} 
+          loading={loading} 
+          theme={theme} 
+          handleDateRangeChange={handleDateRangeChange} 
+          formatCurrency={formatCurrency} 
+          formatDate={formatDate} 
+          getStatusBadgeClass={getStatusBadgeClass} 
+          getOrderStatusText={getOrderStatusText} 
+        />;
       case 'products':
-        if (productsLoading) {
-          return <Loader text="Cargando productos..." size="lg" />;
-        }
-        // Filter products based on search term
-        const filteredProducts = productSearchTerm
-          ? products.filter(product =>
-              product.name.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
-              (product.category && product.category.toLowerCase().includes(productSearchTerm.toLowerCase())) ||
-              (product.description && product.description.toLowerCase().includes(productSearchTerm.toLowerCase()))
-            )
-          : products;
-
-        return (
-          <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <h2 className={`text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Todos los productos</h2>
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Buscar productos..."
-                    value={productSearchTerm}
-                    onChange={(e) => setProductSearchTerm(e.target.value)}
-                    className={`pl-10 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      theme === 'dark' 
-                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                    }`}
-                  />
-                  <FiShoppingBag className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                    theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                  }`} />
-                </div>
-                <button 
-                  onClick={openAddProductModal} 
-                  className={`flex items-center px-4 py-2 text-sm font-medium rounded-full ${
-                    theme === 'dark' 
-                      ? 'text-gray-200 bg-gray-700 hover:bg-gray-600' 
-                      : 'text-gray-700 bg-gray-200 hover:bg-gray-300'
-                  }`}
-                >
-                  <FiPlus className="mr-1" />
-                  Añadir Nuevo
-                </button>
-
-              </div>
-            </div>
-            <div className="w-full overflow-x-auto">
-              <table className={`min-w-full divide-y ${theme === 'dark' ? 'divide-gray-700' : 'divide-gray-200'}`}>
-                <thead>
-                  <tr>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Nombre</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Precio</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Stock</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className={`divide-y ${theme === 'dark' ? 'divide-gray-700 bg-gray-800' : 'divide-gray-200 bg-white'}`}>
-                  {filteredProducts.map((product) => (
-                    <tr key={product.id} className={theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{product.name}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{formatCurrency(product.price)}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{product.stock}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-md font-medium flex space-x-2`}>
-                        <button 
-                          onClick={() => openEditProductModal(product)} 
-                          className={`p-1 rounded hover:opacity-80 ${
-                            theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-indigo-600 hover:text-indigo-900'
-                          }`}
-                        >
-                          <FiEdit />
-                        </button>
-                        <button 
-                          onClick={() => deleteProduct(product.id, product.name)} 
-                          className={`p-1 rounded hover:opacity-80 ${
-                            theme === 'dark' ? 'text-red-400 hover:text-red-300' : 'text-red-600 hover:text-red-900'
-                          }`}
-                        >
-                          <FiTrash2 />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {filteredProducts.length === 0 && (
-                <div className={`text-center py-8 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                  {productSearchTerm ? 'No se encontraron productos que coincidan con la búsqueda.' : 'No hay productos disponibles.'}
-                </div>
-              )}
-            </div>
-          </div>
-        );
+        return <AdminProducts 
+          products={products}
+          productsLoading={productsLoading}
+          productSearchTerm={productSearchTerm}
+          setProductSearchTerm={setProductSearchTerm}
+          theme={theme}
+          formatCurrency={formatCurrency}
+          openAddProductModal={openAddProductModal}
+          openEditProductModal={openEditProductModal}
+          deleteProduct={deleteProduct}
+        />;
       case 'users':
-        if (usersLoading) {
-          return <Loader text="Cargando usuarios..." size="lg" />;
-        }
-        // Filter users based on search term and role filter
-        const filteredUsers = users.filter(user => {
-          // Apply search filter
-          const matchesSearch = !userSearchTerm || 
-            (user.email && user.email.toLowerCase().includes(userSearchTerm.toLowerCase())) ||
-            (user.role && user.role.toLowerCase().includes(userSearchTerm.toLowerCase()));
-          
-          // Apply role filter
-          const matchesRole = userRoleFilter === 'all' || 
-            (userRoleFilter === 'admin' && user.role === 'admin') ||
-            (userRoleFilter === 'user' && user.role === 'user');
-          
-          return matchesSearch && matchesRole;
-        });
-
-        return (
-          <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <h2 className={`text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Todos los usuarios</h2>
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Buscar usuarios..."
-                    value={userSearchTerm}
-                    onChange={(e) => setUserSearchTerm(e.target.value)}
-                    className={`pl-10 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      theme === 'dark' 
-                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                    }`}
-                  />
-                  <FiUsers className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                    theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                  }`} />
-                </div>
-                <select
-                  value={userRoleFilter}
-                  onChange={(e) => setUserRoleFilter(e.target.value)}
-                  className={`px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    theme === 'dark' 
-                      ? 'bg-gray-700 border-gray-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
-                >
-                  <option value="all">Todos</option>
-                  <option value="admin">Administradores</option>
-                  <option value="user">Clientes</option>
-                </select>
-              </div>
-            </div>
-            <div className="w-full overflow-x-auto">
-              <table className={`min-w-full divide-y ${theme === 'dark' ? 'divide-gray-700' : 'divide-gray-200'}`}>
-                <thead>
-                  <tr>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Email</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Rol</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className={`divide-y ${theme === 'dark' ? 'divide-gray-700 bg-gray-800' : 'divide-gray-200 bg-white'}`}>
-                  {filteredUsers.map((user) => (
-                    <tr key={user.id} className={theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{user.email}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{user.role}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-md font-medium flex space-x-2`}>
-                        <button 
-                          onClick={() => updateUserRole(user.id, user.role === 'admin' ? 'user' : 'admin')} 
-                          className={`p-1 rounded hover:opacity-80 ${
-                            theme === 'dark' ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-900'
-                          }`}
-                        >
-                          <FiEdit />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {filteredUsers.length === 0 && (
-                <div className={`text-center py-8 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                  {userSearchTerm ? 'No se encontraron usuarios que coincidan con la búsqueda.' : 'No hay usuarios disponibles.'}
-                </div>
-              )}
-            </div>
-          </div>
-        );
+        return <AdminUsers 
+          users={users}
+          usersLoading={usersLoading}
+          userSearchTerm={userSearchTerm}
+          setUserSearchTerm={setUserSearchTerm}
+          userRoleFilter={userRoleFilter}
+          setUserRoleFilter={setUserRoleFilter}
+          theme={theme}
+          updateUserRole={updateUserRole}
+        />;
       case 'reviews':
-        if (reviewsLoading) {
-          return <Loader text="Cargando reseñas..." size="lg" />;
-        }
-        // Filter reviews based on search term
-        const filteredReviews = reviews.filter(review =>
-          (review.productName && review.productName.toLowerCase().includes(reviewSearchTerm.toLowerCase())) ||
-          (review.createdAt && formatDate(review.createdAt).toLowerCase().includes(reviewSearchTerm.toLowerCase()))
-        );
-
-        return (
-          <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <h2 className={`text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Todas las reseñas</h2>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Buscar reseñas..."
-                  value={reviewSearchTerm}
-                  onChange={(e) => setReviewSearchTerm(e.target.value)}
-                  className={`pl-10 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    theme === 'dark' 
-                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                  }`}
-                />
-                <FiMessageSquare className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                  theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                }`} />
-              </div>
-            </div>
-            <div className="w-full overflow-x-auto">
-              <table className={`min-w-full divide-y ${theme === 'dark' ? 'divide-gray-700' : 'divide-gray-200'}`}>
-                <thead>
-                  <tr>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Producto</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Fecha</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className={`divide-y ${theme === 'dark' ? 'divide-gray-700 bg-gray-800' : 'divide-gray-200 bg-white'}`}>
-                  {filteredReviews.map((review) => (
-                    <tr key={review.id} className={theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{review.productName || 'Producto eliminado'}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{formatDate(review.createdAt)}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-md font-medium flex space-x-2`}>
-                        <button 
-                          onClick={() => openEditReviewModal(review)} 
-                          className={`p-1 rounded hover:opacity-80 ${
-                            theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-indigo-600 hover:text-indigo-900'
-                          }`}
-                        >
-                          <FiEdit />
-                        </button>
-                        <button 
-                          onClick={() => deleteReviewHandler(review.id)} 
-                          className={`p-1 rounded hover:opacity-80 ${
-                            theme === 'dark' ? 'text-red-400 hover:text-red-300' : 'text-red-600 hover:text-red-900'
-                          }`}
-                        >
-                          <FiTrash2 />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {filteredReviews.length === 0 && (
-                <div className={`text-center py-8 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                  {reviewSearchTerm ? 'No se encontraron reseñas que coincidan con la búsqueda.' : 'No hay reseñas disponibles.'}
-                </div>
-              )}
-            </div>
-          </div>
-        );
+        return <AdminReviews 
+          reviews={reviews}
+          reviewsLoading={reviewsLoading}
+          reviewSearchTerm={reviewSearchTerm}
+          setReviewSearchTerm={setReviewSearchTerm}
+          theme={theme}
+          formatDate={formatDate}
+          openEditReviewModal={openEditReviewModal}
+          deleteReviewHandler={deleteReviewHandler}
+        />;
       case 'orders':
-        if (ordersLoading) {
-          return <Loader text="Cargando pedidos..." size="lg" />;
-        }
-        // Filter orders based on search term
-        const filteredOrders = orderSearchTerm
-          ? orders.filter(order =>
-              (order.id && order.id.toLowerCase().includes(orderSearchTerm.toLowerCase())) ||
-              (order.userEmail && order.userEmail.toLowerCase().includes(orderSearchTerm.toLowerCase())) ||
-              (order.orderStatus && order.orderStatus.toLowerCase().includes(orderSearchTerm.toLowerCase()))
-            )
-          : orders;
-
-        return (
-          <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <h2 className={`text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Todos los pedidos</h2>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Buscar pedidos..."
-                  value={orderSearchTerm}
-                  onChange={(e) => setOrderSearchTerm(e.target.value)}
-                  className={`pl-10 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    theme === 'dark' 
-                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                  }`}
-                />
-                <FiPackage className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                  theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                }`} />
-              </div>
-            </div>
-            <div className="w-full overflow-x-auto">
-              <table className={`min-w-full divide-y ${theme === 'dark' ? 'divide-gray-700' : 'divide-gray-200'}`}>
-                <thead>
-                  <tr>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>ID</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Cliente</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Fecha</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Total</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Estado</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className={`divide-y ${theme === 'dark' ? 'divide-gray-700 bg-gray-800' : 'divide-gray-200 bg-white'}`}>
-                  {filteredOrders.map((order) => (
-                    <tr key={order.id} className={theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{order.id.substring(0, 8)}...</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{order.userEmail || 'N/A'}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{formatDate(order.createdAt)}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{formatCurrency(order.totalAmount || 0)}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm`}>
-                        <div className="flex items-center space-x-2">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(order.orderStatus, theme)}`}>
-                            {getOrderStatusText(order.orderStatus)}
-                          </span>
-                          {orderStatusUpdating[order.id] ? (
-                            <div className={`w-4 h-4 border-b-2 rounded-full animate-spin ${
-                              theme === 'dark' ? 'border-gray-400' : 'border-gray-900'
-                            }`}></div>
-                          ) : (
-                            <select
-                              value={order.orderStatus || 'pending'}
-                              onChange={(e) => updateOrderStatusHandler(order.id, e.target.value)}
-                              className={`text-xs rounded px-2 py-1 ${
-                                theme === 'dark' 
-                                  ? 'bg-gray-700 border-gray-600 text-white' 
-                                  : 'bg-white border-gray-300 text-gray-900'
-                              }`}
-                            >
-                              <option value="pending">Pendiente</option>
-                              <option value="processing">Procesando</option>
-                              <option value="shipped">Enviado</option>
-                              <option value="delivered">Entregado</option>
-                              <option value="cancelled">Cancelado</option>
-                            </select>
-                          )}
-                        </div>
-                      </td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-md font-medium flex space-x-2`}>
-                        <button 
-                          onClick={() => openOrderDetails(order)} 
-                          className={`p-1 rounded hover:opacity-80 ${
-                            theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-indigo-600 hover:text-indigo-900'
-                          }`}
-                        >
-                          <FiShoppingBag />
-                        </button>
-                        <button 
-                          onClick={() => deleteOrder(order.id)} 
-                          className={`p-1 rounded hover:opacity-80 ${
-                            theme === 'dark' ? 'text-red-400 hover:text-red-300' : 'text-red-600 hover:text-red-900'
-                          }`}
-                        >
-                          <FiTrash2 />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {filteredOrders.length === 0 && (
-                <div className={`text-center py-8 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                  {orderSearchTerm ? 'No se encontraron pedidos que coincidan con la búsqueda.' : 'No hay pedidos disponibles.'}
-                </div>
-              )}
-            </div>
-          </div>
-        );
+        return <AdminOrders 
+          orders={orders}
+          ordersLoading={ordersLoading}
+          orderSearchTerm={orderSearchTerm}
+          setOrderSearchTerm={setOrderSearchTerm}
+          theme={theme}
+          formatDate={formatDate}
+          formatCurrency={formatCurrency}
+          getStatusBadgeClass={getStatusBadgeClass}
+          getOrderStatusText={getOrderStatusText}
+          orderStatusUpdating={orderStatusUpdating}
+          updateOrderStatusHandler={updateOrderStatusHandler}
+          openOrderDetails={openOrderDetails}
+          deleteOrder={deleteOrder}
+        />;
       case 'categories':
-        if (categoriesLoading) {
-          return <Loader text="Cargando categorías..." size="lg" />;
-        }
-        // Filter categories based on search term
-        const filteredCategories = categorySearchTerm
-          ? categories.filter(category =>
-              category.name.toLowerCase().includes(categorySearchTerm.toLowerCase()) ||
-              (category.description && category.description.toLowerCase().includes(categorySearchTerm.toLowerCase()))
-            )
-          : categories;
-
-        return (
-          <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <h2 className={`text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Todas las categorías</h2>
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Buscar categorías..."
-                    value={categorySearchTerm}
-                    onChange={(e) => setCategorySearchTerm(e.target.value)}
-                    className={`pl-10 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      theme === 'dark' 
-                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                    }`}
-                  />
-                  <FiList className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                    theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                  }`} />
-                </div>
-                <button 
-                  onClick={openAddCategoryModal} 
-                  className={`flex items-center px-4 py-2 text-sm font-medium rounded-full ${
-                    theme === 'dark' 
-                      ? 'text-gray-200 bg-gray-700 hover:bg-gray-600' 
-                      : 'text-gray-700 bg-gray-200 hover:bg-gray-300'
-                  }`}
-                >
-                  <FiPlus className="mr-1" />
-                  Añadir Nueva
-                </button>
-              </div>
-            </div>
-            <div className="w-full overflow-x-auto">
-              <table className={`min-w-full divide-y ${theme === 'dark' ? 'divide-gray-700' : 'divide-gray-200'}`}>
-                <thead>
-                  <tr>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Imagen</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Nombre</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Descripción</th>
-                    <th className={`px-6 py-3 text-xs font-medium tracking-wider text-left uppercase ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-50'}`}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className={`divide-y ${theme === 'dark' ? 'divide-gray-700 bg-gray-800' : 'divide-gray-200 bg-white'}`}>
-                  {filteredCategories.map((category) => (
-                    <tr key={category.id} className={theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {category.imageUrl ? (
-                          <img 
-                            src={category.imageUrl} 
-                            alt={category.name} 
-                            className="object-cover w-12 h-12 rounded-lg"
-                          />
-                        ) : (
-                          <div className={`flex items-center justify-center w-12 h-12 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`}>
-                            <FiList className={`w-6 h-6 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
-                          </div>
-                        )}
-                      </td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{category.name}</td>
-                      <td className={`px-6 py-4 text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>{category.description || 'Sin descripción'}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap text-md font-medium flex space-x-2`}>
-                        <button 
-                          onClick={() => openEditCategoryModal(category)} 
-                          className={`p-1 rounded hover:opacity-80 ${
-                            theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-indigo-600 hover:text-indigo-900'
-                          }`}
-                        >
-                          <FiEdit />
-                        </button>
-                        <button 
-                          onClick={() => deleteCategoryHandler(category.id, category.name)} 
-                          className={`p-1 rounded hover:opacity-80 ${
-                            theme === 'dark' ? 'text-red-400 hover:text-red-300' : 'text-red-600 hover:text-red-900'
-                          }`}
-                        >
-                          <FiTrash2 />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {filteredCategories.length === 0 && (
-                <div className={`text-center py-8 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                  {categorySearchTerm ? 'No se encontraron categorías que coincidan con la búsqueda.' : 'No hay categorías disponibles.'}
-                </div>
-              )}
-            </div>
-          </div>
-        );
+        return <AdminCategories 
+          categories={categories}
+          categoriesLoading={categoriesLoading}
+          categorySearchTerm={categorySearchTerm}
+          setCategorySearchTerm={setCategorySearchTerm}
+          theme={theme}
+          openAddCategoryModal={openAddCategoryModal}
+          openEditCategoryModal={openEditCategoryModal}
+          deleteCategoryHandler={deleteCategoryHandler}
+        />;
       case 'coupons':
         return (
           <div className={`p-6 shadow-sm rounded-xl ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} w-full`}>
@@ -1971,362 +1370,23 @@ const ModernAdminDashboard = () => {
       </div>
       
       {/* Product Modal */}
-      {productModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div 
-              className="fixed transition-opacity bg-opacity-50" 
-              aria-hidden="true"
-              onClick={() => setProductModalOpen(false)}
-            ></div>
-            
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            
-            {/* Modern Modal Design */}
-            <div className={`z-50 inline-block overflow-hidden text-left align-bottom transition-all transform shadow-xl rounded-2xl sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full ${
-              theme === 'dark' ? 'bg-gray-800' : 'bg-white'
-            }`} style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.1)', width: '650px' }}>
-              <div className="px-8 py-8">
-                <div className="mb-8 text-center">
-                  <h3 className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    {modalMode === 'add' ? 'Añadir Producto' : 'Editar Producto'}
-                  </h3>
-                  <p className={`mt-2 text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                    {modalMode === 'add' ? 'Ingresa los detalles del nuevo producto' : 'Modifica la información del producto'}
-                  </p>
-                </div>
-                
-                <div className="mt-2">
-                  <form onSubmit={modalMode === 'add' ? createProduct : updateProduct} className="space-y-6">
-                    <div>
-                      <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Nombre del Producto</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={modalMode === 'add' ? newProduct.name : editingProduct?.name}
-                        onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                        className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                        }`}
-                        placeholder="Nombre del producto"
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Descripción</label>
-                      <textarea
-                        name="description"
-                        value={modalMode === 'add' ? newProduct.description : editingProduct?.description}
-                        onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                        className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                        }`}
-                        rows="4"
-                        placeholder="Descripción del producto"
-                      />
-                    </div>
-                    
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                      <div>
-                        <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Precio (COP)</label>
-                        <input
-                          type="number"
-                          name="price"
-                          step="0.01"
-                          min="0"
-                          value={modalMode === 'add' ? newProduct.price : editingProduct?.price}
-                          onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                          className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            theme === 'dark' 
-                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                          }`}
-                          placeholder="0.00"
-                          required
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Stock</label>
-                        <input
-                          type="number"
-                          name="stock"
-                          min="0"
-                          value={modalMode === 'add' ? newProduct.stock : editingProduct?.stock}
-                          onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                          className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            theme === 'dark' 
-                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                          }`}
-                          placeholder="Cantidad disponible"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                      <div>
-                        <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Calificación</label>
-                        <input
-                          type="number"
-                          name="rating"
-                          step="0.1"
-                          min="0"
-                          max="5"
-                          value={modalMode === 'add' ? newProduct.rating : editingProduct?.rating}
-                          onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                          className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            theme === 'dark' 
-                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                          }`}
-                          placeholder="0.0 - 5.0"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Material</label>
-                        <input
-                          type="text"
-                          name="material"
-                          value={modalMode === 'add' ? newProduct.material : editingProduct?.material}
-                          onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                          className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            theme === 'dark' 
-                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                          }`}
-                          placeholder="Material del producto"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                      <div>
-                        <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Color</label>
-                        <input
-                          type="text"
-                          name="color"
-                          value={modalMode === 'add' ? newProduct.color : editingProduct?.color}
-                          onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                          className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            theme === 'dark' 
-                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                          }`}
-                          placeholder="Color del producto"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Tamaño</label>
-                        <input
-                          type="text"
-                          name="size"
-                          value={modalMode === 'add' ? newProduct.size : editingProduct?.size}
-                          onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                          className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            theme === 'dark' 
-                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                          }`}
-                          placeholder="Tamaño del producto"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Estilo</label>
-                        <input
-                          type="text"
-                          name="style"
-                          value={modalMode === 'add' ? newProduct.style : editingProduct?.style}
-                          onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                          className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            theme === 'dark' 
-                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                          }`}
-                          placeholder="Estilo del producto"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Categoría</label>
-                      <select
-                        name="category"
-                        value={modalMode === 'add' ? newProduct.category : editingProduct?.category}
-                        onChange={modalMode === 'add' ? handleProductChange : handleEditProductChange}
-                        className={`w-full px-4 py-3 transition-all border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      >
-                        <option value="" className={theme === 'dark' ? 'bg-gray-700' : 'bg-white'}>
-                          Seleccionar categoría
-                        </option>
-                        {categories.map((category) => (
-                          <option 
-                            key={category.id} 
-                            value={category.name} 
-                            className={theme === 'dark' ? 'bg-gray-700' : 'bg-white'}
-                          >
-                            {category.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className={`block mb-3 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Imágenes</label>
-                      <div className="mt-3">
-                        <button
-                          type="button"
-                          onClick={() => handleImageSelect(modalMode === 'edit')}
-                          className={`inline-flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
-                            theme === 'dark' 
-                              ? 'text-gray-200 bg-gray-700 border border-gray-600 hover:bg-gray-600' 
-                              : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                          } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-                          disabled={uploading || (modalMode === 'add' ? newProduct.imageUrls.length >= 4 : editingProduct?.imageUrls.length >= 4)}
-                        >
-                          {uploading ? 'Subiendo...' : `Añadir Imagen${modalMode === 'add' ? (newProduct.imageUrls.length > 0 ? ` (${newProduct.imageUrls.length}/4)` : '') : (editingProduct?.imageUrls.length > 0 ? ` (${editingProduct?.imageUrls.length}/4)` : '')}`}
-                        </button>
-                        
-                        {(modalMode === 'add' ? newProduct.imageUrls.length >= 4 : editingProduct?.imageUrls.length >= 4) && (
-                          <p className={`mt-2 text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Has alcanzado el límite máximo de 4 imágenes.</p>
-                        )}
-                        
-                        {uploading && (
-                          <div className="mt-4">
-                            <div className={`w-8 h-8 border-b-2 rounded-full animate-spin ${
-                              theme === 'dark' ? 'border-gray-400' : 'border-gray-900'
-                            }`}></div>
-                          </div>
-                        )}
-                        
-                        {modalMode === 'add' ? (
-                          newProduct.imageUrls.length > 0 && (
-                            <div className="grid grid-cols-2 gap-4 mt-5">
-                              {newProduct.imageUrls.map((imageData, index) => (
-                                <div key={index} className="relative">
-                                  <img 
-                                    src={typeof imageData === 'string' ? imageData : imageData.data} 
-                                    alt={`Preview ${index}`} 
-                                    className="object-cover w-full h-32 rounded-lg"
-                                    onError={(e) => {
-                                      e.target.onerror = null;
-                                      e.target.src = 'https://via.placeholder.com/150x150.png?text=Imagen';
-                                    }}
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={() => removeImage(index)}
-                                    className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1.5 hover:bg-red-700 transition-colors shadow-md"
-                                  >
-                                    <FiX size={14} />
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => setPrimaryImage(index)}
-                                    className={`absolute -bottom-2 left-1/2 transform -translate-x-1/2 text-xs px-2.5 py-1 rounded-full shadow-sm ${
-                                      newProduct.primaryImageIndex === index 
-                                        ? theme === 'dark' 
-                                          ? 'bg-blue-600 text-white' 
-                                          : 'bg-gray-900 text-white' 
-                                        : theme === 'dark' 
-                                          ? 'bg-gray-700 text-gray-200 border border-gray-600' 
-                                          : 'bg-white text-gray-800 border border-gray-300'
-                                    }`}
-                                  >
-                                    Principal
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          )
-                        ) : (
-                          editingProduct?.imageUrls.length > 0 && (
-                            <div className="grid grid-cols-2 gap-4 mt-5">
-                              {editingProduct.imageUrls.map((imageData, index) => (
-                                <div key={index} className="relative">
-                                  <img 
-                                    src={typeof imageData === 'string' ? imageData : imageData.data} 
-                                    alt={`Preview ${index}`} 
-                                    className="object-cover w-full h-32 rounded-lg"
-                                    onError={(e) => {
-                                      e.target.onerror = null;
-                                      e.target.src = 'https://via.placeholder.com/150x150.png?text=Imagen';
-                                    }}
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={() => removeImage(index, true)}
-                                    className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1.5 hover:bg-red-700 transition-colors shadow-md"
-                                  >
-                                    <FiX size={14} />
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => setPrimaryImage(index, true)}
-                                    className={`absolute -bottom-2 left-1/2 transform -translate-x-1/2 text-xs px-2.5 py-1 rounded-full shadow-sm ${
-                                      editingProduct.primaryImageIndex === index 
-                                        ? theme === 'dark' 
-                                          ? 'bg-blue-600 text-white' 
-                                          : 'bg-gray-900 text-white' 
-                                        : theme === 'dark' 
-                                          ? 'bg-gray-700 text-gray-200 border border-gray-600' 
-                                          : 'bg-white text-gray-800 border border-gray-300'
-                                    }`}
-                                  >
-                                    Principal
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          )
-                        )}
-                      </div>
-                    </div>
-
-                    <div className={`flex justify-between px-8 py-5 border-t ${
-                      theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
-                    }`}>
-                      <button
-                        type="button"
-                        onClick={() => setProductModalOpen(false)}
-                        className={`inline-flex justify-center px-5 py-2.5 text-sm font-medium rounded-lg transition-all ${
-                          theme === 'dark' 
-                            ? 'text-gray-300 bg-gray-700 border border-gray-600 hover:bg-gray-600' 
-                            : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                        } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        type="submit"
-                        className={`inline-flex justify-center px-5 py-2.5 text-sm font-medium text-white rounded-lg transition-all ${
-                          theme === 'dark' 
-                            ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500' 
-                            : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
-                        } border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2`}
-                      >
-                        {modalMode === 'add' ? 'Añadir Producto' : 'Actualizar Producto'}
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <AdminProductModal 
+        isOpen={productModalOpen}
+        onClose={() => setProductModalOpen(false)}
+        theme={theme}
+        modalMode={modalMode}
+        newProduct={newProduct}
+        editingProduct={editingProduct}
+        categories={categories}
+        handleProductChange={handleProductChange}
+        handleEditProductChange={handleEditProductChange}
+        createProduct={createProduct}
+        updateProduct={updateProduct}
+        handleImageSelect={handleImageSelect}
+        uploading={uploading}
+        removeImage={removeImage}
+        setPrimaryImage={setPrimaryImage}
+      />
 
       {/* Review Edit Modal */}
       {reviewModalOpen && editingReview && (
