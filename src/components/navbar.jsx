@@ -5,9 +5,20 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
-import { BsCart3 } from "react-icons/bs";
-import { GoHeart } from "react-icons/go";
-import { FiUser, FiSettings, FiList, FiLogOut, FiMenu, FiX, FiHome, FiPackage, FiBook, FiMail } from "react-icons/fi";
+import { 
+  FaCartShopping, 
+  FaRegHeart, 
+  FaRegUser, 
+  FaGear, 
+  FaList, 
+  FaArrowRightFromBracket, 
+  FaBars, 
+  FaXmark, 
+  FaHouse, 
+  FaBagShopping, 
+  FaBookOpen, 
+  FaEnvelope 
+} from "react-icons/fa6";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,28 +67,28 @@ const Navbar = () => {
   ];
 
   const mobileLinks = [
-    { to: '/home', label: 'Inicio', icon: FiHome },
-    { to: '/shop', label: 'Productos', icon: FiPackage },
-    { to: '/blog', label: 'Sobre Nosotros', icon: FiBook },
-    { to: '/contact', label: 'Contacto', icon: FiMail },
-    { to: '/cart', label: 'Carrito', icon: BsCart3 },
-    { to: '/wishlist', label: 'Favoritos', icon: GoHeart },
+    { to: '/home', label: 'Inicio', icon: FaHouse },
+    { to: '/shop', label: 'Productos', icon: FaBagShopping },
+    { to: '/blog', label: 'Sobre Nosotros', icon: FaBookOpen },
+    { to: '/contact', label: 'Contacto', icon: FaEnvelope },
+    { to: '/cart', label: 'Carrito', icon: FaCartShopping },
+    { to: '/wishlist', label: 'Favoritos', icon: FaRegHeart },
   ];
 
   return (
     <>
       {/* ─── Header ─── */}
       <header className="sticky top-0 z-50 bg-white border-b border-gray-100" style={{ fontFamily: 'Inter, sans-serif' }}>
-        <nav className="flex items-center justify-between px-4 mx-auto max-w-7xl h-16">
+        <nav className="flex justify-between items-center px-4 mx-auto max-w-7xl h-16">
 
           {/* Left: hamburger + Logo */}
-          <div className="flex items-center gap-3">
+          <div className="flex gap-3 items-center">
             <button
-              className="text-gray-600 hover:text-black transition-colors duration-150 md:hidden"
+              className="text-gray-600 transition-colors duration-150 hover:text-black md:hidden"
               onClick={toggleMenu}
               aria-label="Abrir menú"
             >
-              <FiMenu size={22} />
+              <FaBars size={20} />
             </button>
 
             <Link to="/home" className="flex items-center gap-0.5 select-none" aria-label="PSG Shop - Inicio">
@@ -88,7 +99,7 @@ const Navbar = () => {
           </div>
 
           {/* Center: desktop nav links */}
-          <ul className="items-center hidden gap-1 md:flex">
+          <ul className="hidden gap-1 items-center md:flex">
             {navLinks.map(({ to, label }) => (
               <li key={to}>
                 <Link
@@ -107,14 +118,14 @@ const Navbar = () => {
           </ul>
 
           {/* Right: icon actions */}
-          <div className="flex items-center gap-1">
+          <div className="flex gap-1 items-center">
             {/* Wishlist */}
             <Link
               to="/wishlist"
-              className="relative flex items-center justify-center w-9 h-9 rounded-full text-gray-600 hover:text-black hover:bg-gray-100 transition-all duration-150"
+              className="flex relative justify-center items-center w-9 h-9 text-gray-600 rounded-full transition-all duration-150 hover:text-black hover:bg-gray-100"
               aria-label="Lista de deseos"
             >
-              <GoHeart size={20} />
+              <FaRegHeart size={18} />
               {wishlistItemCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-black rounded-full">
                   {wishlistItemCount}
@@ -125,10 +136,10 @@ const Navbar = () => {
             {/* Cart */}
             <Link
               to="/cart"
-              className="relative flex items-center justify-center w-9 h-9 rounded-full text-gray-600 hover:text-black hover:bg-gray-100 transition-all duration-150"
+              className="flex relative justify-center items-center w-9 h-9 text-gray-600 rounded-full transition-all duration-150 hover:text-black hover:bg-gray-100"
               aria-label="Carrito"
             >
-              <BsCart3 size={19} />
+              <FaCartShopping size={18} />
               {cartItemCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-black rounded-full">
                   {cartItemCount}
@@ -141,7 +152,7 @@ const Navbar = () => {
               {currentUser ? (
                 <button
                   onClick={toggleProfileMenu}
-                  className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-900 text-white text-xs font-bold hover:ring-2 hover:ring-gray-300 transition-all duration-150 overflow-hidden"
+                  className="flex overflow-hidden justify-center items-center w-9 h-9 text-xs font-bold text-white bg-gray-900 rounded-full transition-all duration-150 hover:ring-2 hover:ring-gray-300"
                   aria-label="Perfil"
                   aria-expanded={isProfileMenuOpen}
                 >
@@ -154,20 +165,20 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="flex items-center justify-center w-9 h-9 rounded-full text-gray-600 hover:text-black hover:bg-gray-100 transition-all duration-150"
+                  className="flex justify-center items-center w-9 h-9 text-gray-600 rounded-full transition-all duration-150 hover:text-black hover:bg-gray-100"
                   aria-label="Iniciar sesión"
                 >
-                  <FiUser size={18} />
+                  <FaRegUser size={18} />
                 </Link>
               )}
 
               {/* Dropdown */}
               {currentUser && isProfileMenuOpen && (
-                <div className="absolute right-0 z-50 w-60 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden">
+                <div className="overflow-hidden absolute right-0 z-50 mt-2 w-60 bg-white rounded-xl border border-gray-200 shadow-xl">
                   {/* User info header */}
                   <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-900 text-white text-sm font-bold overflow-hidden flex-shrink-0">
+                    <div className="flex gap-3 items-center">
+                      <div className="flex overflow-hidden flex-shrink-0 justify-center items-center w-9 h-9 text-sm font-bold text-white bg-gray-900 rounded-full">
                         {userProfile?.profileImage ? (
                           <img src={userProfile.profileImage} alt="Profile" className="object-cover w-full h-full" />
                         ) : (
@@ -190,7 +201,7 @@ const Navbar = () => {
                         onClick={closeProfileMenu}
                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-900 hover:text-white transition-colors duration-150 group"
                       >
-                        <FiSettings size={14} className="text-gray-400 group-hover:text-white" />
+                        <FaGear size={14} className="text-gray-400 group-hover:text-white" />
                         <span>Administrar página</span>
                       </Link>
                     )}
@@ -199,7 +210,7 @@ const Navbar = () => {
                       onClick={closeProfileMenu}
                       className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-900 hover:text-white transition-colors duration-150 group"
                     >
-                      <FiUser size={14} className="text-gray-400 group-hover:text-white" />
+                      <FaRegUser size={14} className="text-gray-400 group-hover:text-white" />
                       <span>Editar perfil</span>
                     </Link>
                     <Link
@@ -207,7 +218,7 @@ const Navbar = () => {
                       onClick={closeProfileMenu}
                       className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-900 hover:text-white transition-colors duration-150 group"
                     >
-                      <FiList size={14} className="text-gray-400 group-hover:text-white" />
+                      <FaList size={14} className="text-gray-400 group-hover:text-white" />
                       <span>Mis Pedidos</span>
                     </Link>
                   </div>
@@ -217,7 +228,7 @@ const Navbar = () => {
                       onClick={handleLogout}
                       className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-600 hover:text-white transition-colors duration-150 group"
                     >
-                      <FiLogOut size={14} className="group-hover:text-white" />
+                      <FaArrowRightFromBracket size={14} className="group-hover:text-white" />
                       <span>Cerrar sesión</span>
                     </button>
                   </div>
@@ -230,7 +241,7 @@ const Navbar = () => {
 
       {/* ─── Mobile Overlay ─── */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" onClick={toggleMenu} />
+        <div className="fixed inset-0 z-40 backdrop-blur-sm bg-black/30" onClick={toggleMenu} />
       )}
 
       {/* ─── Mobile Sidebar ─── */}
@@ -241,19 +252,19 @@ const Navbar = () => {
         style={{ fontFamily: 'Inter, sans-serif' }}
       >
         {/* Sidebar header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <div className="flex justify-between items-center px-5 py-4 border-b border-gray-100">
           <Link to="/home" onClick={toggleMenu} className="flex items-center gap-0.5 select-none">
             <span className="text-lg font-black tracking-tight text-black">PSG</span>
-            <span className="w-1 h-1 mx-1 rounded-full bg-black inline-block" />
+            <span className="inline-block mx-1 w-1 h-1 bg-black rounded-full" />
             <span className="text-[10px] font-light tracking-widest text-gray-500 uppercase">SHOP</span>
           </Link>
-          <button onClick={toggleMenu} className="text-gray-500 hover:text-black transition-colors">
-            <FiX size={20} />
+          <button onClick={toggleMenu} className="text-gray-500 transition-colors hover:text-black">
+            <FaXmark size={20} />
           </button>
         </div>
 
         {/* Nav links */}
-        <nav className="flex-1 overflow-y-auto py-4">
+        <nav className="overflow-y-auto flex-1 py-4">
           <ul className="space-y-0.5 px-3">
             {mobileLinks.map(({ to, label, icon: Icon }) => (
               <li key={to}>
@@ -273,11 +284,11 @@ const Navbar = () => {
         </nav>
 
         {/* Sidebar footer */}
-        <div className="p-4 border-t border-gray-100 space-y-2">
+        <div className="p-4 space-y-2 border-t border-gray-100">
           {currentUser ? (
             <>
-              <div className="flex items-center gap-3 px-3 py-2 mb-2">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-900 text-white text-xs font-bold overflow-hidden flex-shrink-0">
+              <div className="flex gap-3 items-center px-3 py-2 mb-2">
+                <div className="flex overflow-hidden flex-shrink-0 justify-center items-center w-8 h-8 text-xs font-bold text-white bg-gray-900 rounded-full">
                   {userProfile?.profileImage ? (
                     <img src={userProfile.profileImage} alt="Profile" className="object-cover w-full h-full" />
                   ) : (

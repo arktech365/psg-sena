@@ -5,6 +5,17 @@ import { db, auth } from '../../firebase';
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import Swal from 'sweetalert2';
+import { 
+  FaRegUser, 
+  FaShieldHalved, 
+  FaMapLocationDot, 
+  FaCamera, 
+  FaLaptopCode, 
+  FaRegTrashCan, 
+  FaPen, 
+  FaCheck, 
+  FaPlus 
+} from 'react-icons/fa6';
 
 const Profile = () => {
   const { currentUser, userRole, refreshUserData } = useAuth();
@@ -93,7 +104,8 @@ const Profile = () => {
           title: 'Error',
           text: 'Error al cargar el perfil',
           icon: 'error',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#000'
         });
       } finally {
         setLoading(false);
@@ -143,29 +155,28 @@ const Profile = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check file size (max 2MB)
       if (file.size > 2 * 1024 * 1024) {
         Swal.fire({
           title: 'Archivo muy grande',
           text: 'La imagen debe ser menor a 2MB',
           icon: 'warning',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#000'
         });
         return;
       }
       
-      // Check file type
       if (!file.type.match('image.*')) {
         Swal.fire({
           title: 'Tipo de archivo inválido',
           text: 'Por favor selecciona una imagen',
           icon: 'warning',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#000'
         });
         return;
       }
       
-      // Read file as data URL
       const reader = new FileReader();
       reader.onload = (e) => {
         setProfileData(prev => ({
@@ -183,33 +194,20 @@ const Profile = () => {
     setSaving(true);
     
     try {
-      // Get the existing user document to preserve fields like 'role'
       const userDocRef = doc(db, 'users', currentUser.uid);
       const userDocSnap = await getDoc(userDocRef);
       
-      // Start with the profile data
       let userDataToSave = {
         ...profileData,
         updatedAt: new Date()
       };
       
-      // Preserve existing fields that shouldn't be overwritten
       if (userDocSnap.exists()) {
         const existingData = userDocSnap.data();
-        // Preserve the role field to maintain admin status
-        if (existingData.hasOwnProperty('role')) {
-          userDataToSave.role = existingData.role;
-        }
-        // Preserve createdAt field if it exists
-        if (existingData.hasOwnProperty('createdAt')) {
-          userDataToSave.createdAt = existingData.createdAt;
-        }
-        // Preserve addresses if they exist
-        if (existingData.hasOwnProperty('addresses')) {
-          userDataToSave.addresses = existingData.addresses;
-        }
+        if (existingData.hasOwnProperty('role')) userDataToSave.role = existingData.role;
+        if (existingData.hasOwnProperty('createdAt')) userDataToSave.createdAt = existingData.createdAt;
+        if (existingData.hasOwnProperty('addresses')) userDataToSave.addresses = existingData.addresses;
       } else {
-        // For new users, set the default role as customer
         userDataToSave.role = 'customer';
         userDataToSave.createdAt = new Date();
         userDataToSave.addresses = [];
@@ -218,14 +216,14 @@ const Profile = () => {
       await setDoc(userDocRef, userDataToSave);
       
       console.log('Profile saved, refreshing user data');
-      // Refresh user data in the auth context to ensure UI updates
       refreshUserData();
       
       Swal.fire({
         title: 'Perfil actualizado',
         text: 'Tu perfil se ha actualizado correctamente',
         icon: 'success',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -233,7 +231,8 @@ const Profile = () => {
         title: 'Error',
         text: 'Error al guardar el perfil: ' + error.message,
         icon: 'error',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
     } finally {
       setSaving(false);
@@ -245,13 +244,13 @@ const Profile = () => {
     e.preventDefault();
     setSecuritySaving(true);
     
-    // Validate passwords
     if (securityData.newPassword !== securityData.confirmNewPassword) {
       Swal.fire({
         title: 'Error',
         text: 'Las contraseñas nuevas no coinciden',
         icon: 'error',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
       setSecuritySaving(false);
       return;
@@ -262,31 +261,29 @@ const Profile = () => {
         title: 'Error',
         text: 'La nueva contraseña debe tener al menos 6 caracteres',
         icon: 'error',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
       setSecuritySaving(false);
       return;
     }
     
     try {
-      // Reauthenticate user
       const credential = EmailAuthProvider.credential(
         currentUser.email,
         securityData.currentPassword
       );
       await reauthenticateWithCredential(currentUser, credential);
-      
-      // Update password
       await updatePassword(currentUser, securityData.newPassword);
       
       Swal.fire({
         title: 'Contraseña actualizada',
         text: 'Tu contraseña se ha actualizado correctamente',
         icon: 'success',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
       
-      // Reset security form
       setSecurityData({
         currentPassword: '',
         newPassword: '',
@@ -311,7 +308,8 @@ const Profile = () => {
         title: 'Error',
         text: errorMessage,
         icon: 'error',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
     } finally {
       setSecuritySaving(false);
@@ -323,13 +321,13 @@ const Profile = () => {
     e.preventDefault();
     setAddressSaving(true);
     
-    // Validate required fields
     if (!newAddress.name || !newAddress.street || !newAddress.city || !newAddress.state || !newAddress.zipCode) {
       Swal.fire({
         title: 'Error',
         text: 'Por favor completa todos los campos de la dirección',
         icon: 'error',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
       setAddressSaving(false);
       return;
@@ -337,25 +335,16 @@ const Profile = () => {
     
     try {
       const userDocRef = doc(db, 'users', currentUser.uid);
-      const newAddressWithId = {
-        ...newAddress,
-        id: Date.now()
-      };
+      const newAddressWithId = { ...newAddress, id: Date.now() };
       
-      // If this is the first address or marked as default, make it default
       if (addresses.length === 0 || newAddress.isDefault) {
         newAddressWithId.isDefault = true;
-        // Remove default from other addresses
-        const updatedAddresses = addresses.map(addr => ({
-          ...addr,
-          isDefault: false
-        }));
+        const updatedAddresses = addresses.map(addr => ({ ...addr, isDefault: false }));
         setAddresses([...updatedAddresses, newAddressWithId]);
       } else {
         setAddresses([...addresses, newAddressWithId]);
       }
       
-      // Update in Firestore
       await updateDoc(userDocRef, {
         addresses: arrayUnion(newAddressWithId)
       });
@@ -364,10 +353,10 @@ const Profile = () => {
         title: 'Dirección agregada',
         text: 'La dirección se ha agregado correctamente',
         icon: 'success',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
       
-      // Reset form but keep country as Colombia
       setNewAddress({
         id: Date.now(),
         name: '',
@@ -383,20 +372,19 @@ const Profile = () => {
         title: 'Error',
         text: 'Error al agregar la dirección: ' + error.message,
         icon: 'error',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
     } finally {
       setAddressSaving(false);
     }
   };
   
-  // Start editing an address
   const startEditingAddress = (address) => {
     setEditingAddress(address.id);
     setEditAddressData({...address});
   };
   
-  // Cancel editing an address
   const cancelEditingAddress = () => {
     setEditingAddress(null);
     setEditAddressData({
@@ -410,18 +398,17 @@ const Profile = () => {
     });
   };
   
-  // Save edited address
   const saveEditedAddress = async (e) => {
     e.preventDefault();
     setAddressSaving(true);
     
-    // Validate required fields
     if (!editAddressData.name || !editAddressData.street || !editAddressData.city || !editAddressData.state || !editAddressData.zipCode) {
       Swal.fire({
         title: 'Error',
         text: 'Por favor completa todos los campos de la dirección',
         icon: 'error',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
       setAddressSaving(false);
       return;
@@ -430,7 +417,6 @@ const Profile = () => {
     try {
       const userDocRef = doc(db, 'users', currentUser.uid);
       
-      // Remove old address
       const addressToRemove = addresses.find(addr => addr.id === editAddressData.id);
       if (addressToRemove) {
         await updateDoc(userDocRef, {
@@ -438,28 +424,21 @@ const Profile = () => {
         });
       }
       
-      // Add updated address
-      const updatedAddressWithId = {
-        ...editAddressData
-      };
-      
+      const updatedAddressWithId = { ...editAddressData };
       await updateDoc(userDocRef, {
         addresses: arrayUnion(updatedAddressWithId)
       });
       
-      // Update state
-      setAddresses(addresses.map(addr => 
-        addr.id === editAddressData.id ? updatedAddressWithId : addr
-      ));
+      setAddresses(addresses.map(addr => addr.id === editAddressData.id ? updatedAddressWithId : addr));
       
       Swal.fire({
         title: 'Dirección actualizada',
         text: 'La dirección se ha actualizado correctamente',
         icon: 'success',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
       
-      // Reset editing state but keep country as Colombia
       setEditingAddress(null);
       setEditAddressData({
         id: null,
@@ -476,59 +455,14 @@ const Profile = () => {
         title: 'Error',
         text: 'Error al actualizar la dirección: ' + error.message,
         icon: 'error',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
     } finally {
       setAddressSaving(false);
     }
   };
   
-  // Edit address
-  const handleEditAddress = async (addressId, updatedAddress) => {
-    try {
-      const userDocRef = doc(db, 'users', currentUser.uid);
-      
-      // Remove old address
-      const addressToRemove = addresses.find(addr => addr.id === addressId);
-      if (addressToRemove) {
-        await updateDoc(userDocRef, {
-          addresses: arrayRemove(addressToRemove)
-        });
-      }
-      
-      // Add updated address
-      const updatedAddressWithId = {
-        ...updatedAddress,
-        id: addressId
-      };
-      
-      await updateDoc(userDocRef, {
-        addresses: arrayUnion(updatedAddressWithId)
-      });
-      
-      // Update state
-      setAddresses(addresses.map(addr => 
-        addr.id === addressId ? updatedAddressWithId : addr
-      ));
-      
-      Swal.fire({
-        title: 'Dirección actualizada',
-        text: 'La dirección se ha actualizado correctamente',
-        icon: 'success',
-        confirmButtonText: 'Aceptar'
-      });
-    } catch (error) {
-      console.error('Error updating address:', error);
-      Swal.fire({
-        title: 'Error',
-        text: 'Error al actualizar la dirección: ' + error.message,
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      });
-    }
-  };
-  
-  // Delete address
   const handleDeleteAddress = async (addressId) => {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -536,7 +470,9 @@ const Profile = () => {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280'
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -544,18 +480,15 @@ const Profile = () => {
           const addressToDelete = addresses.find(addr => addr.id === addressId);
           
           if (addressToDelete) {
-            await updateDoc(userDocRef, {
-              addresses: arrayRemove(addressToDelete)
-            });
-            
-            // Update state
+            await updateDoc(userDocRef, { addresses: arrayRemove(addressToDelete) });
             setAddresses(addresses.filter(addr => addr.id !== addressId));
             
             Swal.fire({
-              title: 'Dirección eliminada',
-              text: 'La dirección se ha eliminado correctamente',
+              title: 'Eliminada',
+              text: 'La dirección fue eliminada',
               icon: 'success',
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              confirmButtonColor: '#000'
             });
           }
         } catch (error) {
@@ -564,131 +497,133 @@ const Profile = () => {
             title: 'Error',
             text: 'Error al eliminar la dirección: ' + error.message,
             icon: 'error',
-            confirmButtonText: 'Aceptar'
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#000'
           });
         }
       }
     });
   };
   
-  // Set address as default
   const handleSetDefaultAddress = async (addressId) => {
     try {
       const userDocRef = doc(db, 'users', currentUser.uid);
-      
-      // Update addresses in state
       const updatedAddresses = addresses.map(addr => ({
         ...addr,
         isDefault: addr.id === addressId
       }));
-      
       setAddresses(updatedAddresses);
-      
-      // Update all addresses in Firestore
-      await updateDoc(userDocRef, {
-        addresses: updatedAddresses
-      });
+      await updateDoc(userDocRef, { addresses: updatedAddresses });
       
       Swal.fire({
-        title: 'Dirección predeterminada',
-        text: 'La dirección se ha establecido como predeterminada',
+        title: 'Actualizado',
+        text: 'La dirección se estableció como predeterminada',
         icon: 'success',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000',
+        timer: 1500
       });
     } catch (error) {
       console.error('Error setting default address:', error);
       Swal.fire({
         title: 'Error',
-        text: 'Error al establecer la dirección predeterminada: ' + error.message,
+        text: 'Error al establecer: ' + error.message,
         icon: 'error',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#000'
       });
     }
   };
   
   if (loading) {
     return (
-      <div>
-        <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="w-12 h-12 border-b-2 border-gray-900 rounded-full animate-spin"></div>
-          </div>
-        </div>
+      <div className="flex items-center justify-center min-h-[60vh] bg-[#fdfdfd]">
+        <div className="w-8 h-8 border-2 border-t-black border-gray-200 rounded-full animate-spin"></div>
       </div>
     );
   }
   
   return (
-    <div>
-      <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto">
-          <h1 className="mb-8 text-3xl font-bold text-gray-900">Mi Perfil</h1>
+    <div className="min-h-screen bg-[#fdfdfd] pb-24 font-inter text-gray-900" style={{ fontFamily: 'Inter, sans-serif' }}>
+      
+      {/* Header Compacto */}
+      <div className="bg-white border-b border-gray-100">
+        <div className="px-5 py-8 mx-auto max-w-5xl">
+          <h1 className="text-2xl font-bold tracking-tight text-black sm:text-3xl">Configuración</h1>
+          <p className="mt-1 text-sm text-gray-500">Administra tu información personal y direcciones de envío.</p>
+        </div>
+      </div>
+
+      <div className="px-5 mx-auto max-w-5xl mt-8">
+        <div className="flex flex-col md:flex-row gap-8">
           
-          {/* Tabs */}
-          <div className="mb-8 border-b border-white/10">
-            <nav className="flex -mb-px space-x-8">
+          {/* Sidebar Tabs */}
+          <aside className="w-full md:w-64 flex-shrink-0">
+            <nav className="flex flex-row md:flex-col gap-2 overflow-x-auto pb-4 md:pb-0 scrollbar-hide">
               <button
                 onClick={() => setActiveTab('profile')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors whitespace-nowrap ${
                   activeTab === 'profile'
-                    ? 'border-indigo-500 text-black uppercase tracking-widest'
-                    : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-slate-600'
+                    ? 'bg-gray-100 text-black'
+                    : 'text-gray-500 hover:text-black hover:bg-gray-50'
                 }`}
               >
-                Perfil
+                <FaRegUser size={16} />
+                Perfil Personal
               </button>
               <button
                 onClick={() => setActiveTab('security')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors whitespace-nowrap ${
                   activeTab === 'security'
-                    ? 'border-indigo-500 text-black uppercase tracking-widest'
-                    : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-slate-600'
+                    ? 'bg-gray-100 text-black'
+                    : 'text-gray-500 hover:text-black hover:bg-gray-50'
                 }`}
               >
+                <FaShieldHalved size={16} />
                 Seguridad
               </button>
               <button
                 onClick={() => setActiveTab('addresses')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors whitespace-nowrap ${
                   activeTab === 'addresses'
-                    ? 'border-indigo-500 text-black uppercase tracking-widest'
-                    : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-slate-600'
+                    ? 'bg-gray-100 text-black'
+                    : 'text-gray-500 hover:text-black hover:bg-gray-50'
                 }`}
               >
-                Direcciones
+                <FaMapLocationDot size={16} />
+                Mis Direcciones
               </button>
             </nav>
-          </div>
+          </aside>
           
-          {/* Profile Tab */}
-          {activeTab === 'profile' && (
-            <div className="overflow-hidden bg-white  border border-gray-200 rounded-lg shadow">
-              <div className="px-6 py-8">
-                <form onSubmit={handleSaveProfile}>
-                  {/* Profile Image Section */}
-                  <div className="mb-8">
-                    <h2 className="mb-4 text-lg font-medium text-gray-900">Foto de Perfil</h2>
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0">
+          {/* Content Area */}
+          <main className="flex-1 min-w-0">
+            
+            {/* ── Perfil Tab ── */}
+            {activeTab === 'profile' && (
+              <div className="space-y-8 animate-fadeIn">
+                <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 sm:p-8">
+                  <h2 className="text-lg font-bold text-black mb-6">Información Personal</h2>
+                  
+                  <form onSubmit={handleSaveProfile} className="space-y-8">
+                    {/* Img Upload */}
+                    <div className="flex items-center gap-6">
+                      <div className="relative group">
                         {profileData.profileImage ? (
                           <img 
                             src={profileData.profileImage} 
                             alt="Profile" 
-                            className="object-cover w-24 h-24 border-2 border-slate-600 rounded-full"
+                            className="object-cover w-20 h-20 rounded-full bg-gray-100 border border-gray-200"
                           />
                         ) : (
-                          <div className="flex items-center justify-center w-24 h-24 bg-gray-100 border-2 border-slate-600 rounded-full">
-                            <span className="text-3xl font-bold text-gray-500">
-                              {profileData.displayName?.charAt(0) || profileData.email?.charAt(0) || 'U'}
+                          <div className="flex items-center justify-center w-20 h-20 bg-gray-100 text-gray-400 rounded-full border border-gray-200">
+                            <span className="text-2xl font-bold text-gray-500">
+                              {profileData.displayName?.charAt(0).toUpperCase() || profileData.email?.charAt(0).toUpperCase() || 'U'}
                             </span>
                           </div>
                         )}
-                      </div>
-                      <div className="ml-6">
-                        <label className="block">
-                          <span className="px-4 py-2 text-sm font-medium text-gray-600 bg-white  border border-gray-200 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm cursor-pointer hover:bg-white">
-                            Cambiar foto
-                          </span>
+                        <label className="absolute inset-0 flex items-center justify-center bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                          <FaCamera size={18} />
                           <input 
                             type="file" 
                             className="hidden" 
@@ -696,19 +631,17 @@ const Profile = () => {
                             onChange={handleImageUpload}
                           />
                         </label>
-                        <p className="mt-2 text-sm text-gray-500">
-                          JPG, GIF o PNG. Tamaño máximo 2MB
-                        </p>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-semibold text-black">Foto de Perfil</h3>
+                        <p className="text-xs text-gray-500 mt-0.5">JPG, GIF o PNG. Max 2MB.</p>
                       </div>
                     </div>
-                  </div>
-                  
-                  {/* Personal Information */}
-                  <div className="mb-8">
-                    <h2 className="mb-4 text-lg font-medium text-gray-900">Información Personal</h2>
+                    
+                    {/* Inputs */}
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <div>
-                        <label htmlFor="displayName" className="block text-sm font-medium text-gray-600">
+                        <label htmlFor="displayName" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
                           Nombre Completo
                         </label>
                         <input
@@ -717,12 +650,12 @@ const Profile = () => {
                           id="displayName"
                           value={profileData.displayName}
                           onChange={handleProfileChange}
-                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black focus:bg-white transition-colors sm:text-sm"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-600">
+                        <label htmlFor="email" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
                           Correo Electrónico
                         </label>
                         <input
@@ -731,15 +664,12 @@ const Profile = () => {
                           id="email"
                           value={profileData.email}
                           disabled
-                          className="block w-full px-3 py-2 mt-1 bg-gray-100 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-100 text-gray-500 border-none rounded-xl cursor-not-allowed sm:text-sm"
                         />
-                        <p className="mt-1 text-sm text-gray-500">
-                          El correo no puede ser modificado
-                        </p>
                       </div>
                       
                       <div>
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-600">
+                        <label htmlFor="phone" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
                           Teléfono
                         </label>
                         <input
@@ -748,71 +678,62 @@ const Profile = () => {
                           id="phone"
                           value={profileData.phone}
                           onChange={handleProfileChange}
-                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black focus:bg-white transition-colors sm:text-sm"
                         />
                       </div>
                       
-                      {/* Role Display (Read-only) */}
                       <div>
-                        <label htmlFor="role" className="block text-sm font-medium text-gray-600">
-                          Rol
+                        <label htmlFor="role" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
+                          Rol Actual
                         </label>
                         <input
                           type="text"
                           name="role"
                           id="role"
-                          value={userRole || 'customer'}
+                          value={userRole === 'admin' ? 'Administrador' : 'Cliente'}
                           disabled
-                          className="block w-full px-3 py-2 mt-1 bg-gray-100 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                        />
-                        <p className="mt-1 text-sm text-gray-500">
-                          El rol no puede ser modificado
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Save Button */}
-                  <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      disabled={saving}
-                      className="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-gray-900 border border-transparent rounded-md shadow-2xl shadow-sm shadow-sm bg-gradient-to-r from-blue-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-                    >
-                      {saving ? 'Guardando...' : 'Guardar Cambios'}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
-          
-          {/* Security Tab */}
-          {activeTab === 'security' && (
-            <div className="overflow-hidden bg-white  border border-gray-200 rounded-lg shadow">
-              <div className="px-6 py-8">
-                <form onSubmit={handleChangePassword}>
-                  <div className="mb-8">
-                    <h2 className="mb-4 text-lg font-medium text-gray-900">Cambiar Contraseña</h2>
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                      <div>
-                        <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-600">
-                          Contraseña Actual
-                        </label>
-                        <input
-                          type="password"
-                          name="currentPassword"
-                          id="currentPassword"
-                          value={securityData.currentPassword}
-                          onChange={handleSecurityChange}
-                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-100 text-gray-500 border-none rounded-xl cursor-not-allowed sm:text-sm capitalize"
                         />
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+                    <div className="pt-4 flex justify-end">
+                      <button
+                        type="submit"
+                        disabled={saving}
+                        className="px-6 py-3 text-sm font-semibold text-white bg-black rounded-xl hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50 transition-colors"
+                      >
+                        {saving ? 'Guardando...' : 'Guardar Cambios'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+            
+            {/* ── Seguridad Tab ── */}
+            {activeTab === 'security' && (
+              <div className="space-y-8 animate-fadeIn">
+                <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 sm:p-8">
+                  <h2 className="text-lg font-bold text-black mb-6">Cambiar Contraseña</h2>
+                  <form onSubmit={handleChangePassword} className="space-y-6">
+                    <div>
+                      <label htmlFor="currentPassword" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
+                        Contraseña Actual
+                      </label>
+                      <input
+                        type="password"
+                        name="currentPassword"
+                        id="currentPassword"
+                        value={securityData.currentPassword}
+                        onChange={handleSecurityChange}
+                        className="w-full md:w-1/2 px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black focus:bg-white transition-colors sm:text-sm"
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <div>
-                        <label htmlFor="newPassword" className="block text-sm font-medium text-gray-600">
+                        <label htmlFor="newPassword" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
                           Nueva Contraseña
                         </label>
                         <input
@@ -821,13 +742,13 @@ const Profile = () => {
                           id="newPassword"
                           value={securityData.newPassword}
                           onChange={handleSecurityChange}
-                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black focus:bg-white transition-colors sm:text-sm"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="confirmNewPassword" className="block text-sm font-medium text-gray-600">
-                          Confirmar Nueva Contraseña
+                        <label htmlFor="confirmNewPassword" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
+                          Repetir Nueva Contraseña
                         </label>
                         <input
                           type="password"
@@ -835,99 +756,85 @@ const Profile = () => {
                           id="confirmNewPassword"
                           value={securityData.confirmNewPassword}
                           onChange={handleSecurityChange}
-                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black focus:bg-white transition-colors sm:text-sm"
                         />
                       </div>
                     </div>
-                  </div>
-                  
-                  {/* Save Button */}
-                  <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      disabled={securitySaving}
-                      className="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-gray-900 border border-transparent rounded-md shadow-2xl shadow-sm shadow-sm bg-gradient-to-r from-blue-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-                    >
-                      {securitySaving ? 'Guardando...' : 'Cambiar Contraseña'}
-                    </button>
-                  </div>
-                </form>
-                
-                {/* Active Devices Section */}
-                <div className="mt-12">
-                  <h2 className="mb-4 text-lg font-medium text-gray-900">Dispositivos Activos</h2>
-                  <div className="p-4 rounded-lg bg-white">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0">
-                        <div className="flex items-center justify-center w-10 h-10 bg-indigo-500/100/10 border border-gray-200 rounded-full">
-                          <svg className="w-6 h-6 text-black uppercase tracking-widest" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <h3 className="text-sm font-medium text-gray-900">Este dispositivo</h3>
-                        <p className="text-sm text-gray-500">Última actividad: Ahora mismo</p>
-                      </div>
-                      <div className="ml-auto">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Activo
-                        </span>
-                      </div>
+                    
+                    <div className="pt-4 flex justify-end">
+                      <button
+                        type="submit"
+                        disabled={securitySaving}
+                        className="px-6 py-3 text-sm font-semibold text-white bg-black rounded-xl hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50 transition-colors"
+                      >
+                        {securitySaving ? 'Actualizando...' : 'Actualizar Contraseña'}
+                      </button>
                     </div>
+                  </form>
+                </div>
+
+                <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 sm:p-8">
+                  <h2 className="text-lg font-bold text-black mb-6">Dispositivos Activos</h2>
+                  <div className="flex items-center gap-4 bg-gray-50 border border-gray-100 p-4 rounded-xl">
+                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black border border-gray-200">
+                      <FaLaptopCode size={18} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-sm font-bold text-black">Este dispositivo</h3>
+                      <p className="text-xs text-gray-500 mt-0.5">Última actividad: Ahora mismo</p>
+                    </div>
+                    <span className="px-3 py-1 text-[10px] font-bold tracking-widest uppercase bg-green-100 text-green-700 rounded-lg">
+                      Activo
+                    </span>
                   </div>
-                  
-                  <div className="mt-4 text-sm text-gray-500">
-                    <p>Para seguridad adicional, si ves un dispositivo que no reconoces, cierra la sesión en todos los dispositivos y cambia tu contraseña.</p>
-                  </div>
+                  <p className="text-xs text-gray-500 mt-4 leading-relaxed">
+                    Asegúrate de cambiar tu contraseña regularmente. Si notas actividad sospechosa, te recomendamos actualizarla de inmediato.
+                  </p>
                 </div>
               </div>
-            </div>
-          )}
-          
-          {/* Addresses Tab */}
-          {activeTab === 'addresses' && (
-            <div className="overflow-hidden bg-white  border border-gray-200 rounded-lg shadow">
-              <div className="px-6 py-8">
-                {/* Add/Edit Address Form */}
-                <div className="mb-8">
-                  <h2 className="mb-4 text-lg font-medium text-gray-900">
+            )}
+            
+            {/* ── Addresses Tab ── */}
+            {activeTab === 'addresses' && (
+              <div className="space-y-8 animate-fadeIn">
+                <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 sm:p-8">
+                  <h2 className="text-lg font-bold text-black mb-6">
                     {editingAddress ? 'Editar Dirección' : 'Agregar Nueva Dirección'}
                   </h2>
                   <form onSubmit={editingAddress ? saveEditedAddress : handleAddAddress}>
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                      <div>
-                        <label htmlFor="addressName" className="block text-sm font-medium text-gray-600">
-                          Nombre de la Dirección
+                      <div className="sm:col-span-2">
+                        <label htmlFor="addressName" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
+                          Nombre de la dirección
                         </label>
                         <input
                           type="text"
                           name="name"
                           id="addressName"
+                          placeholder="Ej: Mi Casa, Oficina..."
                           value={editingAddress ? editAddressData.name : newAddress.name}
                           onChange={editingAddress ? handleEditAddressChange : handleAddressChange}
-                          placeholder="Ej: Casa, Trabajo"
-                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black focus:bg-white transition-colors sm:text-sm"
                         />
                       </div>
                       
-                      <div>
-                        <label htmlFor="addressStreet" className="block text-sm font-medium text-gray-600">
-                          Calle y Número
+                      <div className="sm:col-span-2">
+                        <label htmlFor="addressStreet" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
+                          Calle / Número / Detalle
                         </label>
                         <input
                           type="text"
                           name="street"
                           id="addressStreet"
+                          placeholder="Ej: Carrera 12 #34-56 Apto 7B"
                           value={editingAddress ? editAddressData.street : newAddress.street}
                           onChange={editingAddress ? handleEditAddressChange : handleAddressChange}
-                          placeholder="Ej: Av. Principal 123"
-                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black focus:bg-white transition-colors sm:text-sm"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="addressCity" className="block text-sm font-medium text-gray-600">
+                        <label htmlFor="addressCity" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
                           Ciudad
                         </label>
                         <input
@@ -936,13 +843,13 @@ const Profile = () => {
                           id="addressCity"
                           value={editingAddress ? editAddressData.city : newAddress.city}
                           onChange={editingAddress ? handleEditAddressChange : handleAddressChange}
-                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black focus:bg-white transition-colors sm:text-sm"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="addressState" className="block text-sm font-medium text-gray-600">
-                          Estado/Provincia
+                        <label htmlFor="addressState" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
+                          Departamento
                         </label>
                         <input
                           type="text"
@@ -950,12 +857,12 @@ const Profile = () => {
                           id="addressState"
                           value={editingAddress ? editAddressData.state : newAddress.state}
                           onChange={editingAddress ? handleEditAddressChange : handleAddressChange}
-                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black focus:bg-white transition-colors sm:text-sm"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="addressZipCode" className="block text-sm font-medium text-gray-600">
+                        <label htmlFor="addressZipCode" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
                           Código Postal
                         </label>
                         <input
@@ -964,12 +871,12 @@ const Profile = () => {
                           id="addressZipCode"
                           value={editingAddress ? editAddressData.zipCode : newAddress.zipCode}
                           onChange={editingAddress ? handleEditAddressChange : handleAddressChange}
-                          className="block w-full px-3 py-2 mt-1 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black focus:bg-white transition-colors sm:text-sm"
                         />
                       </div>
                       
                       <div>
-                        <label htmlFor="addressCountry" className="block text-sm font-medium text-gray-600">
+                        <label htmlFor="addressCountry" className="block text-xs font-semibold text-gray-700 uppercase tracking-widest mb-2">
                           País
                         </label>
                         <input
@@ -978,106 +885,90 @@ const Profile = () => {
                           id="addressCountry"
                           value="Colombia"
                           disabled
-                          className="block w-full px-3 py-2 mt-1 bg-gray-100 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-4 py-3 bg-gray-100 text-gray-500 border-none rounded-xl cursor-not-allowed sm:text-sm"
                         />
-                        <p className="mt-1 text-sm text-gray-500">
-                          Este ecommerce solo opera en Colombia
-                        </p>
                       </div>
                     </div>
                     
-                    <div className="flex mt-6 space-x-3">
-                      <button
-                        type="submit"
-                        disabled={addressSaving}
-                        className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-900 border border-transparent rounded-md shadow-2xl shadow-sm shadow-sm bg-gradient-to-r from-blue-400 to-indigo-500 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-                      >
-                        {addressSaving ? 'Guardando...' : (editingAddress ? 'Guardar Cambios' : 'Agregar Dirección')}
-                      </button>
-                      
+                    <div className="pt-6 flex gap-3 justify-end border-t border-gray-100 mt-8">
                       {editingAddress && (
                         <button
                           type="button"
                           onClick={cancelEditingAddress}
-                          className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-600 bg-white  border border-gray-200 border border-slate-600 rounded-md shadow-2xl shadow-sm shadow-sm hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className="px-6 py-3 text-sm font-semibold text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
                         >
                           Cancelar
                         </button>
                       )}
+                      <button
+                        type="submit"
+                        disabled={addressSaving}
+                        className="px-6 py-3 text-sm font-semibold text-white bg-black rounded-xl hover:bg-gray-800 disabled:opacity-50 transition-colors"
+                      >
+                        {addressSaving ? 'Guardando...' : (editingAddress ? 'Guardar Cambios' : 'Agregar Dirección')}
+                      </button>
                     </div>
                   </form>
                 </div>
                 
-                {/* Saved Addresses */}
-                <div>
-                  <h2 className="mb-4 text-lg font-medium text-gray-900">Direcciones Guardadas</h2>
+                <div className="mt-8">
+                  <h2 className="text-lg font-bold text-black mb-6">Mis Direcciones Guardadas</h2>
                   {addresses.length === 0 ? (
-                    <div className="py-8 text-center">
-                      <svg className="w-12 h-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      <h3 className="mt-2 text-sm font-medium text-gray-900">No hay direcciones</h3>
-                      <p className="mt-1 text-sm text-gray-500">Agrega tu primera dirección usando el formulario de arriba.</p>
+                    <div className="bg-white border border-gray-100 border-dashed rounded-2xl p-12 text-center text-gray-500 shadow-sm">
+                      <FaMapLocationDot size={32} className="mx-auto mb-4 text-gray-300" />
+                      <p className="text-sm font-medium text-black">Aún no tienes direcciones</p>
+                      <p className="text-xs mt-1">Empieza a agregar tus lugares frecuentes para comprar más rápido.</p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {addresses.map((address) => (
-                        <div key={address.id} className="p-4 transition-shadow duration-200 border border-white/10 rounded-lg hover:shadow-xl shadow-sm">
-                          <div className="flex flex-col md:flex-row md:justify-between md:items-start">
-                            <div className="flex-1">
-                              <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-4">
-                                <div className="flex-1">
-                                  <div className="flex items-start space-x-2">
-                                    <h3 className="text-base font-medium text-gray-900">{address.name}</h3>
-                                    {address.isDefault && (
-                                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-500/100/10 border border-gray-200 text-gray-800">
-                                        Predeterminada
-                                      </span>
-                                    )}
-                                  </div>
-                                  <div className="mt-2 text-sm text-gray-500">
-                                    <p>{address.street}</p>
-                                    <p>{address.city}, {address.state} {address.zipCode}</p>
-                                    <p>{address.country}</p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex flex-col mt-4 space-y-2 md:mt-0 sm:flex-row sm:space-x-2 sm:space-y-0">
-                              <button
-                                onClick={() => startEditingAddress(address)}
-                                className="inline-flex items-center justify-center px-3 py-1.5 border border-slate-600 text-xs font-medium rounded-md text-black bg-white  border border-gray-200 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
-                              >
-                                <svg className="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                                Editar
-                              </button>
+                        <div key={address.id} className={`relative p-5 rounded-2xl border transition-all ${
+                          address.isDefault ? 'border-black bg-black text-white shadow-md' : 'border-gray-200 bg-white hover:border-gray-300 shadow-sm'
+                        }`}>
+                          <div className="flex justify-between items-start mb-3">
+                            <h3 className={`text-base font-bold ${address.isDefault ? 'text-white' : 'text-black'}`}>
+                              {address.name}
+                            </h3>
+                            {address.isDefault && (
+                              <span className="flex items-center gap-1 text-[10px] font-bold tracking-widest uppercase bg-white text-black px-2.5 py-1 rounded-md">
+                                <FaCheck size={10} /> Predeterminado
+                              </span>
+                            )}
+                          </div>
+                          <div className={`text-sm space-y-1 ${address.isDefault ? 'text-gray-300' : 'text-gray-500'}`}>
+                            <p>{address.street}</p>
+                            <p>{address.city}, {address.state} {address.zipCode}</p>
+                            <p>{address.country}</p>
+                          </div>
+                          
+                          <div className="flex items-center gap-2 mt-6 pt-4 border-t border-current border-opacity-10">
+                            <button
+                              onClick={() => startEditingAddress(address)}
+                              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors ${
+                                address.isDefault ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                              }`}
+                            >
+                              <FaPen size={10} /> Editar
+                            </button>
+                            
+                            {!address.isDefault && (
                               <button
                                 onClick={() => handleSetDefaultAddress(address.id)}
-                                disabled={address.isDefault}
-                                className={`inline-flex items-center justify-center px-3 py-1.5 border text-xs font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ${
-                                  address.isDefault 
-                                    ? 'border-slate-600 text-gray-500 bg-gray-100 cursor-not-allowed' 
-                                    : 'border-indigo-300 text-black bg-gray-50 hover:from-indigo-100 hover:to-purple-100'
-                                }`}
+                                className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
                               >
-                                <svg className={`mr-1 h-4 w-4 ${address.isDefault ? 'text-gray-400' : 'text-black'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                                {address.isDefault ? 'Predeterminada' : 'Predeterminada'}
+                                Hacer principal
                               </button>
-                              <button
-                                onClick={() => handleDeleteAddress(address.id)}
-                                className="inline-flex items-center justify-center px-3 py-1.5 border border-red-300 text-xs font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
-                              >
-                                <svg className="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                                Eliminar
-                              </button>
-                            </div>
+                            )}
+                            
+                            <button
+                              onClick={() => handleDeleteAddress(address.id)}
+                              className={`ml-auto flex items-center justify-center w-8 h-8 rounded-lg transition-colors ${
+                                address.isDefault ? 'hover:bg-red-500/20 text-red-300' : 'hover:bg-red-50 text-red-500'
+                              }`}
+                              aria-label="Eliminar dirección"
+                            >
+                              <FaRegTrashCan size={14} />
+                            </button>
                           </div>
                         </div>
                       ))}
@@ -1085,8 +976,9 @@ const Profile = () => {
                   )}
                 </div>
               </div>
-            </div>
-          )}
+            )}
+            
+          </main>
         </div>
       </div>
     </div>
