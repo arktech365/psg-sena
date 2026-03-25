@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://github.com/arktech365/psg-shop",
+  "homepage": "https://arktech365.github.io/psg-official/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
