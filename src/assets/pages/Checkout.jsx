@@ -171,8 +171,8 @@ const Checkout = () => {
           cartItems: cleanItems,
           shippingCost: shippingCost,
           discount: discount,
-          successUrl: `${window.location.origin}/psg-official/#/orders?payment=success&orderId=${orderId}`,
-          cancelUrl: `${window.location.origin}/psg-official/#/checkout`,
+          successUrl: `${window.location.origin}${window.location.hostname.includes('github.io') ? '/psg-official' : ''}/#/orders?payment=success&orderId=${orderId}`,
+          cancelUrl: `${window.location.origin}${window.location.hostname.includes('github.io') ? '/psg-official' : ''}/#/checkout`,
         }),
       });
 
