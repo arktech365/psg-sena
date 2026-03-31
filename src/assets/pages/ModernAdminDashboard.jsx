@@ -38,8 +38,13 @@ import AdminCategories from '../../components/admin/AdminCategories';
 import AdminProductModal from '../../components/admin/AdminProductModal';
 
 const ModernAdminDashboard = () => {
-  const { currentUser, isAdmin } = useAuth();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
+
+  // URL del servidor (local o producción en Vercel)
+  const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3001'
+    : '/api';
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('analytics');
   const [theme, setTheme] = useState('light');
@@ -423,7 +428,7 @@ const ModernAdminDashboard = () => {
         imageUrl: p.imageUrl || ''
       }));
 
-      const response = await fetch('http://localhost:3001/sync-products', {
+      const response = await fetch(`${API_BASE_URL}/sync-products`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ products: cleanProducts }),

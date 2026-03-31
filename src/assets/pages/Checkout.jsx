@@ -14,6 +14,11 @@ const Checkout = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
+  // URL del servidor (local o producción en Vercel)
+  const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3001'
+    : '/api';
+
   const EXCHANGE_RATE = 0.00028;
   const convertToUSD = (cop) => cop * EXCHANGE_RATE;
 
@@ -159,7 +164,7 @@ const Checkout = () => {
         quantity: it.quantity
       }));
 
-      const response = await fetch('http://localhost:3001/create-checkout-session', {
+      const response = await fetch(`${API_BASE_URL}/create-checkout-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
