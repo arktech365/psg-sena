@@ -38,7 +38,7 @@ import AdminCategories from '../../components/admin/AdminCategories';
 import AdminProductModal from '../../components/admin/AdminProductModal';
 
 const ModernAdminDashboard = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   // URL del servidor (local o producción en Vercel)
