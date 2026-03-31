@@ -23,7 +23,7 @@ import Blog from './assets/pages/Blog';
 import BlogPost from './assets/pages/BlogPost';
 import Contact from './assets/pages/Contact';
 import Navbar from './components/navbar';
-import Footer from './components/footer';
+import Footer from './components/Footer';
 import createSampleCoupon from './utils/createSampleCoupon';
 import useScrollToTop from './hooks/useScrollToTop';
 
