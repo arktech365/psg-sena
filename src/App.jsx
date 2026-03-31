@@ -22,6 +22,7 @@ import Wishlist from './assets/pages/Wishlist';
 import Blog from './assets/pages/Blog';
 import BlogPost from './assets/pages/BlogPost';
 import Contact from './assets/pages/Contact';
+import NotFound from './assets/pages/NotFound';
 import Navbar from './components/navbar';
 import Footer from './components/Footer';
 import createSampleCoupon from './utils/createSampleCoupon';
@@ -176,6 +177,7 @@ function App() {
                     <CouponTest />
                   </ProtectedRoute>
                 } />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
             {/* Only show footer for non-admin routes */}
