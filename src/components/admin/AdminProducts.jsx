@@ -1,6 +1,6 @@
 import React from 'react';
 import Loader from '../Loader';
-import { FiShoppingBag, FiPlus, FiEdit3, FiTrash2, FiSearch, FiLayers, FiPackage, FiActivity } from 'react-icons/fi';
+import { FiShoppingBag, FiPlus, FiEdit3, FiTrash2, FiSearch, FiLayers, FiPackage, FiActivity, FiRefreshCw } from 'react-icons/fi';
 
 const AdminProducts = ({
   products,
@@ -11,7 +11,9 @@ const AdminProducts = ({
   formatCurrency,
   openAddProductModal,
   openEditProductModal,
-  deleteProduct
+  deleteProduct,
+  syncProductsToStripe,
+  stripeSyncing
 }) => {
   if (productsLoading) {
     return (
@@ -70,6 +72,14 @@ const AdminProducts = ({
             className="flex items-center justify-center gap-2 px-8 py-4 bg-black text-white rounded-2xl font-black text-sm transition-all hover:bg-gray-800 hover:shadow-2xl active:scale-95 w-full md:w-auto"
           >
             <FiPlus size={20} /> Añadir Producto
+          </button>
+          <button 
+            onClick={syncProductsToStripe}
+            disabled={stripeSyncing}
+            className={`flex items-center justify-center gap-2 px-8 py-4 ${isDark ? 'bg-indigo-600' : 'bg-emerald-600'} text-white rounded-2xl font-black text-sm transition-all hover:opacity-90 hover:shadow-2xl active:scale-95 w-full md:w-auto disabled:opacity-50`}
+          >
+            {stripeSyncing ? <FiRefreshCw className="animate-spin" /> : <FiActivity size={20} />}
+            {stripeSyncing ? (stripeSyncing === "syncing" ? "Sincronizando..." : "Sincronizado!") : "Sincronizar Stripe"}
           </button>
         </div>
       </div>

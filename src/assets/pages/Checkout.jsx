@@ -5,7 +5,9 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../firebase';
 import { doc, getDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
+import { loadStripe } from '@stripe/stripe-js';
 import Swal from 'sweetalert2';
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51S8kdbBqZW5OQI7pv3OQ3OQ3OQ3OQ3OQ3OQ3OQ3OQ3OQ3OQ3OQ3OQ3OQ3OQ3OQ');
 
 const Checkout = () => {
   const { items, getTotalPrice, loading: cartLoading, clearCart, coupon } = useCart();
@@ -95,9 +97,22 @@ const Checkout = () => {
   };
 
   const createOrder = async (paymentMethod, paymentStatus) => {
+    // Limpiamos los items para que no pesen demasiado (evita error de 1MB en Firestore)
+    // Especialmente si los productos tienen imágenes en Base64
+    const cleanItems = items.map(it => ({
+      id: it.id || '',
+      name: it.name,
+      price: it.price,
+      quantity: it.quantity,
+      selectedSize: it.selectedSize || null,
+      selectedColor: it.selectedColor || null,
+      // Solo guardamos la URL de la imagen si NO es un Base64 pesado
+      imageUrl: (it.imageUrl && !it.imageUrl.startsWith('data:')) ? it.imageUrl : null
+    }));
+
     const orderData = {
       userId: currentUser.uid, userEmail: currentUser.email,
-      items, subtotal: parseFloat(subtotal), discount: parseFloat(discount),
+      items: cleanItems, subtotal: parseFloat(subtotal), discount: parseFloat(discount),
       shippingCost: parseFloat(shippingCost), totalAmount: parseFloat(total),
       totalAmountUSD: parseFloat(convertToUSD(total).toFixed(2)),
       address: selectedAddress, paymentMethod, paymentStatus,
@@ -123,6 +138,61 @@ const Checkout = () => {
 
   const handlePayPalError = (err) => {
     Swal.fire({ title: 'Error', text: 'Error en el pago con PayPal. Intenta nuevamente.', icon: 'error', confirmButtonText: 'Aceptar' });
+  };
+
+  const handleStripeCheckout = async () => {
+    if (!selectedAddress) {
+      Swal.fire({ title: 'Error', text: 'Selecciona una dirección de envío', icon: 'error', confirmButtonText: 'Aceptar' });
+      return;
+    }
+    
+    setProcessing(true);
+    try {
+      // 1. Crear el pedido en Firestore primero con estado 'Pendiente de Pago (Stripe)'
+      // para que el administrador ya pueda verlo.
+      const orderId = await createOrder('Stripe', 'pending_stripe');
+
+      // 2. Optimizamos los items para que no pesen tanto
+      const cleanItems = items.map(it => ({
+        name: it.name,
+        price: it.price,
+        quantity: it.quantity
+      }));
+
+      const response = await fetch('http://localhost:3001/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cartItems: cleanItems,
+          shippingCost: shippingCost,
+          discount: discount,
+          successUrl: `${window.location.origin}/psg-official/#/orders?payment=success&orderId=${orderId}`,
+          cancelUrl: `${window.location.origin}/psg-official/#/checkout`,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error del servidor (${response.status}): ${errorText.substring(0, 50)}...`);
+      }
+
+      const session = await response.json();
+      if (!session.id) throw new Error(session.error || 'No se pudo crear la sesión');
+
+      // 2. Redirect to Stripe Checkout
+      const stripe = await stripePromise;
+      if (!stripe) throw new Error('Stripe no se pudo cargar');
+      
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (error) throw error;
+    } catch (err) {
+      Swal.fire({ title: 'Error', text: 'Stripe Error: ' + err.message, icon: 'error', confirmButtonText: 'Aceptar' });
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleCashOnDelivery = async () => {
@@ -320,6 +390,26 @@ const Checkout = () => {
               {/* Payment Methods */}
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Método de Pago</p>
+
+                {/* Stripe/Card Payment */}
+                <div className="mb-3">
+                  {selectedAddress ? (
+                    <button
+                      onClick={() => handleStripeCheckout()}
+                      disabled={processing}
+                      className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-indigo-600 rounded-xl text-sm font-black text-white hover:bg-indigo-700 transition-all hover:shadow-xl active:scale-95 disabled:opacity-50"
+                    >
+                      {processing ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      )}
+                      {processing ? 'Procesando...' : 'Pagar con Tarjeta (Stripe)'}
+                    </button>
+                  ) : null}
+                </div>
 
                 {/* PayPal */}
                 <div className="mb-3">

@@ -70,6 +70,7 @@ const ModernAdminDashboard = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('add');
+  const [stripeSyncing, setStripeSyncing] = useState(false);
   
   // Users state
   const [users, setUsers] = useState([]);
@@ -384,6 +385,8 @@ const ModernAdminDashboard = () => {
       showSuccessMessage("Producto creado!");
       setProductModalOpen(false);
       fetchProducts();
+      // Auto-Sync to Stripe
+      syncProductsToStripe();
     } catch (err) { setError("Error al crear producto."); }
   };
 
@@ -394,6 +397,8 @@ const ModernAdminDashboard = () => {
       showSuccessMessage("Producto actualizado!");
       setProductModalOpen(false);
       fetchProducts();
+      // Auto-Sync to Stripe
+      syncProductsToStripe();
     } catch (err) { setError("Error al actualizar."); }
   };
 
@@ -404,6 +409,36 @@ const ModernAdminDashboard = () => {
 
   const openAddProductModal = () => { setModalMode('add'); setProductModalOpen(true); };
   const openEditProductModal = (p) => { setEditingProduct({ ...p }); setModalMode('edit'); setProductModalOpen(true); };
+
+  const syncProductsToStripe = async () => {
+    setStripeSyncing(true);
+    setError(null);
+    try {
+      // Limpiamos los productos para no enviar datos binarios innecesarios (solo lo que Stripe necesita)
+      const cleanProducts = products.map(p => ({
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        description: p.description || '',
+        imageUrl: p.imageUrl || ''
+      }));
+
+      const response = await fetch('http://localhost:3001/sync-products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ products: cleanProducts }),
+      });
+
+      const data = await response.json();
+      if (!data.success) throw new Error(data.error || 'Error en sincronización');
+
+      showSuccessMessage(`Sincronización exitosa: ${data.created} creados, ${data.updated} actualizados.`);
+    } catch (err) {
+      setError("Error al sincronizar con Stripe: " + err.message);
+    } finally {
+      setStripeSyncing(false);
+    }
+  };
 
   const updateUserRole = async (userId, newRole) => {
     try { await updateUserServiceRole(userId, newRole); fetchUsers(); showSuccessMessage("Rol actualizado."); } catch (err) { setError("Error."); }
@@ -475,6 +510,8 @@ const ModernAdminDashboard = () => {
           openAddProductModal={openAddProductModal}
           openEditProductModal={openEditProductModal}
           deleteProduct={deleteProduct}
+          syncProductsToStripe={syncProductsToStripe}
+          stripeSyncing={stripeSyncing}
         />;
       case 'users':
         return <AdminUsers 

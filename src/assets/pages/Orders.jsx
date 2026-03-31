@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { db } from '../../firebase';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 import { getOrdersByUserId } from '../../services/orderService';
 import OrderDetailsModal from '../../components/OrderDetailsModal';
 import { createReview, getUserReviewForProduct, updateReview, deleteReview } from '../../services/reviewService';
@@ -8,8 +11,24 @@ import Swal from 'sweetalert2';
 
 const Orders = () => {
   const { currentUser } = useAuth();
+  const { clearCart } = useCart();
   const navigate = useNavigate();
+  
+  const getPrimaryImageUrl = (product) => {
+    if (product.imageUrls && product.imageUrls.length > 0) {
+      const valid = product.imageUrls.filter(img => img && (typeof img === 'string' || (img.data && typeof img.data === 'string')));
+      if (valid.length > 0) {
+        const safe = Math.min(product.primaryImageIndex || 0, valid.length - 1);
+        const img = valid[safe];
+        if (typeof img === 'string') return img;
+        if (img && img.data) return img.data;
+      }
+    }
+    return product.imageUrl || 'https://via.placeholder.com/100x100.png?text=PSG';
+  };
+
   const [orders, setOrders] = useState([]);
+  const [productImages, setProductImages] = useState({}); // Cache para imágenes faltantes
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -104,11 +123,76 @@ const Orders = () => {
   };
 
   useEffect(() => {
+    // Check if coming from a successful payment (Universal detection for HashRouter or standard routes)
+    const currentPath = window.location.hash || window.location.search;
+    if (currentPath.includes('payment=success')) {
+      // Find orderId in path
+      const urlParams = new URLSearchParams(currentPath.split('?')[1]);
+      const orderId = urlParams.get('orderId');
+      
+      const finalizeOrder = async () => {
+        if (orderId) {
+          try {
+            await updateDoc(doc(db, 'orders', orderId), {
+              paymentStatus: 'paid',
+              updatedAt: new Date()
+            });
+          } catch (e) {
+            console.error("Error updating order status:", e);
+          }
+        }
+        clearCart();
+        Swal.fire({
+          title: '¡Pago Exitoso!',
+          text: 'Tu pedido ha sido procesado correctamente con Stripe.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+          timer: 5000
+        });
+        // Clean up the URL to avoid repeated alerts
+        const cleanUrl = window.location.href.replace(/[?&]payment=success(&orderId=[\w-]+)?/, '');
+        window.history.replaceState({}, document.title, cleanUrl);
+        fetchUserOrders(); // Refresh list
+      };
+
+      finalizeOrder();
+    }
+
     const fetchUserOrders = async () => {
       if (!currentUser) { navigate('/login'); return; }
       try {
-        const ordersData = await getOrdersByUserId(currentUser.uid);
-        setOrders(ordersData);
+        const orderList = await getOrdersByUserId(currentUser.uid);
+        setOrders(orderList);
+        
+        // Cargar las imágenes de los productos que tengan imageUrl null
+        const missingImgIds = [];
+        orderList.forEach(order => {
+          order.items?.forEach(item => {
+            if (!item.imageUrl && item.id) {
+              missingImgIds.push(item.id);
+            }
+          });
+        });
+
+        if (missingImgIds.length > 0) {
+          const uniqueIds = [...new Set(missingImgIds)];
+          const imagesMap = { ...productImages };
+          
+          for (const id of uniqueIds) {
+            if (!imagesMap[id]) {
+              try {
+                const prodRef = doc(db, 'products', id);
+                const prodSnap = await getDoc(prodRef);
+                if (prodSnap.exists()) {
+                  imagesMap[id] = getPrimaryImageUrl(prodSnap.data());
+                }
+              } catch (e) {
+                console.warn(`No se pudo cargar imagen para producto ${id}`, e);
+              }
+            }
+          }
+          setProductImages(imagesMap);
+        }
       } catch (err) {
         setError('No se pudieron cargar tus órdenes. Por favor, intenta nuevamente.');
       } finally {
@@ -218,7 +302,7 @@ const Orders = () => {
                           <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
                               <img
-                                src={item.imageUrl || 'https://via.placeholder.com/48x48.png?text=PSG'}
+                                src={item.imageUrl || productImages[item.id] || 'https://via.placeholder.com/48x48.png?text=PSG'}
                                 alt={item.name}
                                 className="object-cover w-full h-full"
                                 onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/48x48.png?text=PSG'; }}

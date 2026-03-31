@@ -136,7 +136,7 @@ function App() {
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:id" element={<BlogPost />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/checkout" element={
+                 <Route path="/checkout" element={
                   <ProtectedRoute>
                     <Checkout />
                   </ProtectedRoute>
