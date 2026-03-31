@@ -1,10 +1,12 @@
 
-// Vercel Serverless Function for Stripe Payments
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const express = require('express');
-const cors = require('cors');
+// Vercel Serverless Function for Stripe Payments (ESM Version)
+import Stripe from 'stripe';
+import express from 'express';
+import cors from 'cors';
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const app = express();
+
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 
@@ -121,4 +123,4 @@ app.post('/api/create-checkout-session', async (req, res) => {
   }
 });
 
-module.exports = app;
+export default app;
