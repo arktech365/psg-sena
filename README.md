@@ -170,3 +170,22 @@ Este proyecto está licenciado bajo la Licencia MIT.
 ## Contacto
 
 Para cualquier pregunta o sugerencia, por favor abre un issue en el repositorio.
+
+---
+
+## Cronograma de Pruebas PSG SHOP (GA9-220501096-AA1-EV02)
+
+| Fase | Actividad | Descripción / Métodos | Fecha | Verificación de Pruebas |
+| :--- | :--- | :--- | :--- | :--- |
+| **Pruebas Unitarias** | Inicio de sesión | Método de validación de usuario y contraseña | 01/10/2025 - 06/10/2025 | - Validar credenciales correctas e incorrectas. |
+| | Administración de productos | Métodos CRUD (Agregar, editar, eliminar y ver producto) | | - Verificar visualización en lista.<br>- Confirmar eliminación.<br>- Verificar edición reflejada en base de datos. |
+| | Administración de clientes | Métodos CRUD (Registrar cliente, editar, eliminar y ver clientes) | | - Confirmar registro exitoso en Firestore.<br>- Verificar actualización de perfiles. |
+| | Administración de usuarios | Métodos CRUD (Registrar usuario, editar, eliminar y ver usuarios) | | - Verificar que el admin pueda ver lista completa.<br>- Confirmar borrado seguro de cuentas. |
+| | Gestión de ventas | Métodos CRUD (Agregar producto al carrito, editar cantidad, eliminar y ver lista) | | - Método para calcular el total.<br>- Método para vaciar lista de compra. |
+| | Registro de ventas | Métodos de visualización de detalles, eliminación y listado | | - Verificar que se genere el ID de orden único.<br>- Listar pedidos histórico. |
+| | Entrega de resultados | Entrega de documentación técnica y resultados de pruebas | 07/10/2025 | - Consolidación de informe final y planeación de pruebas. |
+| **Pruebas Funcionales** | Inicio de sesión | Ingreso de datos y redirección según rol (Admin/User) | 08/10/2025 - 15/10/2025 | - Ingresar datos correctos y verificar redirección a tablero.<br>- Probar funciones según rol asignado. |
+| | Administración de productos | Flujo completo de gestión desde la interfaz UI | | - Registrar producto con formulario e imágenes.<br>- Editar y confirmar cambios visuales en el shop. |
+| | Administración de clientes | Flujo completo de gestión de perfiles de clientes | | - Registrar cliente y verificar aparición en dashboard.<br>- Probar eliminación y confirmar refresco de lista. |
+| | Administración de usuarios | Flujo completo de gestión de usuarios del sistema | | - Verificar que se puedan ver todos los usuarios.<br>- Editar datos y confirmar consistencia de roles. |
+| | Gestión de ventas | Flujo de compra completo (Carrito, Pago y Confirmación) | | - Ver catálogo, agregar producto y confirmar carrito.<br>- Verificar subtotal y total.<br>- Editar cantidad y recalcular total. |
