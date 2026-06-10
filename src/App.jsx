@@ -25,6 +25,8 @@ import Contact from './assets/pages/Contact';
 import NotFound from './assets/pages/NotFound';
 import Navbar from './components/navbar';
 import Footer from './components/Footer';
+import DocumentationModal from './components/DocumentationModal';
+import FloatingDocsButton from './components/FloatingDocsButton';
 import createSampleCoupon from './utils/createSampleCoupon';
 import useScrollToTop from './hooks/useScrollToTop';
 
@@ -33,6 +35,7 @@ function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isDocsModalOpen, setIsDocsModalOpen] = useState(false);
 
   // Add scroll to top functionality
   useScrollToTop();
@@ -188,6 +191,9 @@ function App() {
           </div>
         </WishlistProvider>
       </CartProvider>
+      
+      <FloatingDocsButton onClick={() => setIsDocsModalOpen(true)} />
+      <DocumentationModal isOpen={isDocsModalOpen} onClose={() => setIsDocsModalOpen(false)} />
     </AuthContext.Provider>
   );
 }
